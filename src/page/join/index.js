@@ -78,7 +78,7 @@ function Join () {
 
   useEffect(() => {
 
-    // load()
+    load()
   }, [page, size, flag])
 
   const load = async () => {
