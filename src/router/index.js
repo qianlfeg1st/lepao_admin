@@ -12,7 +12,7 @@ import Staff from './../page/staff/index'
 // import Order from './../page/order/index'
 
 // 用户管理
-import UserAlipay from './../page/user/alipay'
+// import UserAlipay from './../page/user/alipay'
 
 // 定义routes
 const routerConfig = [
