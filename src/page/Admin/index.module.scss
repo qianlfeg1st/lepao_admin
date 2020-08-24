@@ -1,0 +1,104 @@
+.pageWrapper {
+  max-width: 100vw;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.aside {
+  width: 230px;
+  height: 100vh;
+  overflow: auto;
+  background-color: #eef1f6;
+}
+
+.header {
+  $rule: &;
+  height: 60px;
+  background: #20a0ff;
+  color:#fff;
+
+  img {
+    width: 40px;
+    height: 40px;
+    margin: 0 10px;
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    @at-root #{$rule}__name {
+      color: #fff;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+    }
+  }
+
+  &__center {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 20px;
+    letter-spacing: 3px;
+
+    p {
+      cursor: pointer;
+    }
+
+    .gas {
+      margin-right: 100px;
+    }
+
+    .activeNavMenu {
+      color: #ffd04b;
+    }
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    padding: 0 70px 0 0;
+
+    a {
+      color: #fff !important;
+    }
+
+    span {
+      cursor:pointer
+    }
+  }
+}
+
+.body {
+  display: flex;
+}
+
+.main {
+  padding: 20px;
+  width: calc(100vw - 230px);
+  height: auto;
+  max-height: 100vh;
+  overflow: auto;
+}
+
+.statusTip {
+  background: #ff7141;
+  text-align: center;
+  min-height: 42px;
+  line-height: 42px;
+  vertical-align: middle;
+  font-size: 20px;
+  color: #fff;
+}
+
+.logouTitle {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}

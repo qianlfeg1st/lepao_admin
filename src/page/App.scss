@@ -1,0 +1,209 @@
+/* 全局组件样式 */
+
+*, p {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  display: block;
+}
+
+.displayBlock {
+  display: block;
+}
+
+.modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.modal__footer button {
+  margin: 0 0 0 16px;
+}
+
+.searchbar {
+  width: 100%;
+  background: #f2f2f2;
+  padding: 10px;
+  margin: 0 0 10px 0;
+}
+
+.searchitems {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.searchitem {
+  display: flex;
+  margin: 0 20px 20px 0
+}
+
+.searchitem p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  margin-bottom: 0;
+}
+
+.searchbtn {
+  display: flex;
+  justify-content: space-between;
+  width: 190px;
+  margin: 10px 0 10px 0;
+}
+
+.pagebar {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  background: #f2f2f2;
+  padding: 10px;
+  margin: 10px 0 0 0;
+}
+
+.fixedWidthTable table {
+  table-layout: fixed;
+}
+
+.fixedWidthTable .ant-table-tbody > tr > td {
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.box {
+  margin: 0 auto;
+}
+
+.hide {
+  display: none;
+}
+
+.show {
+  display: inline-block;
+}
+
+#outer-box {
+  height: 100%;
+  padding-right: 300px;
+}
+
+#container {
+  height: 100%;
+  width: 100%;
+}
+
+#panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  height: 100%;
+  overflow: auto;
+  width: 300px;
+  z-index: 999;
+  border-left: 1px solid #eaeaea;
+  background: #fff;
+}
+
+#searchBar {
+  height: 30px;
+  background: #ccc;
+}
+
+#searchInput {
+  width: 100%;
+  height: 30px;
+  line-height: 30%;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  padding: 0 5px;
+}
+
+#searchResults {
+  overflow: auto;
+  height: calc(100% - 30px);
+}
+
+.flexCenter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.flexColumnCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.flexHCenterVbetween {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flexHbetweenVstart {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.flexHCenterVarround {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.btn {
+  margin-right: 12px;
+}
+
+.ml20 {
+  margin-left: 20px;
+}
+
+.pl20 {
+  margin-left: 20px;
+}
+
+.mr20 {
+  margin-right: 20px;
+}
+
+.mt10 {
+  margin-top: 10px;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.marginBottom24 {
+  margin-bottom: 24px;
+}
+
+.textCenter{
+  text-align: center;
+}
+
+.textRight{
+  text-align: right;
+}
+
+.ant-form-item-label-left {
+  max-width: 150px !important;
+}
