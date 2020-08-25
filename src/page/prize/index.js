@@ -10,15 +10,7 @@ function Join () {
   }
 
   const [listLoading, setListLoading] = useState(false)
-  const [listData, setListData] = useState([
-    {
-      "companyId": 0,
-      "companyName": "string",
-      "empJoinedTotal": 0,
-      "empJoiningTotal": 0,
-      "empTotal": 0
-    }
-  ])
+  const [listData, setListData] = useState([])
   const [page, setPage] = useState(0)
   const [total, setTotal] = useState(0)
   const [size, setSize] = useState(20)
@@ -36,22 +28,12 @@ function Join () {
       width: 100,
     },
     {
-      title: '总员工数',
-      dataIndex: 'empTotal',
-      width: 100,
-    },
-    {
-      title: '已加入员工数',
-      dataIndex: 'empJoinedTotal',
-      width: 100,
-    },
-    {
-      title: '已审核确认员工数',
+      title: '已选商品',
       dataIndex: '',
       width: 100,
     },
     {
-      title: '未确认员工数',
+      title: '推荐的热门商品',
       dataIndex: '',
       width: 100,
     },
@@ -61,7 +43,7 @@ function Join () {
       render (e) {
 
         return (
-          <Button type="primary">查看明细</Button>
+          <Button type="primary">编辑奖品</Button>
         )
       }
     },

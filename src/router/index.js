@@ -6,7 +6,18 @@ import FrontendAuth from './../page/FrontendAuth/index'
 import NotFound from './../page/notFound/index'
 import Login from './../page/login/index'
 import Join from './../page/join/index'
+
 import Staff from './../page/staff/index'
+import StaffDetail from './../page/staff/detail/index'
+
+import Prize from './../page/prize/index'
+import PrizeDetai from './../page/prize/detail/index'
+
+import Exchange from './../page/exchange/index'
+import ExchangeDetai from './../page/exchange/detail/index'
+
+import Point from './../page/point/index'
+import PointDetai from './../page/point/detail/index'
 
 // import Equipment from './../page/equipment/index'
 // import Order from './../page/order/index'
@@ -50,6 +61,55 @@ const routerConfig = [
     children: <Staff />,
     auth: false,
     title: '企业员工',
+  },
+  {
+    path: '/staff/detail',
+    component: StaffDetail,
+    children: <StaffDetail />,
+    auth: false,
+    title: '企业员工',
+  },
+  {
+    path: '/prize',
+    component: Prize,
+    children: <Prize />,
+    auth: false,
+    title: '企业奖品',
+  },
+  {
+    path: '/prize/detail',
+    component: PrizeDetai,
+    children: <PrizeDetai />,
+    auth: false,
+    title: '企业奖品',
+  },
+  {
+    path: '/exchange',
+    component: Exchange,
+    children: <Exchange />,
+    auth: false,
+    title: '企业兑换',
+  },
+  {
+    path: '/exchange/detail',
+    component: ExchangeDetai,
+    children: <ExchangeDetai />,
+    auth: false,
+    title: '企业兑换',
+  },
+  {
+    path: '/point',
+    component: Point,
+    children: <Point />,
+    auth: false,
+    title: '企业积分',
+  },
+  {
+    path: '/point/detail',
+    component: PointDetai,
+    children: <PointDetai />,
+    auth: false,
+    title: '企业积分',
   },
   /*
   {

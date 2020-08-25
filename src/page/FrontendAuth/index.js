@@ -34,15 +34,7 @@ function FrontendAuth (props) {
   // 进入不需要验证的页面
   if(targetRouterConfig && !targetRouterConfig.auth) {
 
-    // return <Route exact path={ targetRouterConfig.path } component={ targetRouterConfig.component } />
-    return (
-      <Route path="/" render={ () =>
-        <Admin targetRouterConfig={ targetRouterConfig }>
-          <Route path={ targetRouterConfig.path } component={ targetRouterConfig.component } />
-        </Admin>
-      }
-      />
-    )
+    return <Route exact path={ targetRouterConfig.path } component={ targetRouterConfig.component } />
   }
 
   // 需要验证登录

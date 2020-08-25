@@ -36,22 +36,42 @@ function Join () {
       width: 100,
     },
     {
-      title: '总员工数',
-      dataIndex: 'empTotal',
-      width: 100,
-    },
-    {
-      title: '已加入员工数',
-      dataIndex: 'empJoinedTotal',
-      width: 100,
-    },
-    {
-      title: '已审核确认员工数',
+      title: '已发放积分',
       dataIndex: '',
       width: 100,
     },
     {
-      title: '未确认员工数',
+      title: '已兑换积分',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '人均积分持有数',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '步数积分比',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '单日积分上限',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '周积分奖励',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '排名积分奖励',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '邀请积分奖励',
       dataIndex: '',
       width: 100,
     },
@@ -61,7 +81,7 @@ function Join () {
       render (e) {
 
         return (
-          <Button type="primary">查看明细</Button>
+          <Button type="primary">查看订单</Button>
         )
       }
     },

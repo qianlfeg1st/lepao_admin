@@ -27,16 +27,6 @@ function Login (props) {
 
   const RouteHistory = useHistory()
 
-  useEffect(() => {
-
-    // if (localStorage.getItem('GAdminUserAccount')) {
-
-    //   form.setFieldsValue({'account': localStorage.getItem('GAdminUserAccount')})
-    // }
-
-    // if (props.history.action === 'REPLACE') message.error('登录失效，请重新登录')
-  }, [])
-
   const handleSubmit = async values => {
 
     try {
@@ -47,18 +37,17 @@ function Login (props) {
         ...values,
       })
 
-      sessionStorage.setItem('token', data.token)
-      sessionStorage.setItem('account', data.account)
+      sessionStorage.setItem('accessToken', data.accessToken)
 
       message.success('登录成功')
-      setLoginLoading(false)
 
-      RouteHistory.push('/account')
+      RouteHistory.push('/join')
     } catch (error) {
 
-      setLoginLoading(false)
+      console.error('~~error~~', error)
+    } finally {
 
-      console.error('error', error)
+      setLoginLoading(false)
     }
   }
 
@@ -67,8 +56,8 @@ function Login (props) {
     <div className={ styles.bodyWrap }>
 
       <div className={ `${styles.header} flex hCenter` }>
-        {/* <img className={ styles.header__logo } src={ require(`../../assets/logo.png`) } alt="浙江壳牌燃油" /> */}
-        {/* <p className={ styles.header__name }>浙江壳牌燃油有限公司 - 速车控制台</p> */}
+        <img className={ styles.header__logo } src={ require(`../../assets/logo.png`) } alt="浙江壳牌燃油" />
+        <p className={ styles.header__name }>浙江壳牌燃油有限公司 - 速车控制台</p>
       </div>
 
       <div className={ styles.form }>

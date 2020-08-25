@@ -7,3 +7,18 @@ export const getCompanyList = params => {
     ...params,
   })
 }
+
+// 公司列表
+export const addCompany = params => {
+
+  return axios.get('company/list_company', {
+    ...params,
+  })
+}
+
+export const editCompany = params => {
+
+  return axios.get('company/list_company', {
+    ...params,
+  })
+}

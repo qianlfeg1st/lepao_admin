@@ -74,5 +74,6 @@ module.exports = {
     "no-undef": 0,
     // 禁用dispaly-name
     "react/display-name": 0,
+    "no-constant-condition": 0,
   }
 };

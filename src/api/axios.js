@@ -23,8 +23,7 @@ axios.defaults.baseURL = baseURL[process.env.REACT_APP_ENV]
 // 请求拦截
 axios.interceptors.request.use(config => {
 
-  config.headers.Accept = 'application/json;charset=UTF-8'
-  config.headers.base_access_token = 'eyJhbGciOiJIUzI1NiJ9.CAIQpdmywcsu.aNNSxai6OO7_mAv9h6rtgTkY-iJrSz7VF0B0ZBFBHyw'
+  config.headers['base_access_token'] = sessionStorage.getItem('accessToken')
 
   return config
 }, error => {
