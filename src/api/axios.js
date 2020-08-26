@@ -23,7 +23,8 @@ axios.defaults.baseURL = baseURL[process.env.REACT_APP_ENV]
 // 请求拦截
 axios.interceptors.request.use(config => {
 
-  config.headers['base_access_token'] = sessionStorage.getItem('accessToken')
+  // config.headers['base_access_token'] = sessionStorage.getItem('accessToken')
+  config.headers['base_access_token'] = 'eyJhbGciOiJIUzI1NiJ9.CAIQ68HBkswu.UnXtXck1zBIbn5crth-kdcTC1ZCb85z0fc0KI-Pv9gY'
 
   return config
 }, error => {
@@ -41,6 +42,10 @@ axios.interceptors.response.use(response => {
     sessionStorage.clear()
     window.location.reload()
   }
+
+  if (response.status === 207) message.error(response.data.value || '服务器暂时失联，请稍后再试')
+
+  response.state = response.status === 200
 
   return response
 }, error => {

@@ -1,6 +1,6 @@
 import axios from '@/api/axios'
 
-// 公司列表
+// 企业列表
 export const getCompanyList = params => {
 
   return axios.get('company/list_company', {
@@ -8,17 +8,18 @@ export const getCompanyList = params => {
   })
 }
 
-// 公司列表
-export const addCompany = params => {
+// 企业详情
+export const getCompanyDetail = params => {
 
-  return axios.get('company/list_company', {
+  return axios.get('company/prep_save_company', {
     ...params,
   })
 }
 
-export const editCompany = params => {
+// 新增或编辑企业
+export const addOrEditCompany = params => {
 
-  return axios.get('company/list_company', {
+  return axios.post('company/save_company', {
     ...params,
   })
 }
