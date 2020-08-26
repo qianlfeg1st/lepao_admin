@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Button } from 'antd'
+import { useParams } from 'react-router-dom'
+import { Table, Button, Modal, message } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import api from '@/api'
+import { auditStatus } from '@/stores'
 
 const formItemLayout = {
   labelCol: { span: 5, offset: 2, },
@@ -11,6 +13,7 @@ const formItemLayout = {
 
 function Join () {
 
+  const { companyId } = useParams()
   const [listLoading, setListLoading] = useState(false)
   const [listData, setListData] = useState([])
   const [page, setPage] = useState(0)
@@ -21,59 +24,70 @@ function Join () {
   const listColumns = [
     {
       title: '订单编号',
-      dataIndex: '',
+      dataIndex: 'orderId',
       width: 100,
     },
     {
       title: '兑换时间',
-      dataIndex: '',
+      dataIndex: 'createTimeLabel',
       width: 100,
     },
     {
       title: '消耗积分',
-      dataIndex: '',
+      dataIndex: 'gold',
       width: 100,
     },
     {
       title: '姓名',
-      dataIndex: '',
+      dataIndex: 'nickName',
       width: 100,
     },
     {
       title: '手机号',
-      dataIndex: '',
+      dataIndex: 'phoneNumber',
       width: 100,
     },
     {
       title: '商品名',
-      dataIndex: '',
+      dataIndex: 'goodsName',
       width: 100,
     },
     {
       title: '商品编号',
-      dataIndex: '',
+      dataIndex: 'goodsId',
       width: 100,
     },
     {
       title: '企业采购价',
-      dataIndex: '',
+      dataIndex: 'companyGoodsPrice',
       width: 100,
     },
     {
       title: '企业审核',
-      dataIndex: '',
+      dataIndex: 'auditPass',
       width: 100,
+      render: (e) => (
+        <>{ auditStatus[e] }</>
+      ),
     },
     {
       title: '操作',
       width: 200,
-      render (e) {
+      render ({ orderId, auditPass }) {
 
         return (
           <>
-            <Button className="btn" type="primary">编辑</Button>
-            <Button className="btn" type="danger" onClick={ () => deleted(e) }>移除</Button>
-            <Button className="btn" type="danger" onClick={ () => deleted(e) }>移除并禁入</Button>
+            {
+              auditPass === 'UNRECOGNIZED'
+                ?
+                [
+                  <Button key="pass" className="btn" type="primary" onClick={ () => verifyExchange({ orderId, auditState: 'PBOrderAuditStatePass' }) }>通过</Button>,
+                  <Button key="unpass" className="btn" type="danger" onClick={ () => verifyExchange({ orderId, auditState: 'PBOrderAuditStateUnPass' }) }>拒绝</Button>,
+                  <Button key="back" className="btn" type="primary" onClick={ () => verifyExchange({ orderId, auditState: 'PBOrderAuditStateBack' }) }>回退</Button>,
+                ]
+                :
+                null
+            }
           </>
         )
       }
@@ -82,8 +96,8 @@ function Join () {
 
   useEffect(() => {
 
-    // load()
-  }, [page, size, flag])
+    load()
+  }, [flag])
 
   const load = async () => {
 
@@ -91,17 +105,31 @@ function Join () {
 
       setListLoading(true)
 
-      const { status, data } = await api.staff.getCompanyList({
-        // page,
-        // size,
+      const { state, data } = await api.exchange.getExchangeList({
+        companyId,
+        query: {
+          firstResult: 0,
+          month: 0,
+          nickName: '',
+        },
       })
 
-      if (!status) return
+      if (!state) return
 
-      // setListData(data.data)
-      // setTotal(data.total)
-
-      // dispatch({ type: 'change' })
+      setListData([
+        {
+          "auditPass": "UNRECOGNIZED",
+          "companyGoodsPrice": "string",
+          "createTimeLabel": "string",
+          "gold": 0,
+          "goodsId": 0,
+          "goodsName": "string",
+          "name": "string",
+          "nickName": "string",
+          "orderId": 1,
+          "phoneNumber": "string"
+        }
+      ])
     } catch (error) {
 
       console.error('~~error~~', error)
@@ -109,6 +137,36 @@ function Join () {
 
       setListLoading(false)
     }
+  }
+
+  const verifyExchange = ({ orderId, auditState }) => {
+
+    const content = auditStatus[auditState]
+
+    Modal.confirm({
+      title: '提示',
+      centered: true,
+      content: `确认${content}吗？`,
+      onOk: async () => {
+
+        try {
+
+          const { state } = await api.exchange.verifyExchange({
+            orderId,
+            auditState,
+          })
+
+          if (!state) return
+
+          message.success(`${content}操作成功`)
+
+          setFlag(!flag)
+        } catch (error) {
+
+          console.error('~~error~~', error)
+        }
+      },
+    })
   }
 
   const onCancel = () => {
@@ -163,12 +221,11 @@ function Join () {
   return (
     <>
 
-      {/* 表格 */}
       <Table
         bordered
         className="fixedWidthTable"
         scroll={{ x: 'calc(100vw - 400px)', y: `calc(100vh)` }}
-        rowKey={ e => e.companyId }
+        rowKey={ e => e.orderId }
         loading={ listLoading }
         columns={ listColumns }
         dataSource={ listData }

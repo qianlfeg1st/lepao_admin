@@ -91,7 +91,7 @@ const routerConfig = [
     title: '企业兑换',
   },
   {
-    path: '/exchange/detail',
+    path: '/exchange/:companyId',
     component: ExchangeDetai,
     children: <ExchangeDetai />,
     auth: false,

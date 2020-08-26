@@ -4,11 +4,6 @@ import api from '@/api'
 
 function Join () {
 
-  const joinState = {
-    PBCompanyJoinStateOpen: '开放加入',
-    PBCompanyJoinStateClose: '不开放加入',
-  }
-
   const [listLoading, setListLoading] = useState(false)
   const [listData, setListData] = useState([])
   const [page, setPage] = useState(0)
