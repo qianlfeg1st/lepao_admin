@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Table, Modal, Button, Form, Input, InputNumber, Select, Tag, Upload, Breadcrumb, message, Spin } from 'antd'
 import api from '@/api'
-import { PlusOutlined, LoadingOutlined } from '@ant-design/icons'
+import { PlusOutlined } from '@ant-design/icons'
 import styles from './index.module.scss'
+import { joinState } from '@/stores'
 
 const { Option } = Select
 const tag = ['Tag 1', 'Tag 2', 'Tag 3']
@@ -16,11 +17,6 @@ function Join () {
     labelCol: { span: 5, offset: 2, },
     wrapperCol: { span: 14, },
     labelAlign: 'left',
-  }
-
-  const joinState = {
-    PBCompanyJoinStateOpen: '开放',
-    PBCompanyJoinStateClose: '不开放',
   }
 
   const [ form ] = Form.useForm()

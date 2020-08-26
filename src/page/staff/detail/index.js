@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { Table, Button, Modal, Form, Input, Select, InputNumber } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import api from '@/api'
@@ -11,22 +12,15 @@ const formItemLayout = {
 
 function Join () {
 
-  const [listLoading, setListLoading] = useState(false)
-  const [listData, setListData] = useState([
-    {
-      "companyId": 0,
-      "companyName": "string",
-      "empJoinedTotal": 0,
-      "empJoiningTotal": 0,
-      "empTotal": 0
-    }
-  ])
+  const { companyId } = useParams()
+  const [listLoading, setListLoading] = useState(true)
+  const [listData, setListData] = useState([])
   const [page, setPage] = useState(0)
   const [total, setTotal] = useState(0)
   const [size, setSize] = useState(20)
   const [flag, setFlag] = useState(false)
 
-  const [isEditModel, setEditModel] = useState(!false)
+  const [isEditModel, setEditModel] = useState(false)
   const [ form ] = Form.useForm()
 
   const listColumns = [
@@ -88,8 +82,8 @@ function Join () {
 
   useEffect(() => {
 
-    // load()
-  }, [page, size, flag])
+    load()
+  }, [flag])
 
   const load = async () => {
 
@@ -97,17 +91,14 @@ function Join () {
 
       setListLoading(true)
 
-      const { status, data } = await api.staff.getCompanyList({
-        // page,
-        // size,
+      const { state, data } = await api.staff.getStaffList({
+        firstResult: 0,
+        companyId,
       })
 
-      if (!status) return
+      if (!state) return
 
-      // setListData(data.data)
-      // setTotal(data.total)
-
-      // dispatch({ type: 'change' })
+      setListData(data.items)
     } catch (error) {
 
       console.error('~~error~~', error)

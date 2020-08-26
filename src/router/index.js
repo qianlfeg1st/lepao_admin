@@ -63,7 +63,7 @@ const routerConfig = [
     title: '企业员工',
   },
   {
-    path: '/staff/detail',
+    path: '/staff/:companyId',
     component: StaffDetail,
     children: <StaffDetail />,
     auth: false,

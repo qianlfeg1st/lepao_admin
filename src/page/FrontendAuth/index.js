@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import Admin from './../Admin/index'
 import { Route, Redirect } from 'react-router-dom'
-import checkPath from  './../../utils/checkPath'
 import { RouteConfigContext } from '../../router'
 
 function FrontendAuth (props) {
@@ -13,14 +12,18 @@ function FrontendAuth (props) {
 
   const pathname = location.pathname // 浏览器路由
   const isLogin = sessionStorage.getItem('token')
-  let targetRouterConfig = RouterConfig.find(routeObj => routeObj.path === pathname)
+  const pathnameArr = pathname.split('/')
+  const targetRouterConfig = RouterConfig.find(({ path }) => {
 
+    const pathArr = path.split('/')
 
-  // 路由匹配
-  if (!(targetRouterConfig && checkPath(pathname, targetRouterConfig.path))) {
+    if (pathArr.length !== pathnameArr.length) return false
 
-    targetRouterConfig = undefined
-  }
+    return pathArr.every((item, index) => item === pathnameArr[index] || (pathnameArr[index] && new RegExp('^:.{1,}$').test(item)))
+  })
+
+  // 空路由
+  if (!targetRouterConfig) return <Redirect to="/404" />
 
   // 设置页面标题
   if(targetRouterConfig && 'title' in targetRouterConfig) {

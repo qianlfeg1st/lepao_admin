@@ -1,27 +1,13 @@
 import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Table, Button } from 'antd'
 import api from '@/api'
 
 function Join () {
 
-  const joinState = {
-    PBCompanyJoinStateOpen: '开放加入',
-    PBCompanyJoinStateClose: '不开放加入',
-  }
-
-  const [listLoading, setListLoading] = useState(false)
-  const [listData, setListData] = useState([
-    {
-      "companyId": 0,
-      "companyName": "string",
-      "empJoinedTotal": 0,
-      "empJoiningTotal": 0,
-      "empTotal": 0
-    }
-  ])
-  const [page, setPage] = useState(0)
-  const [total, setTotal] = useState(0)
-  const [size, setSize] = useState(20)
+  const RouteHistory = useHistory()
+  const [listLoading, setListLoading] = useState(true)
+  const [listData, setListData] = useState([])
   const [flag, setFlag] = useState(false)
 
   const listColumns = [
@@ -47,12 +33,12 @@ function Join () {
     },
     {
       title: '已审核确认员工数',
-      dataIndex: '',
+      dataIndex: 'empJoinedTotal',
       width: 100,
     },
     {
       title: '未确认员工数',
-      dataIndex: '',
+      dataIndex: 'empJoiningTotal',
       width: 100,
     },
     {
@@ -61,7 +47,7 @@ function Join () {
       render (e) {
 
         return (
-          <Button type="primary">查看明细</Button>
+          <Button type="primary" onClick={ () => RouteHistory.push(`/staff/${e.companyId}`) }>查看明细</Button>
         )
       }
     },
@@ -69,8 +55,8 @@ function Join () {
 
   useEffect(() => {
 
-    // load()
-  }, [page, size, flag])
+    load()
+  }, [flag])
 
   const load = async () => {
 
@@ -78,17 +64,11 @@ function Join () {
 
       setListLoading(true)
 
-      const { status, data } = await api.staff.getCompanyList({
-        // page,
-        // size,
-      })
+      const { state, data } = await api.staff.getCompanyList()
 
-      if (!status) return
+      if (!state) return
 
-      // setListData(data.data)
-      // setTotal(data.total)
-
-      // dispatch({ type: 'change' })
+      setListData(data)
     } catch (error) {
 
       console.error('~~error~~', error)
@@ -101,7 +81,6 @@ function Join () {
   return (
     <>
 
-      {/* 表格 */}
       <Table
         bordered
         className="fixedWidthTable"
