@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Table, Button, Modal, Form, Input, Select, InputNumber } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-import api from '@/api'
+import { staff } from '@/api'
 
 const formItemLayout = {
   labelCol: { span: 5, offset: 2, },
@@ -91,7 +91,7 @@ function Join () {
 
       setListLoading(true)
 
-      const { state, data } = await api.staff.getStaffList({
+      const { state, data } = await staff.getStaffList({
         firstResult: 0,
         companyId,
       })

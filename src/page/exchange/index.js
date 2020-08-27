@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Table, Button } from 'antd'
-import api from '@/api'
+import { exchange } from '@/api'
 
 function Join () {
 
@@ -54,7 +54,7 @@ function Join () {
 
       setListLoading(true)
 
-      const { state, data } = await api.exchange.getCompanyList()
+      const { state, data } = await exchange.getCompanyList()
 
       if (!state) return
 

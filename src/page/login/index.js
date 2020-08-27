@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 import { Form, Input, Button, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import styles from './index.module.scss'
-import api from '@/api'
+import { common } from '@/api'
 
 const formItemLayout = {
   labelCol: { span: 4 },
@@ -33,7 +33,7 @@ function Login (props) {
 
       setLoginLoading(true)
 
-      const { data } = await api.common.login({
+      const { data } = await common.login({
         ...values,
       })
 

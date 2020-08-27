@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Table, Button, Modal, Form, Input, Select, InputNumber } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-import api from '@/api'
+import { steps } from '@/api'
 
 const formItemLayout = {
   labelCol: { span: 5, offset: 2, },
@@ -23,47 +23,77 @@ function Join () {
 
   const listColumns = [
     {
-      title: '商品编号',
+      title: '企业编号',
       dataIndex: '',
       width: 100,
     },
     {
-      title: '分类',
+      title: '企业名称',
       dataIndex: '',
       width: 100,
     },
     {
-      title: '商品名称',
+      title: '已加入员工数',
       dataIndex: '',
       width: 100,
     },
     {
-      title: '商品标价',
+      title: '1月',
       dataIndex: '',
       width: 100,
     },
     {
-      title: '采购价',
+      title: '2月',
       dataIndex: '',
       width: 100,
     },
     {
-      title: '兑换积分',
+      title: '3月',
       dataIndex: '',
       width: 100,
     },
     {
-      title: '库存数',
+      title: '4月',
       dataIndex: '',
       width: 100,
     },
     {
-      title: '上架时间',
+      title: '5月',
       dataIndex: '',
       width: 100,
     },
     {
-      title: '热门推荐',
+      title: '6月',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '7月',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '8月',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '9月',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '10月',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '11月',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '12月',
       dataIndex: '',
       width: 100,
     },
@@ -94,7 +124,7 @@ function Join () {
 
       setListLoading(true)
 
-      const { status, data } = await api.staff.getCompanyList({
+      const { status, data } = await steps.getCompanyList({
         // page,
         // size,
       })

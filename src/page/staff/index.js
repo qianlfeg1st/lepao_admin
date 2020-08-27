@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Table, Button } from 'antd'
-import api from '@/api'
+import { staff } from '@/api'
 
 function Join () {
 
@@ -64,7 +64,7 @@ function Join () {
 
       setListLoading(true)
 
-      const { state, data } = await api.staff.getCompanyList()
+      const { state, data } = await staff.getCompanyList()
 
       if (!state) return
 

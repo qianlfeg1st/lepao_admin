@@ -2,28 +2,29 @@ import React from 'react'
 import { HashRouter as Router, Switch } from 'react-router-dom'
 
 // 引入路由
-import FrontendAuth from './../page/FrontendAuth/index'
-import NotFound from './../page/notFound/index'
-import Login from './../page/login/index'
-import Join from './../page/join/index'
+import FrontendAuth from './../page/FrontendAuth/'
+import NotFound from './../page/notFound/'
+import Login from './../page/login/'
 
-import Staff from './../page/staff/index'
-import StaffDetail from './../page/staff/detail/index'
+import Join from './../page/join/'
 
-import Prize from './../page/prize/index'
-import PrizeDetai from './../page/prize/detail/index'
+import Staff from './../page/staff/'
+import StaffDetail from './../page/staff/detail/'
 
-import Exchange from './../page/exchange/index'
-import ExchangeDetai from './../page/exchange/detail/index'
+import Prize from './../page/prize/'
+import PrizeDetail from './../page/prize/detail/'
 
-import Point from './../page/point/index'
-import PointDetai from './../page/point/detail/index'
+import Exchange from './../page/exchange/'
+import ExchangeDetail from './../page/exchange/detail/'
 
-// import Equipment from './../page/equipment/index'
-// import Order from './../page/order/index'
+import Point from './../page/point/'
 
-// 用户管理
-// import UserAlipay from './../page/user/alipay'
+import Steps from './../page/steps/'
+import StepsDetail from './../page/steps/detail/'
+
+import User from './../page/user/'
+import Goods from './../page/goods/'
+
 
 // 定义routes
 const routerConfig = [
@@ -52,64 +53,97 @@ const routerConfig = [
     path: '/join',
     component: Join,
     children: <Join />,
-    auth: false,
+    auth: true,
     title: '企业入驻',
+    navMenu: 'company',
   },
   {
     path: '/staff',
     component: Staff,
     children: <Staff />,
-    auth: false,
+    auth: true,
     title: '企业员工',
+    navMenu: 'company',
   },
   {
     path: '/staff/:companyId',
     component: StaffDetail,
     children: <StaffDetail />,
-    auth: false,
+    auth: true,
     title: '企业员工',
+    navMenu: 'company',
   },
   {
     path: '/prize',
     component: Prize,
     children: <Prize />,
-    auth: false,
+    auth: true,
     title: '企业奖品',
+    navMenu: 'company',
   },
   {
     path: '/prize/detail',
-    component: PrizeDetai,
-    children: <PrizeDetai />,
-    auth: false,
+    component: PrizeDetail,
+    children: <PrizeDetail />,
+    auth: true,
     title: '企业奖品',
+    navMenu: 'company',
   },
   {
     path: '/exchange',
     component: Exchange,
     children: <Exchange />,
-    auth: false,
+    auth: true,
     title: '企业兑换',
+    navMenu: 'company',
   },
   {
     path: '/exchange/:companyId',
-    component: ExchangeDetai,
-    children: <ExchangeDetai />,
-    auth: false,
+    component: ExchangeDetail,
+    children: <ExchangeDetail />,
+    auth: true,
     title: '企业兑换',
+    navMenu: 'company',
   },
   {
     path: '/point',
     component: Point,
     children: <Point />,
-    auth: false,
+    auth: true,
     title: '企业积分',
+    navMenu: 'company',
   },
   {
-    path: '/point/detail',
-    component: PointDetai,
-    children: <PointDetai />,
-    auth: false,
-    title: '企业积分',
+    path: '/steps',
+    component: Steps,
+    children: <Steps />,
+    auth: true,
+    title: '步数统计',
+    navMenu: 'company',
+  },
+  {
+    path: '/steps/:companyId',
+    component: StepsDetail,
+    children: <StepsDetail />,
+    auth: true,
+    title: '步数统计',
+    navMenu: 'company',
+  },
+  {
+    path: '/user',
+    component: User,
+    children: <User />,
+    auth: true,
+    title: '用户管理',
+    navMenu: 'user',
+  },
+  {
+    path: '/goods',
+    component: Goods,
+    children: <Goods />,
+    auth: true,
+    title: '商品库',
+    navMenu: 'goods',
   },
   /*
   {

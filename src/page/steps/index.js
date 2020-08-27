@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Table, Button } from 'antd'
-import { prize } from '@/api'
+import { steps } from '@/api'
 
 function Join () {
 
@@ -14,31 +14,90 @@ function Join () {
   const listColumns = [
     {
       title: '企业编号',
-      dataIndex: 'companyId',
-      width: 100,
-    },
-    {
-      title: '企业名称',
-      dataIndex: 'companyName',
-      width: 100,
-    },
-    {
-      title: '已选商品',
       dataIndex: '',
       width: 100,
     },
     {
-      title: '推荐的热门商品',
+      title: '企业名称',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '已加入员工数',
+      dataIndex: '',
+      width: 120,
+    },
+    {
+      title: '1月',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '2月',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '3月',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '4月',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '5月',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '6月',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '7月',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '8月',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '9月',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '10月',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '11月',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '12月',
       dataIndex: '',
       width: 100,
     },
     {
       title: '操作',
-      width: 200,
+      width: 100,
       render (e) {
 
         return (
-          <Button type="primary">编辑奖品</Button>
+          <>
+            <Button className="btn" type="primary">编辑</Button>
+            <Button className="btn" type="danger" onClick={ () => deleted(e) }>移除</Button>
+            <Button className="btn" type="danger" onClick={ () => deleted(e) }>移除并禁入</Button>
+          </>
         )
       }
     },
@@ -55,7 +114,7 @@ function Join () {
 
       setListLoading(true)
 
-      const { status, data } = await prize.getCompanyList({
+      const { status, data } = await steps.getCompanyList({
         // page,
         // size,
       })

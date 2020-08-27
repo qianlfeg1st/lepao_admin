@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Table, Button, Modal, Form, Input, Select, InputNumber } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-import api from '@/api'
+import { prize } from '@/api'
 
 const formItemLayout = {
   labelCol: { span: 5, offset: 2, },
@@ -94,7 +94,7 @@ function Join () {
 
       setListLoading(true)
 
-      const { status, data } = await api.staff.getCompanyList({
+      const { status, data } = await prize.getCompanyList({
         // page,
         // size,
       })

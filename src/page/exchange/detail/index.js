@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Table, Button, Modal, message } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-import api from '@/api'
+import { exchange } from '@/api'
 import { auditStatus } from '@/stores'
 
 const formItemLayout = {
@@ -105,7 +105,7 @@ function Join () {
 
       setListLoading(true)
 
-      const { state, data } = await api.exchange.getExchangeList({
+      const { state, data } = await exchange.getExchangeList({
         companyId,
         query: {
           firstResult: 0,

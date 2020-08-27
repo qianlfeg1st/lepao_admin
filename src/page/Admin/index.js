@@ -2,13 +2,13 @@ import React, { useState, useEffect, useContext, useReducer } from 'react'
 import { useHistory, withRouter } from 'react-router-dom'
 import { RouteConfigContext } from '../../router'
 import { Row, Col, Menu, Dropdown } from 'antd'
-import { UserOutlined, DownOutlined } from '@ant-design/icons'
+import { UserOutlined, HddOutlined, AuditOutlined, DollarOutlined, GiftOutlined, TransactionOutlined, TeamOutlined, UserAddOutlined, DownOutlined } from '@ant-design/icons'
 import styles from './index.module.scss'
 import 'moment/locale/zh-cn' // 配置moment为中文
-import api from '@/api'
+import { common } from '@/api'
 import * as reducer from '../../reducer'
 
-const { SubMenu } = Menu
+// const { SubMenu } = Menu
 
 function User (props) {
 
@@ -23,7 +23,8 @@ function User (props) {
 
   // console.log('RouteConfig', RouteConfig)
 
-  const [selectedKeys, setSelectedKeys] = useState('/join')
+  const [selectedKeys, setSelectedKeys] = useState(location.pathname)
+  const [current, setCurrent] = useState('company')
 
   const [
     state,
@@ -37,18 +38,43 @@ function User (props) {
 
     // console.log('~~~~useEffect~~~~', pathname, selectedKeys, typeof selectedKeys)
 
-    if (pathname) {
+    if (!pathname) return
 
-      const targetRoute = RouteConfig.find(item => item.path === pathname)
+    const targetRoute = RouteConfig.find(item => item.path === pathname)
 
-      if (targetRoute) {
+    console.log('targetRoute', targetRoute)
 
-        setSelectedKeys(pathname)
-      }
+    if (targetRoute) {
 
-      setRouteChildren(targetRoute)
+      setSelectedKeys(targetRoute.path)
+      setCurrent(targetRoute.navMenu)
     }
-  }, [selectedKeys])
+
+    setRouteChildren(targetRoute)
+  }, [selectedKeys, current])
+
+  // useEffect(() => {
+
+
+  // }, current)
+
+  const handleClick = e => {
+
+    console.log('handleClick', e)
+    // history.push(`/${e.keyPath[0]}`)
+
+    if (e.key === 'company') {
+
+      history.push('/join')
+    } else if (e.key === 'goods') {
+
+      history.push('/goods')
+    } else if (e.key === 'user') {
+
+      history.push('/user')
+    }
+    setCurrent(e.key)
+  }
 
   const handleRouteClick = e => {
 
@@ -61,7 +87,7 @@ function User (props) {
 
     try {
 
-      const { status } = await api.logout()
+      const { status } = await common.logout()
 
       if (status) {
 
@@ -86,9 +112,29 @@ function User (props) {
     <div className={ styles.pageWrapper }>
 
       <Row className={ styles.header } id="header">
-        <Col span={ 18 } className={ styles.header__left }>
+        <Col span={ 6 } className={ styles.header__left }>
           <img className={ styles.header__logo } src={ require(`../../assets/logo.png`) } alt="" />
           <div className={ styles.header__name }>控制台</div>
+        </Col>
+        <Col span={ 12 } className={ styles.header__center }>
+          {/* <img className={ styles.header__logo } src={ require(`../../assets/logo.png`) } alt="" />
+          <div className={ styles.header__name }>控制台</div> */}
+          <Menu onClick={ handleClick } selectedKeys={ [current] } mode="horizontal" style={{
+            background: 'transparent',
+            color: '#fff',
+            fontSize: '24px',
+            border: 0,
+          }}>
+            <Menu.Item key="company" style={{ border: 0, }}>
+              <span className={ current === 'company' ? styles.active : styles.unActive }>企业管理</span>
+            </Menu.Item>
+            <Menu.Item key="goods" style={{ border: 0, }}>
+              <span className={ current === 'goods' ? styles.active : styles.unActive }>商品管理</span>
+            </Menu.Item>
+            <Menu.Item key="user" style={{ border: 0, }}>
+              <span className={ current === 'user' ? styles.active : styles.unActive }>用户管理</span>
+            </Menu.Item>
+          </Menu>
         </Col>
         <Col span={ 6 } className={ styles.header__right }>
           <Dropdown overlay={ menu } trigger={['click']}>
@@ -100,18 +146,53 @@ function User (props) {
       </Row>
 
       <Row className={ styles.body }>
-        <Col span={ 3 } className={ styles.aside }>
-          <Menu onClick={ handleRouteClick } mode="inline" selectedKeys={ selectedKeys }>
 
-            <Menu.Item key="/join" onClick={ () => history.push('/join') }>企业入驻</Menu.Item>
+        {
+          (current === 'company') && (
+            <Col span={ 2 } className={ styles.aside }>
+              <Menu onClick={ handleRouteClick } mode="inline" selectedKeys={ selectedKeys }>
 
-            <Menu.Item key="/staff" onClick={ () => history.push('/staff') }>企业员工</Menu.Item>
+                <Menu.Item icon={ <UserAddOutlined /> } key="/join" onClick={ () => history.push('/join') }>企业入驻</Menu.Item>
 
-          </Menu>
-        </Col>
+                <Menu.Item icon={ <TeamOutlined /> } key="/staff" onClick={ () => history.push('/staff') }>企业员工</Menu.Item>
+
+                <Menu.Item icon={ <GiftOutlined /> } key="/prize" onClick={ () => history.push('/prize') }>企业奖品</Menu.Item>
+
+                <Menu.Item icon={ <TransactionOutlined /> } key="/exchange" onClick={ () => history.push('/exchange') }>企业兑换</Menu.Item>
+
+                <Menu.Item icon={ <DollarOutlined /> } key="/point" onClick={ () => history.push('/point') }>企业积分</Menu.Item>
+
+                <Menu.Item icon={ <AuditOutlined /> } key="/steps" onClick={ () => history.push('/steps') }>步数统计</Menu.Item>
+
+              </Menu>
+            </Col>
+          )
+        }
+
+        {
+          (current === 'goods') && (
+            <Col span={ 2 } className={ styles.aside }>
+              <Menu onClick={ handleRouteClick } mode="inline" selectedKeys={ selectedKeys }>
+
+                <Menu.Item icon={ <HddOutlined /> } key="/goods" onClick={ () => history.push('/goods') }>商品库</Menu.Item>
+              </Menu>
+            </Col>
+          )
+        }
+
+        {
+          (current === 'user') && (
+            <Col span={ 2 } className={ styles.aside }>
+              <Menu onClick={ handleRouteClick } mode="inline" selectedKeys={ selectedKeys }>
+
+                <Menu.Item icon={ <UserOutlined /> } key="/user" onClick={ () => history.push('/user') }>用户列表</Menu.Item>
+              </Menu>
+            </Col>
+          )
+        }
 
         <AdminContext.Provider value={ [state.height, dispatch] }>
-          <Col span={ 21 } className={ styles.main } id="main">{ routeChildren?.children }</Col>
+          <Col span={ 22 } className={ styles.main } id="main">{ routeChildren?.children }</Col>
         </AdminContext.Provider>
       </Row>
     </div>

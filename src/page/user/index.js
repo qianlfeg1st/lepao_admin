@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Table, Button, Modal, Spin, Form, Input } from 'antd'
-import { point } from '@/api'
+import { user } from '@/api'
 
 const formItemLayout = {
   labelCol: { span: 5, offset: 2, },
@@ -12,7 +12,7 @@ function Join () {
 
   const [form] = Form.useForm()
   const [listLoading, setListLoading] = useState(false)
-  const [companyModal, setCompanyModal] = useState(false)
+  const [userModal, setUserModal] = useState(false)
   const [detailLoading, setDetailLoading] = useState(false)
   const [listData, setListData] = useState([
     {
@@ -26,52 +26,47 @@ function Join () {
 
   const listColumns = [
     {
-      title: '企业编号',
-      dataIndex: 'companyId',
-      width: 100,
-    },
-    {
-      title: '企业名称',
-      dataIndex: 'companyName',
-      width: 100,
-    },
-    {
-      title: '已发放积分',
+      title: '用户编号',
       dataIndex: '',
       width: 100,
     },
     {
-      title: '已兑换积分',
+      title: '初次授权时间',
       dataIndex: '',
       width: 100,
     },
     {
-      title: '人均积分持有数',
+      title: '步数授权',
       dataIndex: '',
       width: 100,
     },
     {
-      title: '步数积分比',
+      title: '最后登录时间',
       dataIndex: '',
       width: 100,
     },
     {
-      title: '单日积分上限',
+      title: '昵称',
       dataIndex: '',
       width: 100,
     },
     {
-      title: '周积分奖励',
+      title: '手机号',
       dataIndex: '',
       width: 100,
     },
     {
-      title: '排名积分奖励',
+      title: '活跃天数',
       dataIndex: '',
       width: 100,
     },
     {
-      title: '邀请积分奖励',
+      title: '收寄地址',
+      dataIndex: '',
+      width: 100,
+    },
+    {
+      title: '企业',
       dataIndex: '',
       width: 100,
     },
@@ -81,7 +76,7 @@ function Join () {
       render (e) {
 
         return (
-          <Button type="primary" onClick={ () => getCompanyDetail(e.companyId) }>编辑</Button>
+          <Button type="primary" onClick={ () => getUserDetail(e.companyId) }>编辑</Button>
         )
       }
     },
@@ -92,13 +87,13 @@ function Join () {
     // load()
   }, [flag])
 
-  const getCompanyDetail = async companyId => {
+  const getUserDetail = async companyId => {
 
     try {
 
-      setCompanyModal(true)
+      setUserModal(true)
 
-      const { state, data } = await point.getCompanyDetail({
+      const { state, data } = await user.getUserDetail({
         companyId,
       })
 
@@ -122,7 +117,7 @@ function Join () {
 
       setListLoading(true)
 
-      const { state, data } = await point.getCompanyList({
+      const { state, data } = await api.staff.getCompanyList({
         // page,
         // size,
       })
@@ -159,40 +154,35 @@ function Join () {
       />
 
       <Modal
-        visible={ companyModal }
+        visible={ userModal }
         title="编辑"
-        onCancel={ () => ( setAddCompanyModal(false), form.resetFields() ) }
+        onCancel={ () => ( setUserModal(false), form.resetFields() ) }
         onOk={ null }
         maskClosable={ false }
         centered
         width="40vw"
         footer={[
           <Button form="addForm" key="save" type="primary" htmlType="submit" size="default">确定</Button>,
-          <Button key="cancel" type="default" size="default" onClick={ () => ( setAddCompanyModal(false), form.resetFields() ) }>取消</Button>,
+          <Button key="cancel" type="default" size="default" onClick={ () => ( setUserModal(false), form.resetFields() ) }>取消</Button>,
         ]}
       >
         <Spin spinning={ detailLoading }>
           <Form id="form" form={ form } { ...formItemLayout } onFinish={ submit }>
-            <Form.Item label="步数积分比" name="1" rules={[{required: true, message: '请输入步数积分比'}]}>
-              <Input size="large" placeholder="请输入步数积分比" />
+            <Form.Item label="昵称" name="1" rules={[{required: true, message: '请输入昵称'}]}>
+              <Input size="large" placeholder="请输入昵称" />
             </Form.Item>
 
-            <Form.Item label="单日积分上限" name="2" rules={[{required: true, message: '请输入单日积分上限'}]}>
-              <Input size="large" placeholder="请输入单日积分上限" />
+            <Form.Item label="手机号" name="2" rules={[{required: true, message: '请输入手机号'}]}>
+              <Input size="large" placeholder="请输入手机号" />
             </Form.Item>
 
-            <Form.Item label="周积分奖励" name="3" rules={[{required: true, message: '请输入周积分奖励'}]}>
-              <Input size="large" placeholder="请输入周积分奖励" />
+            <Form.Item label="收寄地址" name="3" rules={[{required: true, message: '请输入收寄地址'}]}>
+              <Input size="large" placeholder="请输入收寄地址" />
             </Form.Item>
 
-            <Form.Item label="排名积分奖励" name="4" rules={[{required: true, message: '请输入排名积分奖励'}]}>
+            {/* <Form.Item label="企业" name="4" rules={[{required: true, message: '请输入排名积分奖励'}]}>
               <Input size="large" placeholder="请输入排名积分奖励" />
-            </Form.Item>
-
-            <Form.Item label="邀请积分奖励" name="5" rules={[{required: true, message: '请输入邀请积分奖励'}]}>
-              <Input size="large" placeholder="请输入邀请积分奖励" />
-            </Form.Item>
-
+            </Form.Item> */}
           </Form>
         </Spin>
       </Modal>

@@ -11,7 +11,8 @@ function FrontendAuth (props) {
   const RouterConfig = useContext(RouteConfigContext)
 
   const pathname = location.pathname // 浏览器路由
-  const isLogin = sessionStorage.getItem('token')
+  // const isLogin = sessionStorage.getItem('token')
+  const isLogin = true
   const pathnameArr = pathname.split('/')
   const targetRouterConfig = RouterConfig.find(({ path }) => {
 

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Table, Modal, Button, Form, Input, InputNumber, Select, Tag, Upload, Breadcrumb, message, Spin } from 'antd'
-import api from '@/api'
+import { join } from '@/api'
 import { PlusOutlined } from '@ant-design/icons'
 import styles from './index.module.scss'
 import { joinState } from '@/stores'
 
 const { Option } = Select
-const tag = ['Tag 1', 'Tag 2', 'Tag 3']
 let inputDom = null
 let type = ''
 let imageUrl = ''
@@ -22,7 +21,7 @@ function Join () {
   const [ form ] = Form.useForm()
   const [addCompanyModal, setAddCompanyModal] = useState(false)
   const [listLoading, setListLoading] = useState(true)
-  const [detailLoading, setdetailLoading] = useState(true)
+  const [detailLoading, setDetailLoading] = useState(true)
   const [listData, setListData] = useState([])
   const [flag, setFlag] = useState(false)
   const [inputVisible, setInputVisible] = useState(false)
@@ -89,7 +88,7 @@ function Join () {
       type = 'edit'
       setAddCompanyModal(true)
 
-      const { state, data } = await api.join.getCompanyDetail({
+      const { state, data } = await join.getCompanyDetail({
         companyId,
       })
 
@@ -103,7 +102,7 @@ function Join () {
       console.error('~~error~~', error)
     } finally {
 
-      setdetailLoading(false)
+      setDetailLoading(false)
     }
   }
 
@@ -113,7 +112,7 @@ function Join () {
 
       setListLoading(true)
 
-      const { state, data } = await api.join.getCompanyList()
+      const { state, data } = await join.getCompanyList()
 
       if (!state) return
 
@@ -146,7 +145,7 @@ function Join () {
 
         try {
 
-          const { state } = await api.join.addOrEditCompany({
+          const { state } = await join.addOrEditCompany({
             ...values,
             department: undefined,
             deptNames: department,
@@ -255,7 +254,7 @@ function Join () {
               <Input size="large" placeholder="请输入企业名称" />
             </Form.Item>
 
-            <Form.Item label="企业LOGO" name="logo" hasFeedback help="Should be combination of numbers & alphabets" validateStatus="error">
+            <Form.Item label="企业LOGO" name="logo" rules={[{required: true, message: '请输上传企业LOGO'}]}>
               <Upload
                 fileList={ [] }
                 name="avatar"
@@ -317,7 +316,6 @@ function Join () {
             </Form.Item>
           </Form>
         </Spin>
-
       </Modal>
 
     </>
