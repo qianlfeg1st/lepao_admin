@@ -1,23 +1,28 @@
-import React, { useState, useEffect, useContext, useReducer } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useHistory, withRouter } from 'react-router-dom'
-import { RouteConfigContext } from '../../router'
+import { RouteConfigContext } from '@/router'
 import { Row, Col, Menu, Dropdown } from 'antd'
 import { UserOutlined, HddOutlined, AuditOutlined, DollarOutlined, GiftOutlined, TransactionOutlined, TeamOutlined, UserAddOutlined, DownOutlined } from '@ant-design/icons'
 import styles from './index.module.scss'
 import 'moment/locale/zh-cn' // 配置moment为中文
 import { common } from '@/api'
-import * as reducer from '../../reducer'
 
 // const { SubMenu } = Menu
 
-function User (props) {
+const topMenu = {
+  company: '/join',
+  goods: '/goods',
+  user: '/user'
+}
+
+function Admin (props) {
+
+  // console.log('Admin-props', props)
 
   const history = useHistory()
 
-  const { location, targetRouterConfig, } = props
+  const { location, children } = props
 
-  // 获取父组件中匹配到的路由对象
-  const [routeChildren, setRouteChildren] = useState(targetRouterConfig)
   // 获取全部路由对象
   const RouteConfig = useContext(RouteConfigContext)
 
@@ -25,11 +30,6 @@ function User (props) {
 
   const [selectedKeys, setSelectedKeys] = useState(location.pathname)
   const [current, setCurrent] = useState('company')
-
-  const [
-    state,
-    dispatch
-  ] = useReducer(reducer.reducer, reducer.initialState)
 
   useEffect(() => {
 
@@ -42,37 +42,26 @@ function User (props) {
 
     const targetRoute = RouteConfig.find(item => item.path === pathname)
 
-    console.log('targetRoute', targetRoute)
+    // console.log('@@targetRoute@@', targetRoute)
 
     if (targetRoute) {
 
       setSelectedKeys(targetRoute.path)
       setCurrent(targetRoute.navMenu)
+    } else {
+
+      setSelectedKeys()
     }
-
-    setRouteChildren(targetRoute)
   }, [selectedKeys, current])
-
-  // useEffect(() => {
-
-
-  // }, current)
 
   const handleClick = e => {
 
     console.log('handleClick', e)
+
     // history.push(`/${e.keyPath[0]}`)
 
-    if (e.key === 'company') {
+    history.push(topMenu[e.key])
 
-      history.push('/join')
-    } else if (e.key === 'goods') {
-
-      history.push('/goods')
-    } else if (e.key === 'user') {
-
-      history.push('/user')
-    }
     setCurrent(e.key)
   }
 
@@ -113,8 +102,8 @@ function User (props) {
 
       <Row className={ styles.header } id="header">
         <Col span={ 6 } className={ styles.header__left }>
-          <img className={ styles.header__logo } src={ require(`../../assets/logo.png`) } alt="" />
-          <div className={ styles.header__name }>控制台</div>
+          {/* <img className={ styles.header__logo } src={ require(`../../assets/logo.png`) } alt="" /> */}
+          {/* <div className={ styles.header__name }>控制台</div> */}
         </Col>
         <Col span={ 12 } className={ styles.header__center }>
           {/* <img className={ styles.header__logo } src={ require(`../../assets/logo.png`) } alt="" />
@@ -191,14 +180,10 @@ function User (props) {
           )
         }
 
-        <AdminContext.Provider value={ [state.height, dispatch] }>
-          <Col span={ 22 } className={ styles.main } id="main">{ routeChildren?.children }</Col>
-        </AdminContext.Provider>
+        <Col span={ 22 } className={ styles.main } id="main">{ children }</Col>
       </Row>
     </div>
   )
 }
 
-export const AdminContext = React.createContext()
-
-export default withRouter(User)
+export default withRouter(Admin)

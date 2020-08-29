@@ -5,44 +5,37 @@ import { RouteConfigContext } from '../../router'
 
 function FrontendAuth (props) {
 
-  const { location } = props
+  // 路由配置
+  const routerConfig = useContext(RouteConfigContext)
+  // 当前访问的路由
+  const pathname = props.location.pathname.split('/')
 
-  // 获取全部路由
-  const RouterConfig = useContext(RouteConfigContext)
-
-  const pathname = location.pathname // 浏览器路由
-  // const isLogin = sessionStorage.getItem('token')
-  const isLogin = true
-  const pathnameArr = pathname.split('/')
-  const targetRouterConfig = RouterConfig.find(({ path }) => {
+  // 路由匹配
+  const targetRouterConfig = routerConfig.find(({ path }) => {
 
     const pathArr = path.split('/')
 
-    if (pathArr.length !== pathnameArr.length) return false
+    if (pathArr.length !== pathname.length) return false
 
-    return pathArr.every((item, index) => item === pathnameArr[index] || (pathnameArr[index] && new RegExp('^:.{1,}$').test(item)))
+    return pathArr.every((item, index) => item === pathname[index] || (pathname[index] && new RegExp('^:.{1,}$').test(item)))
   })
 
-  // 空路由
-  if (!targetRouterConfig) return <Redirect to="/404" />
+  // console.log('~~FrontendAuth-targetRouterConfig~~', targetRouterConfig)
 
-  // 设置页面标题
-  if(targetRouterConfig && 'title' in targetRouterConfig) {
+  if (targetRouterConfig) {
 
-    document.title=targetRouterConfig.title
+    // 设置页面标题
+    if ('title' in targetRouterConfig) document.title = targetRouterConfig.title
+
+    // 不需要登录的页面
+    if (!targetRouterConfig.auth) return <Route exact path={ targetRouterConfig.path } component={ targetRouterConfig.component } />
+  } else {
+
+    return <Redirect to="/404" />
   }
 
-  // 找不到页面
-  if (!targetRouterConfig) return <Redirect to="/404" />
-
-  // 进入不需要验证的页面
-  if(targetRouterConfig && !targetRouterConfig.auth) {
-
-    return <Route exact path={ targetRouterConfig.path } component={ targetRouterConfig.component } />
-  }
-
-  // 需要验证登录
-  if (isLogin) {
+  // 已登录
+  if (sessionStorage.getItem('token') || true) {
 
     return (
       <Route path="/" render={ () =>
@@ -54,15 +47,9 @@ function FrontendAuth (props) {
     )
   } else {
 
-    if (targetRouterConfig && targetRouterConfig.auth) {
-
-      return <Redirect to="/login" />
-    } else {
-
-      return <Redirect to="/404" />
-    }
-
+    return <Redirect to="/login" />
   }
+
 }
 
 export default FrontendAuth

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Table, Button, Modal, Form, Input, Select, InputNumber } from 'antd'
+import { Table, Button, Modal, Form, Input, Select, InputNumber, Spin } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { staff } from '@/api'
 
@@ -10,29 +10,29 @@ const formItemLayout = {
   labelAlign: 'left',
 }
 
-function Join () {
+function StaffDetail () {
 
   const { companyId } = useParams()
   const [listLoading, setListLoading] = useState(true)
+  const [detailLoading, setDetailLoading] = useState(true)
   const [listData, setListData] = useState([])
-  const [page, setPage] = useState(0)
-  const [total, setTotal] = useState(0)
-  const [size, setSize] = useState(20)
   const [flag, setFlag] = useState(false)
+  const [deptNameSelect, setDeptNameSelect] = useState([])
+  const [roleSelect, setRoleSelect] = useState([])
 
-  const [isEditModel, setEditModel] = useState(false)
+  const [editModel, setEditModel] = useState(false)
   const [ form ] = Form.useForm()
 
   const listColumns = [
     {
-      title: '员工编号',
-      dataIndex: '',
-      width: 100,
+      title: '编号',
+      dataIndex: 'empId',
+      width: 60,
     },
     {
       title: '加入时间',
-      dataIndex: '',
-      width: 100,
+      dataIndex: 'joinTime',
+      width: 120,
     },
     {
       title: '所属部门',
@@ -41,39 +41,66 @@ function Join () {
     },
     {
       title: '昵称',
-      dataIndex: '',
+      dataIndex: 'nickName',
       width: 100,
     },
     {
       title: '手机号',
-      dataIndex: '',
+      dataIndex: 'phoneNumber',
       width: 100,
     },
     {
-      title: '授权验证时间',
+      title: '授权验证手机时间',
       dataIndex: '',
-      width: 100,
+      width: 120,
     },
     {
       title: '验证状态',
-      dataIndex: '',
+      dataIndex: 'joined',
+      width: 100,
+      render: (e) => (
+        <>{ e ? '已验证' : '未验证' }</>
+      ),
+    },
+    {
+      title: '禁用状态',
+      dataIndex: 'locked',
+      width: 100,
+      render: (e) => (
+        <>{ e ? '已禁用' : '未禁用' }</>
+      ),
+    },
+    {
+      title: '角色',
+      dataIndex: 'roleName',
       width: 100,
     },
     {
       title: '剩余积分',
-      dataIndex: '',
+      dataIndex: 'score',
       width: 100,
     },
     {
       title: '操作',
-      width: 200,
+      width: 220,
       render (e) {
 
         return (
           <>
-            <Button className="btn" type="primary">编辑</Button>
-            <Button className="btn" type="danger" onClick={ () => deleted(e) }>移除</Button>
-            <Button className="btn" type="danger" onClick={ () => deleted(e) }>移除并禁入</Button>
+            <Button className="btn" type="primary" onClick={ () => {
+
+              getStaffDetail(e.empId)
+            } }>编辑</Button>
+            {
+              e.locked
+                ?
+                <Button className="btn" type="primary" onClick={ () => deleted(e) }>撤销</Button>
+                :
+                <>
+                  <Button className="btn" type="danger" onClick={ () => deleted(e) }>移除</Button>
+                  <Button className="btn" type="danger" onClick={ () => deleted(e) }>移除并禁入</Button>
+                </>
+            }
           </>
         )
       }
@@ -84,6 +111,39 @@ function Join () {
 
     load()
   }, [flag])
+
+  const submit = values => {
+
+    console.log('~~values~~', values)
+
+    Modal.confirm({
+      title: '提示',
+      centered: true,
+      content: '确认编辑吗？',
+      onOk: async () => {
+
+        try {
+
+          const { state } = await staff.editStaffDetail({
+            ...values,
+          })
+
+          if (!state) return
+
+          // message.success(`${content}成功`)
+
+          // setAddCompanyModal(false)
+
+          // setFlag(!flag)
+
+          // form.resetFields()
+        } catch (error) {
+
+          console.error('~~error~~', error)
+        }
+      },
+    })
+  }
 
   const load = async () => {
 
@@ -108,16 +168,38 @@ function Join () {
     }
   }
 
+  const getStaffDetail = async empId => {
+
+    try {
+
+      setEditModel(true)
+
+      const { state, data } = await staff.getStaffDetail({
+        empId,
+      })
+
+      if (!state) return
+
+      setDeptNameSelect(data.deptNameSelect)
+      setRoleSelect(data.roleSelect)
+
+      form.setFieldsValue({
+        ...data,
+      })
+    } catch (error) {
+
+      console.error('~~error~~', error)
+    } finally {
+
+      setDetailLoading(false)
+    }
+  }
+
   const onCancel = () => {
 
     setEditModel(false)
 
     form.resetFields()
-  }
-
-  const submit = async values => {
-
-    console.log()
   }
 
   const deleted = e => {
@@ -165,7 +247,7 @@ function Join () {
         bordered
         className="fixedWidthTable"
         scroll={{ x: 'calc(100vw - 400px)', y: `calc(100vh)` }}
-        rowKey={ e => e.companyId }
+        rowKey={ e => e.empId }
         loading={ listLoading }
         columns={ listColumns }
         dataSource={ listData }
@@ -173,7 +255,7 @@ function Join () {
       />
 
       <Modal
-        visible={ isEditModel }
+        visible={ editModel }
         title="编辑员工信息"
         onCancel={ onCancel }
         onOk={ null }
@@ -181,55 +263,47 @@ function Join () {
         centered
         width="40vw"
         footer={[
-          // <Button form="addForm" key="save" type="primary" htmlType="submit" size="default">确定</Button>,
+          <Button form="edit" key="save" type="primary" htmlType="submit" size="default">确定</Button>,
           <Button key="cancel" type="default" size="default" onClick={ onCancel }>取消</Button>,
         ]}
       >
-        <Form id="addForm" form={ form } { ...formItemLayout } onFinish={ submit }>
-          <Form.Item label="所属企业" name="companyName">
-            <Input size="large" disabled />
-          </Form.Item>
+        <Spin spinning={ detailLoading }>
+          <Form id="edit" form={ form } { ...formItemLayout } onFinish={ submit }>
+            <Form.Item label="所属企业" name="companyName">
+              <Input size="large" disabled />
+            </Form.Item>
 
-          <Form.Item label="所属部门" name="3" rules={[{ required: true, message: '请选择所属部门' }]}>
-            <Select placeholder="请选择所属部门" size="large">
-              { Object.keys([1, 2, 3]).map(key => <Select.Option key={ key } value={ key }>{ key }</Select.Option>) }
-            </Select>
-          </Form.Item>
+            <Form.Item label="昵称" name="nickName" rules={[{ required: true, message: '请输入昵称' }]}>
+              <Input size="large" />
+            </Form.Item>
 
-          <Form.Item label="昵称" name="1" rules={[{ required: true, message: '请输入昵称' }]}>
-            <Input size="large" placeholder="请输入昵称" />
-          </Form.Item>
+            <Form.Item label="剩余积分" name="score" rules={[{ required: true, message: '请输入剩余积分' }]}>
+              <InputNumber size="large" style={{ width: '100%' }} maxLength="11" />
+            </Form.Item>
 
-          <Form.Item label="手机号" name="phone" rules={[{ required: true, message: '请输入手机号' }]}>
-            <InputNumber size="large" maxLength="11" placeholder="请输入手机号" style={{ width: '100%' }} />
-          </Form.Item>
+            <Form.Item label="手机号" name="phoneNumber" rules={[{ required: true, message: '请输入手机号' }]}>
+              <InputNumber size="large" style={{ width: '100%' }} maxLength="11" />
+            </Form.Item>
 
-          <Form.Item label="手机验证时间" name="companyName">
-            <Input size="large" disabled />
-          </Form.Item>
+            <Form.Item label="所属部门" name="deptName" rules={[{required: true, message: '请选择所属部门'}]}>
+              <Select placeholder="请选择所属部门" size="large">
+                { deptNameSelect.map(key => <Select.Option key={ key } value={ key }>{ key }</Select.Option>) }
+              </Select>
+            </Form.Item>
 
-          <Form.Item label="手机验证状态" name="companyName">
-            <Input size="large" disabled />
-          </Form.Item>
+            <Form.Item label="角色" name="roleId" rules={[{required: true, message: '请选择角色'}]}>
+              <Select placeholder="请选择角色" size="large">
+                { roleSelect.map(({ roleId, name }) => <Select.Option key={ roleId } value={ roleId }>{ name }</Select.Option>) }
+              </Select>
+            </Form.Item>
 
-          <Form.Item label="剩余积分" name="companyName">
-            <Input size="large" disabled />
-          </Form.Item>
+          </Form>
+        </Spin>
 
-          <Form.Item label="加入时间" name="companyName">
-            <Input size="large" disabled />
-          </Form.Item>
-
-          <Form.Item label="账号权限" name="2" rules={[{ required: true, message: '请选择账号权限' }]}>
-            <Select placeholder="请选择账号权限" size="large">
-              { Object.keys([1, 2, 3]).map(key => <Select.Option key={ key } value={ key }>{ key }</Select.Option>) }
-            </Select>
-          </Form.Item>
-        </Form>
       </Modal>
 
     </>
   )
 }
 
-export default Join
+export default StaffDetail

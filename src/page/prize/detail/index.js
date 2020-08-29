@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { Table, Button, Modal, Form, Input, Select, InputNumber } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { prize } from '@/api'
@@ -9,16 +10,12 @@ const formItemLayout = {
   labelAlign: 'left',
 }
 
-function Join () {
+function PrizeDetail () {
 
+  const { companyId } = useParams()
   const [listLoading, setListLoading] = useState(false)
   const [listData, setListData] = useState([])
-  const [page, setPage] = useState(0)
-  const [total, setTotal] = useState(0)
-  const [size, setSize] = useState(20)
   const [flag, setFlag] = useState(false)
-
-  const [isEditModel, setEditModel] = useState(!false)
   const [ form ] = Form.useForm()
 
   const listColumns = [
@@ -85,8 +82,8 @@ function Join () {
 
   useEffect(() => {
 
-    // load()
-  }, [page, size, flag])
+    load()
+  }, [flag])
 
   const load = async () => {
 
@@ -94,12 +91,12 @@ function Join () {
 
       setListLoading(true)
 
-      const { status, data } = await prize.getCompanyList({
-        // page,
-        // size,
+      const { state, data } = await prize.getCompanyPrizeList({
+        companyId,
+        firstResult: 0,
       })
 
-      if (!status) return
+      if (!state) return
 
       // setListData(data.data)
       // setTotal(data.total)
@@ -178,64 +175,8 @@ function Join () {
         pagination={ false }
       />
 
-      <Modal
-        visible={ isEditModel }
-        title="编辑员工信息"
-        onCancel={ onCancel }
-        onOk={ null }
-        maskClosable={ false }
-        centered
-        width="40vw"
-        footer={[
-          // <Button form="addForm" key="save" type="primary" htmlType="submit" size="default">确定</Button>,
-          <Button key="cancel" type="default" size="default" onClick={ onCancel }>取消</Button>,
-        ]}
-      >
-        <Form id="addForm" form={ form } { ...formItemLayout } onFinish={ submit }>
-          <Form.Item label="所属企业" name="companyName">
-            <Input size="large" disabled />
-          </Form.Item>
-
-          <Form.Item label="所属部门" name="3" rules={[{ required: true, message: '请选择所属部门' }]}>
-            <Select placeholder="请选择所属部门" size="large">
-              { Object.keys([1, 2, 3]).map(key => <Select.Option key={ key } value={ key }>{ key }</Select.Option>) }
-            </Select>
-          </Form.Item>
-
-          <Form.Item label="昵称" name="1" rules={[{ required: true, message: '请输入昵称' }]}>
-            <Input size="large" placeholder="请输入昵称" />
-          </Form.Item>
-
-          <Form.Item label="手机号" name="phone" rules={[{ required: true, message: '请输入手机号' }]}>
-            <InputNumber size="large" maxLength="11" placeholder="请输入手机号" style={{ width: '100%' }} />
-          </Form.Item>
-
-          <Form.Item label="手机验证时间" name="companyName">
-            <Input size="large" disabled />
-          </Form.Item>
-
-          <Form.Item label="手机验证状态" name="companyName">
-            <Input size="large" disabled />
-          </Form.Item>
-
-          <Form.Item label="剩余积分" name="companyName">
-            <Input size="large" disabled />
-          </Form.Item>
-
-          <Form.Item label="加入时间" name="companyName">
-            <Input size="large" disabled />
-          </Form.Item>
-
-          <Form.Item label="账号权限" name="2" rules={[{ required: true, message: '请选择账号权限' }]}>
-            <Select placeholder="请选择账号权限" size="large">
-              { Object.keys([1, 2, 3]).map(key => <Select.Option key={ key } value={ key }>{ key }</Select.Option>) }
-            </Select>
-          </Form.Item>
-        </Form>
-      </Modal>
-
     </>
   )
 }
 
-export default Join
+export default PrizeDetail

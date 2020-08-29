@@ -150,7 +150,7 @@ function Join () {
             department: undefined,
             deptNames: department,
             companyLogo: 'https://file.03os.com/driverLicense/497f9960-d53a-11ea-b364-6fb937b8edc1.JPEG',
-            companyId: 10,
+            companyId: 0,
           })
 
           if (!state) return
@@ -254,7 +254,8 @@ function Join () {
               <Input size="large" placeholder="请输入企业名称" />
             </Form.Item>
 
-            <Form.Item label="企业LOGO" name="logo" rules={[{required: true, message: '请输上传企业LOGO'}]}>
+            {/* <Form.Item label="企业LOGO" name="companyLogo" rules={[{required: true, message: '请输上传企业LOGO'}]}> */}
+            <Form.Item label="企业LOGO" rules={[{required: true, message: '请输上传企业LOGO'}]}>
               <Upload
                 fileList={ [] }
                 name="avatar"
@@ -307,11 +308,11 @@ function Join () {
               </>
             </Form.Item>
 
-            <Form.Item label="联系人姓名" name="name" rules={[{required: true, message: '请输入联系人姓名'}]}>
+            <Form.Item label="联系人姓名" name="contactName" rules={[{required: true, message: '请输入联系人姓名'}]}>
               <Input size="large" placeholder="请输入联系人姓名" />
             </Form.Item>
 
-            <Form.Item label="联系人手机" name="phone" rules={[{required: true, message: '请输入联系人手机'}]}>
+            <Form.Item label="联系人手机" name="contactPhone" rules={[{required: true, message: '请输入联系人手机'}]}>
               <Input size="large" placeholder="请输入联系人手机" />
             </Form.Item>
           </Form>

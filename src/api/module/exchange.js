@@ -3,9 +3,7 @@ import axios from '@/api/axios'
 // 企业列表
 export const getCompanyList = params => {
 
-  return axios.get('company_order/list_company', {
-    ...params,
-  })
+  return axios.get('company_order/list_company')
 }
 
 // 兑换奖品列表

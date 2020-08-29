@@ -9,7 +9,7 @@ axios.defaults.withCredentials = true
 
 const baseURL = {
   // dev: 'https://api.03os.com/admin/',
-  dev: 'https://app.happyrun.cn/master/hc2/',
+  dev: 'http://47.99.193.34/master/hc2/',
   // dev: 'http://127.0.0.1:7001/admin/',
   // dev: 'https://api.03os.com/admin/',
   test: 'https://api.03os.com/admin/',

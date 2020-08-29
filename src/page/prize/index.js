@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Table, Button } from 'antd'
 import { prize } from '@/api'
 
-function Join () {
+function Prize () {
 
+  const RouteHistory = useHistory()
   const [listLoading, setListLoading] = useState(false)
   const [listData, setListData] = useState([])
-  const [page, setPage] = useState(0)
-  const [total, setTotal] = useState(0)
-  const [size, setSize] = useState(20)
   const [flag, setFlag] = useState(false)
 
   const listColumns = [
@@ -24,12 +23,12 @@ function Join () {
     },
     {
       title: '已选商品',
-      dataIndex: '',
+      dataIndex: 'recommendGoodsTotal',
       width: 100,
     },
     {
       title: '推荐的热门商品',
-      dataIndex: '',
+      dataIndex: 'goodsTotal',
       width: 100,
     },
     {
@@ -38,7 +37,7 @@ function Join () {
       render (e) {
 
         return (
-          <Button type="primary">编辑奖品</Button>
+          <Button type="primary" onClick={ () => RouteHistory.push(`/prize/${e.companyId}`) }>编辑奖品</Button>
         )
       }
     },
@@ -46,8 +45,8 @@ function Join () {
 
   useEffect(() => {
 
-    // load()
-  }, [page, size, flag])
+    load()
+  }, [flag])
 
   const load = async () => {
 
@@ -55,17 +54,11 @@ function Join () {
 
       setListLoading(true)
 
-      const { status, data } = await prize.getCompanyList({
-        // page,
-        // size,
-      })
+      const { state, data } = await prize.getCompanyList()
 
-      if (!status) return
+      if (!state) return
 
-      // setListData(data.data)
-      // setTotal(data.total)
-
-      // dispatch({ type: 'change' })
+      setListData(data)
     } catch (error) {
 
       console.error('~~error~~', error)
@@ -94,4 +87,4 @@ function Join () {
   )
 }
 
-export default Join
+export default Prize

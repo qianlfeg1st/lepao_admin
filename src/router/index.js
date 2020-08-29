@@ -82,7 +82,7 @@ const routerConfig = [
     navMenu: 'company',
   },
   {
-    path: '/prize/detail',
+    path: '/prize/:companyId',
     component: PrizeDetail,
     children: <PrizeDetail />,
     auth: true,
