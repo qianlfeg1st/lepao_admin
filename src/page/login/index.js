@@ -1,31 +1,16 @@
 
 import React, { useState, useEffect, } from 'react'
-import { useHistory } from 'react-router-dom'
-import { Form, Input, Button, message } from 'antd'
+// import { useHistory } from 'react-router-dom'
+import { message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import styles from './index.module.scss'
 import { common } from '@/api'
-
-const formItemLayout = {
-  labelCol: { span: 4 },
-  wrapperCol: { span: 20 },
-  labelAlign: 'left',
-}
 
 function Login (props) {
 
   console.log('props', props)
 
-  const [
-    form
-  ] = Form.useForm()
-
-  const [
-    loginLoading,
-    setLoginLoading,
-  ] = useState(false)
-
-  const RouteHistory = useHistory()
+  // const RouteHistory = useHistory()
 
   const handleSubmit = async values => {
 
@@ -52,34 +37,17 @@ function Login (props) {
   }
 
   return (
+    <div className={ styles.body }>
 
-    <div className={ styles.bodyWrap }>
+      <img src={ require(`../../assets/images/title.png`) } className={ styles.body__title } alt="" />
 
-      <div className={ `${styles.header} flex hCenter` }>
-        <img className={ styles.header__logo } src={ require(`../../assets/logo.png`) } alt="浙江壳牌燃油" />
-        <p className={ styles.header__name }>浙江壳牌燃油有限公司 - 速车控制台</p>
-      </div>
+      <h1 className={ styles.body__subTitle }>再小的个体题，也有自己的品牌</h1>
 
-      <div className={ styles.form }>
+      <img src={ require(`../../assets/images/test.png`) } className={ styles.body__qrCode } />
 
-        <h3 className={ styles.form__title }>用户登录</h3>
+      <p className={ styles.body__text }>手机微信扫一扫，使用微信账号</p>
 
-        <Form form={ form } { ...formItemLayout } onFinish={ handleSubmit }>
-
-          <Form.Item label="账号" name="identity" rules={[{required: true, message: '请输入账号'}]}>
-            <Input size="large" placeholder="请输入账号" prefix={ <UserOutlined className={ styles.icon } /> } />
-          </Form.Item>
-
-          <Form.Item label="密码" name="password" rules={[{required: true, message: '请输入密码'}]}>
-            <Input.Password size="large" placeholder="请输入密码" prefix={ <LockOutlined /> } />
-          </Form.Item>
-
-          <Form.Item labelCol={{ span: 0 }} wrapperCol={{ span: 24 }}>
-            <Button shape="round" type="primary" block loading={ loginLoading } htmlType="submit" size="large">登 录</Button>
-          </Form.Item>
-
-        </Form>
-      </div>
+      <p className={ styles.body__text }>登录管理后台</p>
 
     </div>
   )

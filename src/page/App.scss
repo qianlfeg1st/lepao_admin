@@ -1,9 +1,11 @@
-/* 全局组件样式 */
-
-*, p {
+* {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+}
+
+#root {
+  background: #032b68;
 }
 
 a {
