@@ -117,12 +117,12 @@ function Admin (props) {
             <Menu.Item key="company" style={{ border: 0, }}>
               <span className={ current === 'company' ? styles.active : styles.unActive }>企业管理</span>
             </Menu.Item>
-            <Menu.Item key="goods" style={{ border: 0, }}>
+            {/* <Menu.Item key="goods" style={{ border: 0, }}>
               <span className={ current === 'goods' ? styles.active : styles.unActive }>商品管理</span>
-            </Menu.Item>
-            <Menu.Item key="user" style={{ border: 0, }}>
+            </Menu.Item> */}
+            {/* <Menu.Item key="user" style={{ border: 0, }}>
               <span className={ current === 'user' ? styles.active : styles.unActive }>用户管理</span>
-            </Menu.Item>
+            </Menu.Item> */}
           </Menu>
         </Col>
         <Col span={ 6 } className={ styles.header__right }>
@@ -147,11 +147,11 @@ function Admin (props) {
 
                 <Menu.Item icon={ <GiftOutlined /> } key="/prize" onClick={ () => history.push('/prize') }>企业奖品</Menu.Item>
 
-                <Menu.Item icon={ <TransactionOutlined /> } key="/exchange" onClick={ () => history.push('/exchange') }>企业兑换</Menu.Item>
+                {/* <Menu.Item icon={ <TransactionOutlined /> } key="/exchange" onClick={ () => history.push('/exchange') }>企业兑换</Menu.Item> */}
 
-                <Menu.Item icon={ <DollarOutlined /> } key="/point" onClick={ () => history.push('/point') }>企业积分</Menu.Item>
+                {/* <Menu.Item icon={ <DollarOutlined /> } key="/point" onClick={ () => history.push('/point') }>企业积分</Menu.Item> */}
 
-                <Menu.Item icon={ <AuditOutlined /> } key="/steps" onClick={ () => history.push('/steps') }>步数统计</Menu.Item>
+                {/* <Menu.Item icon={ <AuditOutlined /> } key="/steps" onClick={ () => history.push('/steps') }>步数统计</Menu.Item> */}
 
               </Menu>
             </Col>

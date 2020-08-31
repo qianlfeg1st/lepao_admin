@@ -2,7 +2,7 @@ import React from 'react'
 import { HashRouter as Router, Switch } from 'react-router-dom'
 
 // 引入路由
-import FrontendAuth from './../page/FrontendAuth/'
+import FrontendAuth from '@/components/FrontendAuth/'
 import NotFound from './../page/notFound/'
 import Login from './../page/login/'
 

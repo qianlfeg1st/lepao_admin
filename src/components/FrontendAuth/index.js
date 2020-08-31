@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import Admin from './../Admin/index'
+import Admin from '@/components/Admin/'
 import { Route, Redirect } from 'react-router-dom'
 import { RouteConfigContext } from '../../router'
 
