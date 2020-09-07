@@ -102,8 +102,8 @@ function Admin (props) {
 
       <Row className={ styles.header } id="header">
         <Col span={ 6 } className={ styles.header__left }>
-          {/* <img className={ styles.header__logo } src={ require(`../../assets/logo.png`) } alt="" /> */}
-          {/* <div className={ styles.header__name }>控制台</div> */}
+          <img className={ styles.header__logo } src={ require(`../../assets/images/logo.png`) } alt="" />
+          <div className={ styles.header__name }>企业乐跑管理后台</div>
         </Col>
         <Col span={ 12 } className={ styles.header__center }>
           {/* <img className={ styles.header__logo } src={ require(`../../assets/logo.png`) } alt="" />
@@ -117,12 +117,12 @@ function Admin (props) {
             <Menu.Item key="company" style={{ border: 0, }}>
               <span className={ current === 'company' ? styles.active : styles.unActive }>企业管理</span>
             </Menu.Item>
-            {/* <Menu.Item key="goods" style={{ border: 0, }}>
+            <Menu.Item key="goods" style={{ border: 0, }}>
               <span className={ current === 'goods' ? styles.active : styles.unActive }>商品管理</span>
-            </Menu.Item> */}
-            {/* <Menu.Item key="user" style={{ border: 0, }}>
+            </Menu.Item>
+            <Menu.Item key="user" style={{ border: 0, }}>
               <span className={ current === 'user' ? styles.active : styles.unActive }>用户管理</span>
-            </Menu.Item> */}
+            </Menu.Item>
           </Menu>
         </Col>
         <Col span={ 6 } className={ styles.header__right }>

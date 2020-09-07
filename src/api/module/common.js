@@ -15,3 +15,21 @@ export const logout = params => {
     ...params
   })
 }
+
+// 获取安全码
+export const getSecure = () => {
+
+  return axios.get('company_login/login_mgr_get_secure')
+}
+
+// 获取二维码
+export const getQrCode = () => {
+
+  return axios.get('company_login/login_mgr_get_qr')
+}
+
+// 检查登录状态
+export const checkLogin = () => {
+
+  return axios.get('company_login/check_qr_login')
+}

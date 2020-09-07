@@ -13,8 +13,9 @@
 
 .header {
   $rule: &;
-  height: 60px;
-  background: #20a0ff;
+  height: 70px;
+  background-image: url(../../assets/images/header.png);
+  background-repeat: repeat;
   color:#fff;
 
   img {
