@@ -4,7 +4,7 @@ import axios from '@/api/axios'
 export const login = params => {
 
   return axios.post('user_author/login', {
-    ...params
+    ...params,
   })
 }
 
@@ -12,7 +12,7 @@ export const login = params => {
 export const logout = params => {
 
   return axios.post('logout', {
-    ...params
+    ...params,
   })
 }
 
@@ -23,13 +23,21 @@ export const getSecure = () => {
 }
 
 // 获取二维码
-export const getQrCode = () => {
+export const getQrCode = params => {
 
-  return axios.get('company_login/login_mgr_get_qr')
+  return axios.get('company_login/login_mgr_get_qr', {
+    params: {
+      ...params,
+    },
+  })
 }
 
 // 检查登录状态
-export const checkLogin = () => {
+export const checkLogin = params => {
 
-  return axios.get('company_login/check_qr_login')
+  return axios.get('company_login/check_qr_login', {
+    params: {
+      ...params,
+    },
+  })
 }
