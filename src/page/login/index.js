@@ -1,33 +1,31 @@
 
-import React, { useState, useEffect, } from 'react'
-// import { useHistory } from 'react-router-dom'
+import React, { useState, useEffect, useRef } from 'react'
+import { useHistory } from 'react-router-dom'
 import { message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import styles from './index.module.scss'
 import { common } from '@/api'
 import sleep from '@/utils/sleep'
 
-function Login (props) {
+function Login () {
 
-  // console.log('props', props)
+  const RouteHistory = useHistory()
 
-  // const RouteHistory = useHistory()
-
-  const [secure, setSecure] = useState('')
   const [qrcode, setQrcode] = useState('http://47.99.193.34/master/hc2/company_login/login_mgr_get_qr?secure=')
-  const [flag, setFlag] = useState(true)
+
+  const secureRef = useRef(null)
 
   useEffect(() => {
 
     getSecure()
-  }, [])
-
-  useEffect(() => {
-
-    if (!secure) return
-
     checkLogin()
-  }, [flag])
+
+    return () => {
+
+      // 停止 checkLogin
+      secureRef.current = null
+    }
+  }, [])
 
   const login = async values => {
 
@@ -57,11 +55,12 @@ function Login (props) {
 
     try {
 
-      const { data } = await common.getSecure()
+      const { data, state } = await common.getSecure()
 
-      setSecure(data.stringValue)
+      if (!state) return
+
       setQrcode(`${qrcode}${data.stringValue}`)
-      setFlag(!flag)
+      secureRef.current = data.stringValue
     } catch (error) {
 
       console.error('~~error~~', error)
@@ -72,15 +71,19 @@ function Login (props) {
 
     await sleep(3000)
 
-    console.log('~~~~~', secure)
+    if (!secureRef.current) return
 
     try {
 
-      const { data } = await common.checkLogin({
-        secure,
+      const { data, state } = await common.checkLogin({
+        secure: secureRef.current,
       })
 
-      console.log('checkLogin', data)
+      if (!state) return
+
+      checkLogin()
+
+      // console.log('checkLogin', data)
     } catch (error) {
 
       console.error('~~error~~', error)
@@ -89,6 +92,8 @@ function Login (props) {
 
   return (
     <div className={ styles.body }>
+
+      {/* <button onClick={ () => { RouteHistory.push('/join') } }>TEST</button> */}
 
       <img src={ require(`../../assets/images/title.png`) } className={ styles.body__title } alt="" />
 

@@ -27,6 +27,7 @@ function Join () {
   const [inputVisible, setInputVisible] = useState(false)
   const [department, setDepartment] = useState([])
   const [inputValue, setInputValue] = useState('')
+  const [companyId, setCompanyId] = useState('')
 
   const listColumns = [
     {
@@ -94,6 +95,8 @@ function Join () {
 
       if (!state) return
 
+      setCompanyId(companyId)
+
       form.setFieldsValue({
         ...data,
       })
@@ -149,8 +152,8 @@ function Join () {
             ...values,
             department: undefined,
             deptNames: department,
-            companyLogo: 'https://file.03os.com/driverLicense/497f9960-d53a-11ea-b364-6fb937b8edc1.JPEG',
-            companyId: 0,
+            companyLogo: 'https://file.03os.com/1.jpg',
+            companyId,
           })
 
           if (!state) return
