@@ -27,7 +27,9 @@ function Join () {
   const [inputVisible, setInputVisible] = useState(false)
   const [department, setDepartment] = useState([])
   const [inputValue, setInputValue] = useState('')
-  const [companyId, setCompanyId] = useState('')
+  const [companyId, setCompanyId] = useState(undefined)
+  const [fileList, setFileList] = useState([])
+  const [companyLogo, setCompanyLogo] = useState('')
 
   const listColumns = [
     {
@@ -82,11 +84,25 @@ function Join () {
     inputDom.focus()
   }, [inputVisible])
 
+  const handleChange = e => {
+
+    // console.log('handleChange', e.file.status)
+    // console.log('@@@@@@@@', e.file)
+    setFileList(e.fileList)
+
+    if (e.file.status === 'none') {
+
+      setCompanyLogo(e.file.response.stringValue)
+    }
+  }
+
   const getCompanyDetail = async companyId => {
 
     try {
 
       type = 'edit'
+      setCompanyLogo('')
+      setDetailLoading(true)
       setAddCompanyModal(true)
 
       const { state, data } = await join.getCompanyDetail({
@@ -96,6 +112,10 @@ function Join () {
       if (!state) return
 
       setCompanyId(companyId)
+      setDepartment(data.deptNames)
+      form.setFieldsValue({
+        department: data.deptNames,
+      })
 
       form.setFieldsValue({
         ...data,
@@ -138,12 +158,12 @@ function Join () {
 
     console.log('~~values~~', values)
 
-    const content = `确认${type === 'add' ? '创建' : '修改'}吗？`
+    const text = type === 'add' ? '创建' : '修改'
 
     Modal.confirm({
       title: '提示',
       centered: true,
-      content,
+      content: `确认${text}吗？`,
       onOk: async () => {
 
         try {
@@ -152,13 +172,13 @@ function Join () {
             ...values,
             department: undefined,
             deptNames: department,
-            companyLogo: 'https://file.03os.com/1.jpg',
+            companyLogo,
             companyId,
           })
 
           if (!state) return
 
-          message.success(`${content}成功`)
+          message.success(`${text}成功`)
 
           setAddCompanyModal(false)
 
@@ -204,7 +224,12 @@ function Join () {
       <PlusOutlined />
       <div className="ant-upload-text">上传</div>
     </>
-  );
+  )
+
+  const closeTag = index => {
+
+    setDepartment(department.filter((_, idx) => idx !== index))
+  }
 
   return (
     <>
@@ -214,8 +239,13 @@ function Join () {
         <div className="searchbtn">
           <Button className="btn" icon={ <PlusOutlined /> } type="primary" size="large" onClick={ () => {
 
+            form.resetFields()
             setDepartment([])
+            setDetailLoading(false)
+            setCompanyId(undefined)
+            setCompanyLogo('')
             setAddCompanyModal(true)
+
             type = 'add'
           } }>创建企业</Button>
         </div>
@@ -260,14 +290,16 @@ function Join () {
             {/* <Form.Item label="企业LOGO" name="companyLogo" rules={[{required: true, message: '请输上传企业LOGO'}]}> */}
             <Form.Item label="企业LOGO" rules={[{required: true, message: '请输上传企业LOGO'}]}>
               <Upload
-                fileList={ [] }
-                name="avatar"
+                fileList={ fileList }
+                // name="avatar"
                 listType="picture-card"
                 className="avatar-uploader"
-                showUploadList={false}
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                // beforeUpload={beforeUpload}
-                // onChange={this.handleChange}
+                showUploadList={ false }
+                action="http://47.99.193.34/master/hc2/aliyun/uploadWithFormType"
+                headers={ {
+                  base_access_token: 'eyJhbGciOiJIUzI1NiJ9.CAIQ68HBkswu.UnXtXck1zBIbn5crth-kdcTC1ZCb85z0fc0KI-Pv9gY',
+                } }
+                onChange={ handleChange }
               >
                 { imageUrl ? <img src={ imageUrl } alt="avatar" style={{ width: '100%' }} /> : uploadButton }
               </Upload>
@@ -289,7 +321,7 @@ function Join () {
 
             <Form.Item label="企业部门" name="department" rules={[{required: true, message: '请添加部门'}]}>
               <>
-                { department.map((item, index) => <Tag className={ styles['edit-tag'] } closable key={ index }>{ item }</Tag>) }
+                { department.map((item, index) => <Tag className={ styles['edit-tag'] } closable key={ index } onClose={ () => closeTag(index) }>{ item }</Tag>) }
                 {
                   inputVisible
                     ?
@@ -315,7 +347,7 @@ function Join () {
               <Input size="large" placeholder="请输入联系人姓名" />
             </Form.Item>
 
-            <Form.Item label="联系人手机" name="contactPhone" rules={[{required: true, message: '请输入联系人手机'}]}>
+            <Form.Item label="联系人手机" name="contactPhoneNumber" rules={[{required: true, message: '请输入联系人手机'}]}>
               <Input size="large" placeholder="请输入联系人手机" />
             </Form.Item>
           </Form>

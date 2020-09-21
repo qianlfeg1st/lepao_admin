@@ -33,3 +33,13 @@ export const editStaffDetail = params => {
     ...params,
   })
 }
+
+// 移除或移入员工
+export const addOrremoveMember = params => {
+
+  return axios.get('company_emp/add_remove_companyemp', {
+    params: {
+      ...params,
+    },
+  })
+}

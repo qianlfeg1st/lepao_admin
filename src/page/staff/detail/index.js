@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Table, Button, Modal, Form, Input, Select, InputNumber, Spin } from 'antd'
+import { Table, Button, Modal, Form, Input, Select, InputNumber, Spin, message } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { staff } from '@/api'
 
@@ -19,6 +19,7 @@ function StaffDetail () {
   const [flag, setFlag] = useState(false)
   const [deptNameSelect, setDeptNameSelect] = useState([])
   const [roleSelect, setRoleSelect] = useState([])
+  const [empId, setEmpId] = useState('')
 
   const [editModel, setEditModel] = useState(false)
   const [ form ] = Form.useForm()
@@ -36,7 +37,7 @@ function StaffDetail () {
     },
     {
       title: '所属部门',
-      dataIndex: '',
+      dataIndex: 'dept',
       width: 100,
     },
     {
@@ -50,8 +51,8 @@ function StaffDetail () {
       width: 100,
     },
     {
-      title: '授权验证手机时间',
-      dataIndex: '',
+      title: '加入时间',
+      dataIndex: 'joinTime',
       width: 120,
     },
     {
@@ -60,14 +61,6 @@ function StaffDetail () {
       width: 100,
       render: (e) => (
         <>{ e ? '已验证' : '未验证' }</>
-      ),
-    },
-    {
-      title: '禁用状态',
-      dataIndex: 'locked',
-      width: 100,
-      render: (e) => (
-        <>{ e ? '已禁用' : '未禁用' }</>
       ),
     },
     {
@@ -82,7 +75,7 @@ function StaffDetail () {
     },
     {
       title: '操作',
-      width: 220,
+      width: 240,
       render (e) {
 
         return (
@@ -92,14 +85,10 @@ function StaffDetail () {
               getStaffDetail(e.empId)
             } }>编辑</Button>
             {
-              e.locked
-                ?
-                <Button className="btn" type="primary" onClick={ () => deleted(e) }>撤销</Button>
-                :
-                <>
-                  <Button className="btn" type="danger" onClick={ () => deleted(e) }>移除</Button>
-                  <Button className="btn" type="danger" onClick={ () => deleted(e) }>移除并禁入</Button>
-                </>
+              <>
+                <Button className="btn" type="danger" onClick={ () => deleted({ empId: e.empId, remove: true }) }>移除</Button>
+                <Button className="btn" type="danger" onClick={ () => offin({ empId: e.empId }) }>移除并禁入</Button>
+              </>
             }
           </>
         )
@@ -126,17 +115,18 @@ function StaffDetail () {
 
           const { state } = await staff.editStaffDetail({
             ...values,
+            empId,
           })
 
           if (!state) return
 
-          // message.success(`${content}成功`)
+          message.success('编辑成功')
 
-          // setAddCompanyModal(false)
+          setEditModel(false)
 
-          // setFlag(!flag)
+          setFlag(!flag)
 
-          // form.resetFields()
+          form.resetFields()
         } catch (error) {
 
           console.error('~~error~~', error)
@@ -182,6 +172,7 @@ function StaffDetail () {
 
       setDeptNameSelect(data.deptNameSelect)
       setRoleSelect(data.roleSelect)
+      setEmpId(data.empId)
 
       form.setFieldsValue({
         ...data,
@@ -202,38 +193,67 @@ function StaffDetail () {
     form.resetFields()
   }
 
-  const deleted = e => {
+  const deleted = ({ empId, remove }) => {
 
     Modal.confirm({
       title: '提示',
-      icon: <ExclamationCircleOutlined />,
       centered: true,
-      // content: `确定${true ? '加入' : '移除'}【${'钱立峰'}】吗？`,
       content: `确定操作吗？`,
-      okText: '确定',
-      cancelText: '取消',
-      onCancel: () => {},
       onOk: async () => {
 
         try {
 
-          setSettingLoading(true)
-
-          const { data } = await stationApi.deleteOil({
-            id,
+          const { state } = await staff.addOrremoveMember({
+            empId,
+            remove,
           })
 
-          if (data?.status) {
+          console.log('state', state)
 
-            message.success('删除成功')
-            setIsReloadOil(Math.random())
-          }
+          if (!state) return
+
+          message.success('操作成功')
+
+          setFlag(!flag)
         } catch (error) {
 
           console.log(error)
         } finally {
 
-          setSettingLoading(false)
+          // setSettingLoading(false)
+        }
+      }
+    })
+  }
+
+  const offin = ({ empId, remove }) => {
+
+    Modal.confirm({
+      title: '提示',
+      centered: true,
+      content: `确定移除并禁入吗？`,
+      onOk: async () => {
+
+        try {
+
+          const { state } = await staff.addOrremoveMember({
+            empId,
+            remove,
+          })
+
+          console.log('state', state)
+
+          if (!state) return
+
+          message.success('操作成功')
+
+          setFlag(!flag)
+        } catch (error) {
+
+          console.log(error)
+        } finally {
+
+          // setSettingLoading(false)
         }
       }
     })
@@ -277,7 +297,7 @@ function StaffDetail () {
               <Input size="large" />
             </Form.Item>
 
-            <Form.Item label="剩余积分" name="score" rules={[{ required: true, message: '请输入剩余积分' }]}>
+            <Form.Item label="剩余积分" name="gold" rules={[{ required: true, message: '请输入剩余积分' }]}>
               <InputNumber size="large" style={{ width: '100%' }} maxLength="11" />
             </Form.Item>
 

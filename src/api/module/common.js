@@ -41,3 +41,11 @@ export const checkLogin = params => {
     },
   })
 }
+
+// 上传图片
+export const uploadImage = params => {
+
+  return axios.post('aliyun/uploadWithFormType', {
+    ...params,
+  })
+}
