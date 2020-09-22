@@ -29,7 +29,6 @@ function Join () {
   const [inputValue, setInputValue] = useState('')
   const [companyId, setCompanyId] = useState(undefined)
   const [fileList, setFileList] = useState([])
-  const [companyLogo, setCompanyLogo] = useState('')
 
   const listColumns = [
     {
@@ -84,15 +83,37 @@ function Join () {
     inputDom.focus()
   }, [inputVisible])
 
-  const handleChange = e => {
+  const onChange = e => {
 
-    // console.log('handleChange', e.file.status)
-    // console.log('@@@@@@@@', e.file)
-    setFileList(e.fileList)
+    const list = e.fileList[0]
 
-    if (e.file.status === 'none') {
+    // console.log('~~onChange~~', e.fileList)
 
-      setCompanyLogo(e.file.response.stringValue)
+    setFileList(e.fileList.slice(-1))
+
+    if (list) {
+
+      if (list?.status !== 'done') return
+
+      if (list.xhr?.status === 200) {
+
+        form.setFieldsValue({
+          companyLogo: list.response.stringValue,
+        })
+      } else {
+
+        form.setFieldsValue({
+          companyLogo: undefined,
+        })
+
+        // 清除缩略图
+        setFileList([])
+      }
+    } else {
+
+      form.setFieldsValue({
+        companyLogo: undefined,
+      })
     }
   }
 
@@ -101,7 +122,6 @@ function Join () {
     try {
 
       type = 'edit'
-      setCompanyLogo('')
       setDetailLoading(true)
       setAddCompanyModal(true)
 
@@ -113,12 +133,15 @@ function Join () {
 
       setCompanyId(companyId)
       setDepartment(data.deptNames)
-      form.setFieldsValue({
-        department: data.deptNames,
-      })
+      setFileList([{
+        uid: '-1',
+        name: 'image.jpg',
+        url: data.companyLogo,
+      }])
 
       form.setFieldsValue({
         ...data,
+        department: data.deptNames,
       })
     } catch (error) {
 
@@ -156,7 +179,7 @@ function Join () {
 
   const submit = values => {
 
-    console.log('~~values~~', values)
+    // console.log('~~values~~', values)
 
     const text = type === 'add' ? '创建' : '修改'
 
@@ -172,7 +195,6 @@ function Join () {
             ...values,
             department: undefined,
             deptNames: department,
-            companyLogo,
             companyId,
           })
 
@@ -218,14 +240,6 @@ function Join () {
     setInputVisible(true)
   }
 
-  const uploadButton = (
-    <>
-      {/* { true ? <LoadingOutlined /> : <PlusOutlined /> } */}
-      <PlusOutlined />
-      <div className="ant-upload-text">上传</div>
-    </>
-  )
-
   const closeTag = index => {
 
     setDepartment(department.filter((_, idx) => idx !== index))
@@ -243,8 +257,8 @@ function Join () {
             setDepartment([])
             setDetailLoading(false)
             setCompanyId(undefined)
-            setCompanyLogo('')
             setAddCompanyModal(true)
+            setFileList([])
 
             type = 'add'
           } }>创建企业</Button>
@@ -287,21 +301,21 @@ function Join () {
               <Input size="large" placeholder="请输入企业名称" />
             </Form.Item>
 
-            {/* <Form.Item label="企业LOGO" name="companyLogo" rules={[{required: true, message: '请输上传企业LOGO'}]}> */}
-            <Form.Item label="企业LOGO" rules={[{required: true, message: '请输上传企业LOGO'}]}>
+            <Form.Item label="企业LOGO" name="companyLogo" rules={[{required: true, message: '请输上传企业LOGO'}]}>
               <Upload
                 fileList={ fileList }
                 // name="avatar"
                 listType="picture-card"
                 className="avatar-uploader"
-                showUploadList={ false }
+                showUploadList={ true }
                 action="http://47.99.193.34/master/hc2/aliyun/uploadWithFormType"
                 headers={ {
                   base_access_token: 'eyJhbGciOiJIUzI1NiJ9.CAIQ68HBkswu.UnXtXck1zBIbn5crth-kdcTC1ZCb85z0fc0KI-Pv9gY',
                 } }
-                onChange={ handleChange }
+                onChange={ onChange }
               >
-                { imageUrl ? <img src={ imageUrl } alt="avatar" style={{ width: '100%' }} /> : uploadButton }
+                <PlusOutlined />
+                <div className="ant-upload-text">上传</div>
               </Upload>
             </Form.Item>
 
