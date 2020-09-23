@@ -25,9 +25,16 @@ function getHeight () {
 
   if (header) arr.push(parseInt(window.getComputedStyle(header).height))
   if (pagebar) arr.push(parseInt(window.getComputedStyle(pagebar).height))
-  if (searchbar) arr.push(parseInt(window.getComputedStyle(searchbar).height))
 
-  console.log('arr', arr)
+  if (searchbar) {
+
+    const styles = window.getComputedStyle(searchbar)
+
+    arr.push(parseInt(styles.height))
+    arr.push(parseInt(styles['margin-bottom']))
+  }
+
+  // console.log('~~arr~~', arr)
 
   return arr.reduce((prev, curr) => prev + curr)
 }

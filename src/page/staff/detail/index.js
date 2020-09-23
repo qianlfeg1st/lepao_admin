@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useParams } from 'react-router-dom'
-import { Table, Button, Modal, Form, Input, Select, InputNumber, Spin, message } from 'antd'
+import { Table, Button, Modal, Form, Input, Select, InputNumber, Spin, message, Pagination } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { staff } from '@/api'
+import { AdminContext } from '@/components/Admin'
 
 const formItemLayout = {
   labelCol: { span: 5, offset: 2, },
@@ -20,30 +21,26 @@ function StaffDetail () {
   const [deptNameSelect, setDeptNameSelect] = useState([])
   const [roleSelect, setRoleSelect] = useState([])
   const [empId, setEmpId] = useState('')
+  const [page, setPage] = useState(0)
+  const [total, setTotal] = useState(0)
+  const [size, setSize] = useState(20)
+  const [firstResult, setFirstResult] = useState(20)
 
   const [editModel, setEditModel] = useState(false)
   const [ form ] = Form.useForm()
 
+  const { height } = useContext(AdminContext)
+
   const listColumns = [
     {
-      title: '编号',
-      dataIndex: 'empId',
-      width: 60,
-    },
-    {
-      title: '加入时间',
-      dataIndex: 'joinTime',
+      title: '昵称',
+      dataIndex: 'nickName',
       width: 120,
     },
     {
       title: '所属部门',
       dataIndex: 'dept',
-      width: 100,
-    },
-    {
-      title: '昵称',
-      dataIndex: 'nickName',
-      width: 100,
+      width: 120,
     },
     {
       title: '手机号',
@@ -66,12 +63,12 @@ function StaffDetail () {
     {
       title: '角色',
       dataIndex: 'roleName',
-      width: 100,
+      width: 70,
     },
     {
       title: '剩余积分',
       dataIndex: 'score',
-      width: 100,
+      width: 70,
     },
     {
       title: '操作',
@@ -149,6 +146,7 @@ function StaffDetail () {
       if (!state) return
 
       setListData(data.items)
+      setTotal(+data.pageable.resultCount + 200)
     } catch (error) {
 
       console.error('~~error~~', error)
@@ -262,17 +260,33 @@ function StaffDetail () {
   return (
     <>
 
-      {/* 表格 */}
+      <div className="searchbar">
+
+      </div>
+
       <Table
         bordered
         className="fixedWidthTable"
-        scroll={{ x: 'calc(100vw - 400px)', y: `calc(100vh)` }}
+        scroll={{ x: 'calc(100vw - 300px)', y: `calc(100vh - ${height}px)` }}
         rowKey={ e => e.empId }
         loading={ listLoading }
         columns={ listColumns }
         dataSource={ listData }
         pagination={ false }
       />
+
+      <div className="pagebar">
+        <Pagination
+          onChange={ e => setPage(e - 1) }
+          total={ total }
+          showTotal={ total => `共 ${total} 条` }
+          showSizeChanger={ true }
+          onShowSizeChange={ (currentPage, currentSize) => (setPage(0), setSize(currentSize)) }
+          pageSize={ size }
+          current={ page + 1 }
+          defaultCurrent={ page + 1 }
+        />
+      </div>
 
       <Modal
         visible={ editModel }

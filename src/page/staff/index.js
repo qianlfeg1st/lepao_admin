@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Table, Button } from 'antd'
 import { staff } from '@/api'
+import { AdminContext } from '@/components/Admin'
 
 function Join () {
 
-  const RouteHistory = useHistory()
+  const { push } = useHistory()
   const [listLoading, setListLoading] = useState(true)
   const [listData, setListData] = useState([])
-  const [flag, setFlag] = useState(false)
+
+  const { height, dispatch } = useContext(AdminContext)
 
   const listColumns = [
     {
@@ -47,7 +49,7 @@ function Join () {
       render (e) {
 
         return (
-          <Button type="primary" onClick={ () => RouteHistory.push(`/staff/${e.companyId}`) }>查看明细</Button>
+          <Button type="primary" onClick={ () => push(`/staff/${e.companyId}`) }>查看明细</Button>
         )
       }
     },
@@ -56,7 +58,7 @@ function Join () {
   useEffect(() => {
 
     load()
-  }, [flag])
+  }, [])
 
   const load = async () => {
 
@@ -84,7 +86,7 @@ function Join () {
       <Table
         bordered
         className="fixedWidthTable"
-        scroll={{ x: 'calc(100vw - 400px)', y: `calc(100vh)` }}
+        scroll={{ x: 'calc(100vw - 300px)', y: `calc(100vh - ${height}px)` }}
         rowKey={ e => e.companyId }
         loading={ listLoading }
         columns={ listColumns }

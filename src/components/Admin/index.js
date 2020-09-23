@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useReducer } from 'react'
 import { useHistory, withRouter } from 'react-router-dom'
 import { RouteConfigContext } from '@/router'
 import { Row, Col, Menu, Dropdown } from 'antd'
@@ -6,6 +6,7 @@ import { UserOutlined, HddOutlined, AuditOutlined, DollarOutlined, GiftOutlined,
 import styles from './index.module.scss'
 import 'moment/locale/zh-cn' // 配置moment为中文
 import { common } from '@/api'
+import * as reducer from '@/reducer'
 
 // const { SubMenu } = Menu
 
@@ -31,6 +32,8 @@ function Admin (props) {
   const [selectedKeys, setSelectedKeys] = useState(location.pathname)
   const [current, setCurrent] = useState('company')
 
+  const [state, dispatch] = useReducer(reducer.reducer, reducer.initialState)
+
   useEffect(() => {
 
     // 导航栏路由切换匹配
@@ -52,6 +55,8 @@ function Admin (props) {
 
       setSelectedKeys()
     }
+
+    dispatch({ type: 'change' })
   }, [selectedKeys, current])
 
   const handleClick = e => {
@@ -180,10 +185,14 @@ function Admin (props) {
           )
         }
 
-        <Col span={ 22 } className={ styles.main } id="main">{ children }</Col>
+        <AdminContext.Provider value={{ height: state.height, dispatch }}>
+          <Col span={ 22 } className={ styles.main } id="main">{ children }</Col>
+        </AdminContext.Provider>
       </Row>
     </div>
   )
 }
+
+export const AdminContext = React.createContext()
 
 export default withRouter(Admin)

@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Table, Modal, Button, Form, Input, InputNumber, Select, Tag, Upload, Breadcrumb, message, Spin } from 'antd'
 import { join } from '@/api'
 import { PlusOutlined } from '@ant-design/icons'
 import styles from './index.module.scss'
 import { joinState } from '@/stores'
+import { AdminContext } from '@/components/Admin'
+import { baseURL } from '@/config'
 
 const { Option } = Select
 let inputDom = null
 let type = ''
-let imageUrl = ''
 
 function Join () {
 
@@ -29,6 +30,8 @@ function Join () {
   const [inputValue, setInputValue] = useState('')
   const [companyId, setCompanyId] = useState(undefined)
   const [fileList, setFileList] = useState([])
+
+  const { height } = useContext(AdminContext)
 
   const listColumns = [
     {
@@ -248,7 +251,6 @@ function Join () {
   return (
     <>
 
-      {/* 搜索条件 */}
       <div className="searchbar">
         <div className="searchbtn">
           <Button className="btn" icon={ <PlusOutlined /> } type="primary" size="large" onClick={ () => {
@@ -265,16 +267,15 @@ function Join () {
         </div>
       </div>
 
-      <Breadcrumb separator=">">
+      {/* <Breadcrumb separator=">">
         <Breadcrumb.Item>首页</Breadcrumb.Item>
         <Breadcrumb.Item>企业入驻</Breadcrumb.Item>
-      </Breadcrumb>
+      </Breadcrumb> */}
 
-      {/* 表格 */}
       <Table
         bordered
         className="fixedWidthTable"
-        scroll={{ x: 'calc(100vw - 400px)', y: `calc(100vh)` }}
+        scroll={{ x: 'calc(100vw - 300px)', y: `calc(100vh - ${height}px)` }}
         rowKey={ e => e.companyId }
         loading={ listLoading }
         columns={ listColumns }
@@ -304,11 +305,10 @@ function Join () {
             <Form.Item label="企业LOGO" name="companyLogo" rules={[{required: true, message: '请输上传企业LOGO'}]}>
               <Upload
                 fileList={ fileList }
-                // name="avatar"
                 listType="picture-card"
                 className="avatar-uploader"
                 showUploadList={ true }
-                action="http://47.99.193.34/master/hc2/aliyun/uploadWithFormType"
+                action={ `${baseURL}aliyun/uploadWithFormType` }
                 headers={ {
                   base_access_token: 'eyJhbGciOiJIUzI1NiJ9.CAIQ68HBkswu.UnXtXck1zBIbn5crth-kdcTC1ZCb85z0fc0KI-Pv9gY',
                 } }

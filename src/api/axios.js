@@ -1,25 +1,13 @@
 import { message } from 'antd'
 import axios from 'axios'
 import requestError from  './requestError'
+import { baseURL } from '@/config'
 
 axios.defaults.timeout = 20000
-axios.defaults.headers.post['Set-Cookie'] = 'HttpOnly;Secure;SameSite=None'
+// axios.defaults.headers.post['Set-Cookie'] = 'HttpOnly;Secure;SameSite=None'
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 axios.defaults.withCredentials = true
-
-const baseURL = {
-  // dev: 'https://api.03os.com/admin/',
-  // dev: 'http://47.99.193.34/master/hc2/',
-  dev: 'http://192.168.31.55:8080/dev/hc2/',
-  // dev: 'http://127.0.0.1:7001/admin/',
-  // dev: 'https://api.03os.com/admin/',
-  test: 'https://api.03os.com/admin/',
-  prod: 'https://api.03os.com/admin/',
-}
-
-console.warn('ENV', process.env.REACT_APP_ENV)
-
-axios.defaults.baseURL = baseURL[process.env.REACT_APP_ENV]
+axios.defaults.baseURL = baseURL
 
 // 请求拦截
 axios.interceptors.request.use(config => {
