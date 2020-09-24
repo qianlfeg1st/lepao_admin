@@ -21,10 +21,9 @@ function StaffDetail () {
   const [deptNameSelect, setDeptNameSelect] = useState([])
   const [roleSelect, setRoleSelect] = useState([])
   const [empId, setEmpId] = useState('')
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [size, setSize] = useState(20)
-  const [firstResult, setFirstResult] = useState(20)
 
   const [editModel, setEditModel] = useState(false)
   const [ form ] = Form.useForm()
@@ -139,14 +138,14 @@ function StaffDetail () {
       setListLoading(true)
 
       const { state, data } = await staff.getStaffList({
-        firstResult: 0,
+        firstResult: (page - 1) * size,
         companyId,
       })
 
       if (!state) return
 
       setListData(data.items)
-      setTotal(+data.pageable.resultCount + 200)
+      setTotal(+data.pageable.resultCount)
     } catch (error) {
 
       console.error('~~error~~', error)
@@ -280,8 +279,6 @@ function StaffDetail () {
           onChange={ e => setPage(e - 1) }
           total={ total }
           showTotal={ total => `共 ${total} 条` }
-          showSizeChanger={ true }
-          onShowSizeChange={ (currentPage, currentSize) => (setPage(0), setSize(currentSize)) }
           pageSize={ size }
           current={ page + 1 }
           defaultCurrent={ page + 1 }
