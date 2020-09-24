@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useParams } from 'react-router-dom'
-import { Table, Button, Modal, Form, Input, Select, InputNumber, Spin, message, Pagination } from 'antd'
-import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { Table, Button, Modal, Form, Input, Select, InputNumber, Spin, message, Pagination, Row, Col } from 'antd'
 import { staff } from '@/api'
 import { AdminContext } from '@/components/Admin'
 
@@ -24,6 +23,7 @@ function StaffDetail () {
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [size, setSize] = useState(20)
+  const [companyName, setCompanyName] = useState(20)
 
   const [editModel, setEditModel] = useState(false)
   const [ form ] = Form.useForm()
@@ -95,6 +95,8 @@ function StaffDetail () {
   useEffect(() => {
 
     load()
+
+    setCompanyName(decodeURIComponent(location.hash.split('?')[1].split('=')[1]))
   }, [flag])
 
   const submit = values => {
@@ -260,6 +262,11 @@ function StaffDetail () {
     <>
 
       <div className="searchbar">
+
+        <Row>
+          <Col span={ 8 }>{ companyName }</Col>
+          <Col span={ 16 }></Col>
+        </Row>
 
       </div>
 

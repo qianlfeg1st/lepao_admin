@@ -49,7 +49,7 @@ function Join () {
       render (e) {
 
         return (
-          <Button type="primary" onClick={ () => push(`/staff/${e.companyId}`) }>查看明细</Button>
+          <Button type="primary" onClick={ () => push(`/staff/${e.companyId}?name=${e.companyName}`) }>查看明细</Button>
         )
       }
     },
