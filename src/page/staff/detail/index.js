@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useParams } from 'react-router-dom'
-import { Table, Button, Modal, Form, Input, Select, InputNumber, Spin, message, Pagination, Row, Col } from 'antd'
+import { Table, Button, Modal, Form, Input, Select, InputNumber, Spin, message, Pagination, Row, Col, Radio } from 'antd'
 import { staff } from '@/api'
 import { AdminContext } from '@/components/Admin'
 
@@ -10,12 +10,19 @@ const formItemLayout = {
   labelAlign: 'left',
 }
 
+const radioOptions = [
+  { label: '全部员工', value: 'PBCompanyEmpQueryAll' },
+  { label: '管理员', value: 'PBCompanyEmpQueryManager' },
+  { label: '禁止名单', value: 'offin'},
+]
+
 function StaffDetail () {
 
   const { companyId } = useParams()
   const [listLoading, setListLoading] = useState(true)
   const [detailLoading, setDetailLoading] = useState(true)
   const [listData, setListData] = useState([])
+  const [offinData, setOffinData] = useState([])
   const [flag, setFlag] = useState(false)
   const [deptNameSelect, setDeptNameSelect] = useState([])
   const [roleSelect, setRoleSelect] = useState([])
@@ -23,7 +30,8 @@ function StaffDetail () {
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [size, setSize] = useState(20)
-  const [companyName, setCompanyName] = useState(20)
+  const [companyName, setCompanyName] = useState('')
+  const [radioValue, setRadioValue] = useState('PBCompanyEmpQueryAll')
 
   const [editModel, setEditModel] = useState(false)
   const [ form ] = Form.useForm()
@@ -83,7 +91,7 @@ function StaffDetail () {
             {
               <>
                 <Button className="btn" type="danger" onClick={ () => deleted({ empId: e.empId, remove: true }) }>移除</Button>
-                <Button className="btn" type="danger" onClick={ () => offin({ empId: e.empId }) }>移除并禁入</Button>
+                <Button className="btn" type="danger" onClick={ () => offin({ empId: e.empId }) }>禁入</Button>
               </>
             }
           </>
@@ -92,12 +100,108 @@ function StaffDetail () {
     },
   ]
 
+  const offinColumns = [
+    {
+      title: '昵称',
+      dataIndex: 'nickName',
+      width: 120,
+    },
+    {
+      title: '手机号',
+      dataIndex: 'phoneNumber',
+      width: 100,
+    },
+    {
+      title: '加入时间',
+      dataIndex: 'joinTime',
+      width: 120,
+    },
+    {
+      title: '验证状态',
+      dataIndex: 'joined',
+      width: 100,
+      render: (e) => (
+        <>{ e ? '已验证' : '未验证' }</>
+      ),
+    },
+    {
+      title: '操作',
+      width: 240,
+      render (e) {
+
+        return (
+          <>
+            <Button className="btn" type="primary" onClick={ () => recover(e.empOffinId) }>移出</Button>
+          </>
+        )
+      }
+    },
+  ]
+
   useEffect(() => {
 
-    load()
+    getQrCode()
 
     setCompanyName(decodeURIComponent(location.hash.split('?')[1].split('=')[1]))
-  }, [flag])
+  }, [])
+
+  useEffect(() => {
+
+    if (radioValue === 'offin') {
+
+      loadOffinList()
+    } else {
+
+      load()
+    }
+  }, [radioValue, flag])
+
+  const getQrCode = async () => {
+
+    try {
+
+      setListLoading(true)
+
+      const { state, data } = await staff.getQrCode({
+        companyId,
+      })
+
+      if (!state) return
+    } catch (error) {
+
+      console.error('~~error~~', error)
+    }
+  }
+
+  const recover = empOffinId => {
+
+    Modal.confirm({
+      title: '提示',
+      centered: true,
+      content: `确定移出吗？`,
+      onOk: async () => {
+
+        try {
+
+          const { state } = await staff.recover({
+            empOffinId,
+          })
+
+          if (!state) return
+
+          message.success('操作成功')
+
+          setFlag(!flag)
+        } catch (error) {
+
+          console.log(error)
+        } finally {
+
+          // setSettingLoading(false)
+        }
+      }
+    })
+  }
 
   const submit = values => {
 
@@ -133,6 +237,30 @@ function StaffDetail () {
     })
   }
 
+  const loadOffinList = async () => {
+
+    try {
+
+      setListLoading(true)
+
+      const { state, data } = await staff.getStaffOffinList({
+        firstResult: (page - 1) * size,
+        companyId,
+      })
+
+      if (!state) return
+
+      setOffinData(data.items)
+      setTotal(+data.pageable.resultCount)
+    } catch (error) {
+
+      console.error('~~error~~', error)
+    } finally {
+
+      setListLoading(false)
+    }
+  }
+
   const load = async () => {
 
     try {
@@ -142,6 +270,7 @@ function StaffDetail () {
       const { state, data } = await staff.getStaffList({
         firstResult: (page - 1) * size,
         companyId,
+        query: radioValue,
       })
 
       if (!state) return
@@ -197,7 +326,7 @@ function StaffDetail () {
     Modal.confirm({
       title: '提示',
       centered: true,
-      content: `确定操作吗？`,
+      content: `确定移除吗？`,
       onOk: async () => {
 
         try {
@@ -207,8 +336,6 @@ function StaffDetail () {
             remove,
           })
 
-          console.log('state', state)
-
           if (!state) return
 
           message.success('操作成功')
@@ -217,9 +344,6 @@ function StaffDetail () {
         } catch (error) {
 
           console.log(error)
-        } finally {
-
-          // setSettingLoading(false)
         }
       }
     })
@@ -230,23 +354,20 @@ function StaffDetail () {
     Modal.confirm({
       title: '提示',
       centered: true,
-      content: `确定移除并禁入吗？`,
+      content: `确定禁入吗？`,
       onOk: async () => {
 
         try {
 
-          const { state } = await staff.addOrremoveMember({
+          const { state } = await staff.offin({
             empId,
-            remove,
           })
-
-          console.log('state', state)
 
           if (!state) return
 
-          message.success('操作成功')
-
           setFlag(!flag)
+
+          message.success('操作成功')
         } catch (error) {
 
           console.log(error)
@@ -258,6 +379,13 @@ function StaffDetail () {
     })
   }
 
+  const onChangeRadio = e => {
+
+    // console.log('onChangeRadio', e)
+
+    setRadioValue(e.target.value)
+  }
+
   return (
     <>
 
@@ -265,7 +393,15 @@ function StaffDetail () {
 
         <Row>
           <Col span={ 8 }>{ companyName }</Col>
-          <Col span={ 16 }></Col>
+          <Col span={ 16 }>
+            <Radio.Group
+              options={ radioOptions }
+              onChange={ onChangeRadio }
+              value={ radioValue }
+              optionType="button"
+              buttonStyle="solid"
+            />
+          </Col>
         </Row>
 
       </div>
@@ -276,8 +412,8 @@ function StaffDetail () {
         scroll={{ x: 'calc(100vw - 300px)', y: `calc(100vh - ${height}px)` }}
         rowKey={ e => e.empId }
         loading={ listLoading }
-        columns={ listColumns }
-        dataSource={ listData }
+        columns={  radioValue === 'offin' ? offinColumns : listColumns }
+        dataSource={ radioValue === 'offin' ? offinData : listData }
         pagination={ false }
       />
 

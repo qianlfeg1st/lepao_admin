@@ -43,7 +43,9 @@ function Admin (props) {
 
     if (!pathname) return
 
-    const targetRoute = RouteConfig.find(item => item.path === pathname)
+    const targetRoute = RouteConfig.find(item => item.path.split('/')[1] === pathname.split('/')[1])
+
+    // console.log('~~~~~~~~', pathname)
 
     // console.log('@@targetRoute@@', targetRoute)
 
