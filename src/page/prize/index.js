@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Table, Button } from 'antd'
 import { prize } from '@/api'
+import { AdminContext } from '@/components/Admin'
 
 function Prize () {
 
   const RouteHistory = useHistory()
   const [listLoading, setListLoading] = useState(false)
   const [listData, setListData] = useState([])
-  const [flag, setFlag] = useState(false)
+
+  const { height } = useContext(AdminContext)
 
   const listColumns = [
     {
@@ -46,7 +48,7 @@ function Prize () {
   useEffect(() => {
 
     load()
-  }, [flag])
+  }, [])
 
   const load = async () => {
 
@@ -75,7 +77,7 @@ function Prize () {
       <Table
         bordered
         className="fixedWidthTable"
-        scroll={{ x: 'calc(100vw - 400px)', y: `calc(100vh)` }}
+        scroll={{ x: 'calc(100vw - 300px)', y: `calc(100vh - ${height}px)` }}
         rowKey={ e => e.companyId }
         loading={ listLoading }
         columns={ listColumns }

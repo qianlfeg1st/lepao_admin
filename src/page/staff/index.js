@@ -10,7 +10,7 @@ function Join () {
   const [listLoading, setListLoading] = useState(true)
   const [listData, setListData] = useState([])
 
-  const { height, dispatch } = useContext(AdminContext)
+  const { height } = useContext(AdminContext)
 
   const listColumns = [
     {

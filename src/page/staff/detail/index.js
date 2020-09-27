@@ -140,7 +140,7 @@ function StaffDetail () {
 
   useEffect(() => {
 
-    getQrCode()
+    // getQrCode()
 
     setCompanyName(decodeURIComponent(location.hash.split('?')[1].split('=')[1]))
   }, [])
