@@ -16,7 +16,7 @@ export function reducer (state, action) {
   }
 }
 
-function getHeight () {
+function getHeight1 () {
 
   const header = document.querySelector('#header')
   const pagebar = document.querySelector('.pagebar')
@@ -35,6 +35,23 @@ function getHeight () {
   }
 
   // console.log('~~arr~~', arr)
+
+  return arr.reduce((prev, curr) => prev + curr)
+}
+
+function getHeight () {
+
+  let arr = [200];
+
+  [...document.querySelector('#main').children].filter(item => {
+
+    return ![...item.classList].includes('ant-table-wrapper')
+  }).forEach(item => {
+
+    arr.push(parseInt(window.getComputedStyle(item).height))
+  })
+
+  // console.log('@@@@@@', arr)
 
   return arr.reduce((prev, curr) => prev + curr)
 }

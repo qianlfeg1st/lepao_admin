@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Table, Modal, Button, Form, Input, InputNumber, Select, Tag, Upload, Breadcrumb, message, Spin } from 'antd'
+import { Table, Modal, Button, Form, Input, InputNumber, Select, Tag, Upload, message, Spin } from 'antd'
 import { join } from '@/api'
 import { PlusOutlined } from '@ant-design/icons'
 import styles from './index.module.scss'
@@ -89,8 +89,6 @@ function Join () {
   const onChange = e => {
 
     const list = e.fileList[0]
-
-    // console.log('~~onChange~~', e.fileList)
 
     setFileList(e.fileList.slice(-1))
 
@@ -330,7 +328,7 @@ function Join () {
             </Form.Item>
 
             <Form.Item label="总员工总数" name="empTotal" rules={[{required: true, message: '请输入总员工总数'}]}>
-              <InputNumber size="large" placeholder="请输入总员工总数" style={{ width: '100%' }} />
+              <InputNumber size="large" placeholder="请输入总员工总数" maxLength={ 4 } style={{ width: '100%' }} />
             </Form.Item>
 
             <Form.Item label="企业部门" name="department" rules={[{required: true, message: '请添加部门'}]}>
@@ -358,11 +356,11 @@ function Join () {
             </Form.Item>
 
             <Form.Item label="联系人姓名" name="contactName" rules={[{required: true, message: '请输入联系人姓名'}]}>
-              <Input size="large" placeholder="请输入联系人姓名" />
+              <Input size="large" placeholder="请输入联系人姓名" maxLength={ 7 } />
             </Form.Item>
 
             <Form.Item label="联系人手机" name="contactPhoneNumber" rules={[{required: true, message: '请输入联系人手机'}]}>
-              <Input size="large" placeholder="请输入联系人手机" />
+              <InputNumber size="large" placeholder="请输入联系人手机" maxLength={ 11 } style={{ width: '100%' }} />
             </Form.Item>
           </Form>
         </Spin>

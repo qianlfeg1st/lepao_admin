@@ -21,7 +21,7 @@ function Join () {
     {
       title: '企业名称',
       dataIndex: 'companyName',
-      width: 100,
+      width: 150,
     },
     {
       title: '总员工数',
@@ -45,7 +45,7 @@ function Join () {
     },
     {
       title: '操作',
-      width: 200,
+      width: 100,
       render (e) {
 
         return (

@@ -3,6 +3,9 @@ import { useParams } from 'react-router-dom'
 import { Table, Button, Modal, Form, Input, Select, InputNumber, Spin, message, Pagination, Row, Col, Radio } from 'antd'
 import { staff } from '@/api'
 import { AdminContext } from '@/components/Admin'
+import styles from './index.module.scss'
+import { QrcodeOutlined } from '@ant-design/icons'
+import { baseURL } from '@/config'
 
 const formItemLayout = {
   labelCol: { span: 5, offset: 2, },
@@ -34,6 +37,7 @@ function StaffDetail () {
   const [radioValue, setRadioValue] = useState('PBCompanyEmpQueryAll')
 
   const [editModel, setEditModel] = useState(false)
+  const [qrcodeModel, setQrcodeModel] = useState(false)
   const [ form ] = Form.useForm()
 
   const { height } = useContext(AdminContext)
@@ -62,7 +66,7 @@ function StaffDetail () {
     {
       title: '验证状态',
       dataIndex: 'joined',
-      width: 100,
+      width: 80,
       render: (e) => (
         <>{ e ? '已验证' : '未验证' }</>
       ),
@@ -74,12 +78,12 @@ function StaffDetail () {
     },
     {
       title: '剩余积分',
-      dataIndex: 'score',
-      width: 70,
+      dataIndex: 'gold',
+      width: 90,
     },
     {
       title: '操作',
-      width: 240,
+      width: 200,
       render (e) {
 
         return (
@@ -102,6 +106,11 @@ function StaffDetail () {
 
   const offinColumns = [
     {
+      title: '用户ID',
+      dataIndex: 'empOffinId',
+      width: 100,
+    },
+    {
       title: '昵称',
       dataIndex: 'nickName',
       width: 120,
@@ -118,15 +127,12 @@ function StaffDetail () {
     },
     {
       title: '验证状态',
-      dataIndex: 'joined',
+      dataIndex: 'phoneValidState',
       width: 100,
-      render: (e) => (
-        <>{ e ? '已验证' : '未验证' }</>
-      ),
     },
     {
       title: '操作',
-      width: 240,
+      width: 100,
       render (e) {
 
         return (
@@ -139,8 +145,6 @@ function StaffDetail () {
   ]
 
   useEffect(() => {
-
-    // getQrCode()
 
     setCompanyName(decodeURIComponent(location.hash.split('?')[1].split('=')[1]))
   }, [])
@@ -155,23 +159,6 @@ function StaffDetail () {
       load()
     }
   }, [radioValue, flag])
-
-  const getQrCode = async () => {
-
-    try {
-
-      setListLoading(true)
-
-      const { state, data } = await staff.getQrCode({
-        companyId,
-      })
-
-      if (!state) return
-    } catch (error) {
-
-      console.error('~~error~~', error)
-    }
-  }
 
   const recover = empOffinId => {
 
@@ -205,7 +192,7 @@ function StaffDetail () {
 
   const submit = values => {
 
-    console.log('~~values~~', values)
+    // console.log('~~values~~', values)
 
     Modal.confirm({
       title: '提示',
@@ -321,6 +308,11 @@ function StaffDetail () {
     form.resetFields()
   }
 
+  const cancelQrcode = () => {
+
+    setQrcodeModel(false)
+  }
+
   const deleted = ({ empId, remove }) => {
 
     Modal.confirm({
@@ -389,11 +381,12 @@ function StaffDetail () {
   return (
     <>
 
+      <div className={ styles.title }>{ companyName }员工列表({ total })</div>
+
       <div className="searchbar">
 
         <Row>
-          <Col span={ 8 }>{ companyName }</Col>
-          <Col span={ 16 }>
+          <Col span={ 12 }>
             <Radio.Group
               options={ radioOptions }
               onChange={ onChangeRadio }
@@ -401,6 +394,10 @@ function StaffDetail () {
               optionType="button"
               buttonStyle="solid"
             />
+          </Col>
+          <Col span={ 12 } className={ styles.qrcode }>
+            <p className={ styles.text }>点击放大右侧二维码，添加{ radioValue === 'PBCompanyEmpQueryManager' ? '管理员' : '企业员工' }</p>
+            <QrcodeOutlined onClick={ () => setQrcodeModel(true) } />
           </Col>
         </Row>
 
@@ -452,7 +449,7 @@ function StaffDetail () {
             </Form.Item>
 
             <Form.Item label="剩余积分" name="gold" rules={[{ required: true, message: '请输入剩余积分' }]}>
-              <InputNumber size="large" style={{ width: '100%' }} maxLength="11" />
+              <InputNumber size="large" style={{ width: '100%' }} maxLength="10" />
             </Form.Item>
 
             <Form.Item label="手机号" name="phoneNumber" rules={[{ required: true, message: '请输入手机号' }]}>
@@ -474,6 +471,23 @@ function StaffDetail () {
           </Form>
         </Spin>
 
+      </Modal>
+
+      <Modal
+        visible={ qrcodeModel }
+        title={ companyName }
+        onCancel={ cancelQrcode }
+        onOk={ null }
+        maskClosable={ false }
+        centered
+        width="450px"
+        footer={[
+          // <Button form="edit" key="save" type="primary" htmlType="submit" size="default">确定</Button>,
+          <Button key="cancel" type="default" size="default" onClick={ cancelQrcode }>取消</Button>,
+        ]}
+      >
+        <img className={ styles.img } src={ `${baseURL}company_emp/invite_join_companyemp?companyId=${companyId}&isManager=${radioValue === 'PBCompanyEmpQueryManager'}` } />
+        <p className={ styles.scan }>微信扫一扫，加为{ radioValue === 'PBCompanyEmpQueryManager' ? '管理员' : '企业员工' }</p>
       </Modal>
 
     </>
