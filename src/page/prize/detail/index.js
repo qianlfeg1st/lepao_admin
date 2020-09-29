@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Table, Button, Modal, Form, Input, Select, InputNumber } from 'antd'
+import { Table, Button, Modal, Form, Image } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { prize } from '@/api'
+import styles from './index.module.scss'
 
 const formItemLayout = {
   labelCol: { span: 5, offset: 2, },
@@ -21,35 +22,61 @@ function PrizeDetail () {
   const [size, setSize] = useState(20)
   const [ form ] = Form.useForm()
 
+  const [companyName, setCompanyName] = useState('')
+
   const listColumns = [
+    {
+      title: '编号',
+      dataIndex: 'companyGoodsId',
+      width: 40,
+    },
     {
       title: '分类',
       dataIndex: 'shelfTitle',
-      width: 100,
+      width: 60,
+    },
+    {
+      title: '缩略图',
+      dataIndex: '',
+      width: 50,
+      render (e) {
+
+        return <Image width={ 36 } src={ e.thumb } />
+      }
     },
     {
       title: '商品名称',
       dataIndex: 'name',
-      width: 100,
+      width: 130,
     },
     {
       title: '商品标价',
-      dataIndex: 'gold',
-      width: 100,
+      dataIndex: 'priceLabel',
+      width: 50,
+    },
+    {
+      title: '采购价',
+      dataIndex: 'companyPriceLabel',
+      width: 50,
     },
     {
       title: '兑换积分',
+      dataIndex: 'gold',
+      width: 50,
+    },
+    {
+      title: '库存',
       dataIndex: 'storeCount',
-      width: 100,
+      width: 50,
     },
     {
       title: '上架时间',
       dataIndex: 'updownTime',
-      width: 100,
+      width: 120,
     },
     {
       title: '操作',
-      width: 100,
+      width: 120,
       render (e) {
 
         return (
@@ -61,6 +88,11 @@ function PrizeDetail () {
       }
     },
   ]
+
+  useEffect(() => {
+
+    setCompanyName(decodeURIComponent(location.hash.split('?')[1].split('=')[1]))
+  }, [])
 
   useEffect(() => {
 
@@ -142,6 +174,8 @@ function PrizeDetail () {
 
   return (
     <>
+
+      <div className={ styles.title }>{ companyName }奖品列表({ total })</div>
 
       <Table
         bordered

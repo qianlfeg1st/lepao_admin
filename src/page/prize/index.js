@@ -21,7 +21,7 @@ function Prize () {
     {
       title: '企业名称',
       dataIndex: 'companyName',
-      width: 100,
+      width: 200,
     },
     {
       title: '已选商品',
@@ -39,7 +39,7 @@ function Prize () {
       render (e) {
 
         return (
-          <Button type="primary" onClick={ () => RouteHistory.push(`/prize/${e.companyId}`) }>编辑奖品</Button>
+          <Button type="primary" onClick={ () => RouteHistory.push(`/prize/${e.companyId}?name=${e.companyName}`) }>编辑奖品</Button>
         )
       }
     },

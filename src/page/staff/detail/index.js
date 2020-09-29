@@ -396,8 +396,17 @@ function StaffDetail () {
             />
           </Col>
           <Col span={ 12 } className={ styles.qrcode }>
-            <p className={ styles.text }>点击放大右侧二维码，添加{ radioValue === 'PBCompanyEmpQueryManager' ? '管理员' : '企业员工' }</p>
-            <QrcodeOutlined onClick={ () => setQrcodeModel(true) } />
+            {
+              radioValue !== 'offin'
+                ?
+                <>
+                  <p className={ styles.text }>点击放大右侧二维码，添加{ radioValue === 'PBCompanyEmpQueryManager' ? '管理员' : '企业员工' }</p>
+                  <QrcodeOutlined onClick={ () => setQrcodeModel(true) } />
+                </>
+                :
+                null
+            }
+
           </Col>
         </Row>
 
@@ -486,7 +495,7 @@ function StaffDetail () {
           <Button key="cancel" type="default" size="default" onClick={ cancelQrcode }>取消</Button>,
         ]}
       >
-        <img className={ styles.img } src={ `${baseURL}company_emp/invite_join_companyemp?companyId=${companyId}&isManager=${radioValue === 'PBCompanyEmpQueryManager'}` } />
+        <img className={ styles.img } src={ `${baseURL}company_emp/invite_join_companyemp?companyId=${companyId}&isManager=${radioValue === 'PBCompanyEmpQueryManager'}&base_access_token=eyJhbGciOiJIUzI1NiJ9.CAIQ68HBkswu.UnXtXck1zBIbn5crth-kdcTC1ZCb85z0fc0KI-Pv9gY` } />
         <p className={ styles.scan }>微信扫一扫，加为{ radioValue === 'PBCompanyEmpQueryManager' ? '管理员' : '企业员工' }</p>
       </Modal>
 
