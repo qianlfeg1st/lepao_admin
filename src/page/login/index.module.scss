@@ -6,6 +6,7 @@
   background: url(../../assets/images/body.png) 50% 50% no-repeat;
 
   &__title {
+    display: block;
     width: 728px;
     height: 87px;
     margin: 0 auto;
@@ -19,6 +20,7 @@
   }
 
   &__qrCode {
+    display: block;
     width: 213px;
     height: 213px;
     margin: 90px auto 0 auto;

@@ -88,10 +88,7 @@ function StaffDetail () {
 
         return (
           <>
-            <Button className="btn" type="primary" onClick={ () => {
-
-              getStaffDetail(e.empId)
-            } }>编辑</Button>
+            <Button className="btn" type="primary" onClick={ () => getStaffDetail(e.empId) }>编辑</Button>
             {
               <>
                 <Button className="btn" type="danger" onClick={ () => deleted({ empId: e.empId, remove: true }) }>移除</Button>
@@ -449,6 +446,7 @@ function StaffDetail () {
       >
         <Spin spinning={ detailLoading }>
           <Form id="edit" form={ form } { ...formItemLayout } onFinish={ submit }>
+
             <Form.Item label="所属企业" name="companyName">
               <Input size="large" disabled />
             </Form.Item>

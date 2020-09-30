@@ -13,6 +13,7 @@ import StaffDetail from './../page/staff/detail/'
 
 import Prize from './../page/prize/'
 import PrizeDetail from './../page/prize/detail/'
+import PrizeChoose from './../page/prize/choose/'
 
 import Exchange from './../page/exchange/'
 import ExchangeDetail from './../page/exchange/detail/'
@@ -24,7 +25,6 @@ import StepsDetail from './../page/steps/detail/'
 
 import User from './../page/user/'
 import Goods from './../page/goods/'
-
 
 // 定义routes
 const routerConfig = [
@@ -87,6 +87,14 @@ const routerConfig = [
     children: <PrizeDetail />,
     auth: true,
     title: '企业奖品',
+    navMenu: 'company',
+  },
+  {
+    path: '/prize/choose/:companyId',
+    component: PrizeChoose,
+    children: <PrizeChoose />,
+    auth: true,
+    title: '挑选奖品',
     navMenu: 'company',
   },
   {

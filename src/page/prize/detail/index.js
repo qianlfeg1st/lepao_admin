@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Table, Button, Modal, Form, Image } from 'antd'
+import { Table, Button, Modal, Form, Image, InputNumber, DatePicker, Input, message } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { prize } from '@/api'
 import styles from './index.module.scss'
+import moment from 'moment'
+
+const { RangePicker } = DatePicker
 
 const formItemLayout = {
   labelCol: { span: 5, offset: 2, },
@@ -21,6 +24,8 @@ function PrizeDetail () {
   const [total, setTotal] = useState(0)
   const [size, setSize] = useState(20)
   const [ form ] = Form.useForm()
+  const [editModel, setEditModel] = useState(false)
+  const [goodsId, setGoodsId] = useState('')
 
   const [companyName, setCompanyName] = useState('')
 
@@ -81,7 +86,7 @@ function PrizeDetail () {
 
         return (
           <>
-            <Button className="btn" type="primary">编辑</Button>
+            <Button className="btn" type="primary" onClick={ () => getGoodsDetail(e) }>编辑</Button>
             <Button className="btn" type="danger" onClick={ () => deleted(e) }>移除</Button>
           </>
         )
@@ -98,6 +103,25 @@ function PrizeDetail () {
 
     load()
   }, [flag])
+
+  const getGoodsDetail = e => {
+
+    setEditModel(true)
+
+    const { name, shelfTitle, priceLabel, companyPriceLabel, gold, storeCount, companyGoodsId } = e
+
+    form.setFieldsValue({
+      name,
+      shelfTitle,
+      priceLabel,
+      companyPriceLabel,
+      gold,
+      storeCount,
+      updownTime: [moment(1600411009340), moment(1601452009340)],
+    })
+
+    setGoodsId(companyGoodsId)
+  }
 
   const load = async () => {
 
@@ -132,7 +156,58 @@ function PrizeDetail () {
 
   const submit = async values => {
 
-    console.log()
+    console.log('~submit~', values)
+    console.log('~goodsId~', goodsId)
+
+    const { storeCount, gold, updownTime, companyPriceLabel } = values
+    const data = listData.find((item => item.companyGoodsId === goodsId))
+
+    Modal.confirm({
+      title: '提示',
+      centered: true,
+      content: '确认编辑吗？',
+      onOk: async () => {
+
+        try {
+
+          const { state } = await prize.editPrizeDetail({
+            items: [
+              {
+                ...data,
+                storeCount,
+                gold,
+                companyPrice: companyPriceLabel,
+                recommend: data.recommendLablel === '是',
+                downTime: updownTime[1].valueOf(),
+                upTime: updownTime[0].valueOf(),
+                companyId: undefined,
+                companyPriceLabel: undefined,
+                name: undefined,
+                priceLabel: undefined,
+                recommendLablel: undefined,
+                shelfTitle: undefined,
+                thumb: undefined,
+                updownTime: undefined,
+                companyUsed: undefined,
+              }
+            ]
+          })
+
+          if (!state) return
+
+          message.success('编辑成功')
+
+          setEditModel(false)
+
+          setFlag(!flag)
+
+          form.resetFields()
+        } catch (error) {
+
+          console.error('~~error~~', error)
+        }
+      },
+    })
   }
 
   const deleted = e => {
@@ -141,7 +216,6 @@ function PrizeDetail () {
       title: '提示',
       icon: <ExclamationCircleOutlined />,
       centered: true,
-      // content: `确定${true ? '加入' : '移除'}【${'钱立峰'}】吗？`,
       content: `确定操作吗？`,
       okText: '确定',
       cancelText: '取消',
@@ -187,6 +261,60 @@ function PrizeDetail () {
         dataSource={ listData }
         pagination={ false }
       />
+
+      <Modal
+        visible={ editModel }
+        title="编辑奖品"
+        onCancel={ onCancel }
+        onOk={ null }
+        maskClosable={ false }
+        centered
+        width="670px"
+        footer={[
+          <Button form="edit" key="save" type="primary" htmlType="submit" size="default">确定</Button>,
+          <Button key="cancel" type="default" size="default" onClick={ onCancel }>取消</Button>,
+        ]}
+      >
+        <Form id="edit" form={ form } { ...formItemLayout } onFinish={ submit }>
+
+          <Form.Item label="商品名称" name="name">
+            <Input size="large" disabled />
+          </Form.Item>
+
+          <Form.Item label="商品名称" name="name">
+            <Input size="large" disabled />
+          </Form.Item>
+
+          <Form.Item label="商品分类" name="shelfTitle">
+            <Input size="large" disabled />
+          </Form.Item>
+
+          <Form.Item label="商品标价" name="priceLabel">
+            <Input size="large" disabled />
+          </Form.Item>
+
+          <Form.Item label="采购价" name="companyPriceLabel">
+            <Input size="large" disabled />
+          </Form.Item>
+
+          <Form.Item label="兑换积分" name="gold" rules={[{ required: true, message: '请输入兑换积分' }]}>
+            <InputNumber size="large" style={{ width: '100%' }} maxLength="7" />
+          </Form.Item>
+
+          <Form.Item label="库存数量" name="storeCount" rules={[{ required: true, message: '请输入库存数量' }]}>
+            <InputNumber size="large" style={{ width: '100%' }} maxLength="4" />
+          </Form.Item>
+
+          <Form.Item label="上架时间" name="updownTime" rules={[{ required: true, message: '请选择上架时间' }]}>
+            <RangePicker
+              size="large"
+              showTime={{ format: 'HH:mm' }}
+              format="YYYY-MM-DD HH:mm"
+            />
+          </Form.Item>
+
+        </Form>
+      </Modal>
 
     </>
   )
