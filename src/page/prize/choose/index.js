@@ -1,45 +1,70 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useParams } from 'react-router-dom'
-import { Table, Button, Transfer } from 'antd'
+import { Table, Button, Select, Modal, Pagination, Row, Col, Image } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { prize } from '@/api'
 import { AdminContext } from '@/components/Admin'
+
+const { Option } = Select
 
 function Prize () {
 
   const { companyId } = useParams()
   const [listLoading, setListLoading] = useState(false)
   const [listData, setListData] = useState([])
+  const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [size, setSize] = useState(20)
+  const [shelfList, setShelfList] = useState([])
+  const [shelfId, setShelfId] = useState('')
+  const [goodsIds, setGoodsIds] = useState([])
+  const [flag, setFlag] = useState(false)
 
   const { height } = useContext(AdminContext)
 
   const listColumns = [
     {
-      title: '企业编号',
-      dataIndex: 'companyId',
+      title: '分类',
+      dataIndex: 'shelfTitle',
       width: 100,
     },
     {
-      title: '企业名称',
-      dataIndex: 'companyName',
-      width: 200,
+      title: '缩略图',
+      dataIndex: '',
+      width: 50,
+      render (e) {
+
+        return <Image width={ 36 } src={ e.thumb } />
+      }
     },
     {
-      title: '已选商品',
-      dataIndex: 'recommendGoodsTotal',
+      title: '商品名称',
+      dataIndex: 'name',
+      width: 170,
+    },
+    {
+      title: '商品标价',
+      dataIndex: 'priceLable',
       width: 100,
     },
     {
-      title: '推荐的热门商品',
-      dataIndex: 'goodsTotal',
+      title: '采购价',
+      dataIndex: 'companyPriceLabel',
       width: 100,
     },
   ]
 
   useEffect(() => {
 
-    load()
-    // getShelfList()
+    getShelfList()
   }, [])
+
+  useEffect(() => {
+
+    if (!shelfId) return
+
+    load()
+  }, [flag])
 
   const getShelfList = async () => {
 
@@ -48,6 +73,10 @@ function Prize () {
       const { state, data } = await prize.getShelfList()
 
       if (!state) return
+
+      setShelfList(data.list)
+      setShelfId(data.list[0].shelfId)
+      setFlag(!flag)
     } catch (error) {
 
       console.error('~~error~~', error)
@@ -62,13 +91,14 @@ function Prize () {
 
       const { state, data } = await prize.getPrizeList({
         companyId,
-        firstResult: 0,
-        shelfId: 1,
+        firstResult: (page - 1) * size,
+        shelfId,
       })
 
       if (!state) return
 
-      setListData(data)
+      setListData(data.items)
+      setTotal(+data.pageable.resultCount)
     } catch (error) {
 
       console.error('~~error~~', error)
@@ -78,54 +108,95 @@ function Prize () {
     }
   }
 
+  const selPrize = async () => {
+
+    Modal.confirm({
+      title: '提示',
+      icon: <ExclamationCircleOutlined />,
+      centered: true,
+      content: '确定选为奖品吗？',
+      okText: '确定',
+      cancelText: '取消',
+      onCancel: () => {},
+      onOk: async () => {
+
+        try {
+
+          const { state } = await prize.selPrize({
+            companyId,
+            goodsIds,
+          })
+
+          if (!state) return
+
+          setFlag(!flag)
+
+          setGoodsIds([])
+        } catch (error) {
+
+          console.error('~~error~~', error)
+        }
+      }
+    })
+  }
+
   return (
     <>
 
-      <Transfer showSelectAll={false}>
-        {({
-          direction,
-          filteredItems,
-          onItemSelectAll,
-          onItemSelect,
-          selectedKeys: listSelectedKeys,
-          disabled: listDisabled,
-        }) => {
-          const columns = direction === 'left' ? leftColumns : rightColumns;
+      <div className="searchbar">
+        <div className="searchbtn">
+          <Select size="large" placeholder="请选择分类" value={ shelfId } onChange={ e => {
 
-          const rowSelection = {
-            getCheckboxProps: item => ({ disabled: listDisabled || item.disabled }),
-            onSelectAll (selected, selectedRows) {
-              const treeSelectedKeys = selectedRows
-                .filter(item => !item.disabled)
-                .map(({ key }) => key);
-              const diffKeys = selected
-                ? difference(treeSelectedKeys, listSelectedKeys)
-                : difference(listSelectedKeys, treeSelectedKeys);
-              onItemSelectAll(diffKeys, selected);
-            },
-            onSelect ({ key }, selected) {
-              onItemSelect(key, selected);
-            },
-            selectedRowKeys: listSelectedKeys,
-          };
+            setShelfId(e)
+            setFlag(!flag)
+          } }>
+            { shelfList.map(({ shelfId, title }) => <Option key={ shelfId } value={ shelfId }>{ title }</Option>) }
+          </Select>
+        </div>
 
-          return (
-            <Table
-              rowSelection={rowSelection}
-              columns={columns}
-              dataSource={filteredItems}
-              size="small"
-              style={{ pointerEvents: listDisabled ? 'none' : null }}
-              onRow={({ key, disabled: itemDisabled }) => ({
-                onClick: () => {
-                  if (itemDisabled || listDisabled) return;
-                  onItemSelect(key, !listSelectedKeys.includes(key));
-                },
-              })}
-            />
-          );
+        <div className="searchbtn">
+
+        </div>
+      </div>
+
+      <Table
+        bordered
+        className="fixedWidthTable"
+        scroll={{ x: 'calc(100vw - 300px)', y: `calc(100vh - ${height}px)` }}
+        rowSelection={{
+          type: 'checkbox',
+          selectedRowKeys: goodsIds,
+          onChange: keys => {
+
+            setGoodsIds(keys)
+          },
         }}
-      </Transfer>
+        rowKey={ e => e.goodsId }
+        loading={ listLoading }
+        columns={ listColumns }
+        dataSource={ listData }
+        pagination={ false }
+      />
+
+      <Row className="pagebar">
+        <Col span={ 18 }>
+          <Button type="primary" disabled={ !goodsIds.length } onClick={ selPrize }>选为奖品</Button>
+        </Col>
+        <Col span={ 6 }>
+          <Pagination
+            onChange={ e => {
+
+              setPage(e)
+              setFlag(!flag)
+            } }
+            total={ total }
+            showTotal={ total => `共 ${total} 条` }
+            pageSize={ size }
+            current={ page }
+            defaultCurrent={ page }
+          />
+        </Col>
+      </Row>
 
     </>
   )

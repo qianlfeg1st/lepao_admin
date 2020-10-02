@@ -35,3 +35,11 @@ export const getShelfList = () => {
 
   return axios.get('goods/list_shelf')
 }
+
+// 选为奖品
+export const selPrize = params => {
+
+  return axios.post('company_goods/sel_goods', {
+    ...params,
+  })
+}

@@ -57,9 +57,13 @@ function Admin (props) {
 
       setSelectedKeys()
     }
-
-    dispatch({ type: 'change' })
   }, [selectedKeys, current])
+
+  useEffect(() => {
+
+    console.log('~~dispatch~~')
+    dispatch({ type: 'change' })
+  }, [location.pathname])
 
   const handleClick = e => {
 

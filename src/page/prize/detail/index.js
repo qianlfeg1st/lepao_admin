@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { Table, Button, Modal, Form, Image, InputNumber, DatePicker, Input, message } from 'antd'
+import React, { useState, useEffect, useContext } from 'react'
+import { useParams, useHistory } from 'react-router-dom'
+import { Table, Button, Modal, Form, Image, InputNumber, DatePicker, Input, message, Col, Row } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { prize } from '@/api'
 import styles from './index.module.scss'
 import moment from 'moment'
+import { AdminContext } from '@/components/Admin'
+import formatDate from '@/utils/formatDate'
 
 const { RangePicker } = DatePicker
 
@@ -16,7 +18,9 @@ const formItemLayout = {
 
 function PrizeDetail () {
 
+  const { push } = useHistory()
   const { companyId } = useParams()
+
   const [listLoading, setListLoading] = useState(false)
   const [listData, setListData] = useState([])
   const [flag, setFlag] = useState(false)
@@ -28,6 +32,8 @@ function PrizeDetail () {
   const [goodsId, setGoodsId] = useState('')
 
   const [companyName, setCompanyName] = useState('')
+
+  const { height } = useContext(AdminContext)
 
   const listColumns = [
     {
@@ -43,7 +49,7 @@ function PrizeDetail () {
     {
       title: '缩略图',
       dataIndex: '',
-      width: 50,
+      width: 45,
       render (e) {
 
         return <Image width={ 36 } src={ e.thumb } />
@@ -67,7 +73,7 @@ function PrizeDetail () {
     {
       title: '兑换积分',
       dataIndex: 'gold',
-      width: 50,
+      width: 60,
     },
     {
       title: '库存',
@@ -178,8 +184,8 @@ function PrizeDetail () {
                 gold,
                 companyPrice: companyPriceLabel,
                 recommend: data.recommendLablel === '是',
-                downTime: updownTime[1].valueOf(),
-                upTime: updownTime[0].valueOf(),
+                downTime: formatDate(updownTime[1].valueOf()),
+                upTime: formatDate(updownTime[0].valueOf()),
                 companyId: undefined,
                 companyPriceLabel: undefined,
                 name: undefined,
@@ -249,12 +255,19 @@ function PrizeDetail () {
   return (
     <>
 
-      <div className={ styles.title }>{ companyName }奖品列表({ total })</div>
+      <Row className="pagebar">
+        <Col span={ 18 }>
+          <div className={ styles.title }>{ companyName }奖品列表({ total })</div>
+        </Col>
+        <Col span={ 6 }>
+          <Button type="primary" onClick={ () => push(`/prize/choose/${companyId}`) }>挑选商品</Button>
+        </Col>
+      </Row>
 
       <Table
         bordered
         className="fixedWidthTable"
-        scroll={{ x: 'calc(100vw - 400px)', y: `calc(100vh)` }}
+        scroll={{ x: 'calc(100vw - 300px)', y: `calc(100vh - ${height}px)` }}
         rowKey={ e => e.companyGoodsId }
         loading={ listLoading }
         columns={ listColumns }

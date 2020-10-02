@@ -41,7 +41,7 @@ function getHeight1 () {
 
 function getHeight () {
 
-  let arr = [200];
+  let arr = [180];
 
   [...document.querySelector('#main').children].filter(item => {
 
