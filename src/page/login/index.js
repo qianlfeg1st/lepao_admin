@@ -6,12 +6,13 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import styles from './index.module.scss'
 import { common } from '@/api'
 import sleep from '@/utils/sleep'
+import { baseURL } from '@/config'
 
 function Login () {
 
   const RouteHistory = useHistory()
 
-  const [qrcode, setQrcode] = useState('http://47.99.193.34/master/hc2/company_login/login_mgr_get_qr?secure=')
+  const [qrcode, setQrcode] = useState(`${baseURL}company_login/login_mgr_get_qr?secure=`)
 
   const secureRef = useRef(null)
 

@@ -61,7 +61,6 @@ function Admin (props) {
 
   useEffect(() => {
 
-    console.log('~~dispatch~~')
     dispatch({ type: 'change' })
   }, [location.pathname])
 
@@ -149,7 +148,7 @@ function Admin (props) {
 
         {
           (current === 'company') && (
-            <Col span={ 2 } className={ styles.aside }>
+            <Col span={ 3 } className={ styles.aside }>
               <Menu onClick={ handleRouteClick } mode="inline" selectedKeys={ selectedKeys }>
 
                 <Menu.Item icon={ <UserAddOutlined /> } key="/join" onClick={ () => history.push('/join') }>企业入驻</Menu.Item>
@@ -171,7 +170,7 @@ function Admin (props) {
 
         {
           (current === 'goods') && (
-            <Col span={ 2 } className={ styles.aside }>
+            <Col span={ 3 } className={ styles.aside }>
               <Menu onClick={ handleRouteClick } mode="inline" selectedKeys={ selectedKeys }>
 
                 <Menu.Item icon={ <HddOutlined /> } key="/goods" onClick={ () => history.push('/goods') }>商品库</Menu.Item>
@@ -182,7 +181,7 @@ function Admin (props) {
 
         {
           (current === 'user') && (
-            <Col span={ 2 } className={ styles.aside }>
+            <Col span={ 3 } className={ styles.aside }>
               <Menu onClick={ handleRouteClick } mode="inline" selectedKeys={ selectedKeys }>
 
                 <Menu.Item icon={ <UserOutlined /> } key="/user" onClick={ () => history.push('/user') }>用户列表</Menu.Item>
@@ -192,7 +191,7 @@ function Admin (props) {
         }
 
         <AdminContext.Provider value={{ height: state.height, dispatch }}>
-          <Col span={ 22 } className={ styles.main } id="main">{ children }</Col>
+          <Col span={ 21 } className={ styles.main } id="main">{ children }</Col>
         </AdminContext.Provider>
       </Row>
     </div>

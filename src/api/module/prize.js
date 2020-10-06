@@ -43,3 +43,13 @@ export const selPrize = params => {
     ...params,
   })
 }
+
+// 移除奖品
+export const removePrize = params => {
+
+  return axios.get('company_goods/remove_companygoods', {
+    params: {
+      ...params,
+    },
+  })
+}

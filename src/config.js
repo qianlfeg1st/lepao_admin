@@ -1,6 +1,6 @@
 const url = {
-  dev: 'http://47.99.193.34/master/hc2/',
-  test: 'https://api.03os.com/admin/',
+  dev: 'https://app.happyrun.cn/master/hc2/',
+  test: 'https://app.happyrun.cn/master/hc2/',
   prod: 'https://api.03os.com/admin/',
 }
 

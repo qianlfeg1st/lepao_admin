@@ -422,12 +422,16 @@ function StaffDetail () {
 
       <div className="pagebar">
         <Pagination
-          onChange={ e => setPage(e - 1) }
+          onChange={ e => {
+
+            setPage(e)
+            setFlag(!flag)
+          } }
           total={ total }
           showTotal={ total => `共 ${total} 条` }
           pageSize={ size }
-          current={ page + 1 }
-          defaultCurrent={ page + 1 }
+          current={ page }
+          defaultCurrent={ page }
         />
       </div>
 

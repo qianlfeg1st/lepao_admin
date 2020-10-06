@@ -220,6 +220,8 @@ function Join () {
 
     setInputVisible(false)
 
+    if (!inputValue) return
+
     const departmentArr = [inputValue, ...department]
 
     setDepartment(departmentArr)
@@ -243,7 +245,13 @@ function Join () {
 
   const closeTag = index => {
 
-    setDepartment(department.filter((_, idx) => idx !== index))
+    console.log('closeTag', index)
+
+    setDepartment(department => department.filter((_, idx) => idx !== index))
+
+    // form.setFieldsValue({
+    //   department: department,
+    // })
   }
 
   return (
@@ -264,11 +272,6 @@ function Join () {
           } }>创建企业</Button>
         </div>
       </div>
-
-      {/* <Breadcrumb separator=">">
-        <Breadcrumb.Item>首页</Breadcrumb.Item>
-        <Breadcrumb.Item>企业入驻</Breadcrumb.Item>
-      </Breadcrumb> */}
 
       <Table
         bordered
@@ -323,7 +326,7 @@ function Join () {
 
             <Form.Item label="企业状态" name="joinState" rules={[{required: true, message: '请选择企业状态'}]}>
               <Select placeholder="请选择企业状态" size="large">
-                { Object.keys(joinState).map(key => <Option key={key} value={key}>{joinState[key]}</Option>) }
+                { Object.keys(joinState).map(key => <Option key={ key } value={ key }>{ joinState[key] }</Option>) }
               </Select>
             </Form.Item>
 
@@ -333,7 +336,7 @@ function Join () {
 
             <Form.Item label="企业部门" name="department" rules={[{required: true, message: '请添加部门'}]}>
               <>
-                { department.map((item, index) => <Tag className={ styles['edit-tag'] } closable key={ index } onClose={ () => closeTag(index) }>{ item }</Tag>) }
+                { department.map((item, index) => <Tag className={ styles['edit-tag'] } closable key={ +new Date() + item } onClose={ () => closeTag(index) }>{ item }</Tag>) }
                 {
                   inputVisible
                     ?
@@ -348,7 +351,7 @@ function Join () {
                       onPressEnter={ inputConfirm }
                     />
                     :
-                    <Tag className={ styles['site-tag-plus'] } onClick={ showInput }>
+                    <Tag className={ styles['edit-tag'] } onClick={ showInput }>
                       <PlusOutlined />新增部门
                     </Tag>
                 }

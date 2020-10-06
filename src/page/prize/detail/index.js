@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { Table, Button, Modal, Form, Image, InputNumber, DatePicker, Input, message, Col, Row } from 'antd'
+import { Table, Button, Modal, Form, Image, InputNumber, DatePicker, Input, message, Col, Row, Pagination } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { prize } from '@/api'
 import styles from './index.module.scss'
@@ -93,7 +93,7 @@ function PrizeDetail () {
         return (
           <>
             <Button className="btn" type="primary" onClick={ () => getGoodsDetail(e) }>编辑</Button>
-            <Button className="btn" type="danger" onClick={ () => deleted(e) }>移除</Button>
+            <Button className="btn" type="danger" onClick={ () => deleted(+e.companyGoodsId) }>移除</Button>
           </>
         )
       }
@@ -216,13 +216,13 @@ function PrizeDetail () {
     })
   }
 
-  const deleted = e => {
+  const deleted = companyGoodsId => {
 
     Modal.confirm({
       title: '提示',
       icon: <ExclamationCircleOutlined />,
       centered: true,
-      content: `确定操作吗？`,
+      content: '确定移除吗？',
       okText: '确定',
       cancelText: '取消',
       onCancel: () => {},
@@ -230,23 +230,17 @@ function PrizeDetail () {
 
         try {
 
-          setSettingLoading(true)
-
-          const { data } = await stationApi.deleteOil({
-            id,
+          const { state } = await prize.removePrize({
+            companyGoodsId,
           })
 
-          if (data?.status) {
+          if (!state) return
 
-            message.success('删除成功')
-            setIsReloadOil(Math.random())
-          }
+          message.success('删除成功')
+          setFlag(!flag)
         } catch (error) {
 
-          console.log(error)
-        } finally {
-
-          setSettingLoading(false)
+          console.log('~~error~~', error)
         }
       }
     })
@@ -274,6 +268,21 @@ function PrizeDetail () {
         dataSource={ listData }
         pagination={ false }
       />
+
+      <div className="pagebar">
+        <Pagination
+          onChange={ e => {
+
+            setPage(e)
+            setFlag(!flag)
+          } }
+          total={ total }
+          showTotal={ total => `共 ${total} 条` }
+          pageSize={ size }
+          current={ page }
+          defaultCurrent={ page }
+        />
+      </div>
 
       <Modal
         visible={ editModel }
