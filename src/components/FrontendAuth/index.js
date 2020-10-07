@@ -35,7 +35,7 @@ function FrontendAuth (props) {
   }
 
   // 已登录
-  if (sessionStorage.getItem('token') || true) {
+  if (sessionStorage.getItem('accessToken')) {
 
     return (
       <Route path="/" render={ () =>

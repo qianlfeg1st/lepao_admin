@@ -2,6 +2,7 @@ import { message } from 'antd'
 import axios from 'axios'
 import requestError from  './requestError'
 import { baseURL } from '@/config'
+const createHistory = require('history').createHashHistory
 
 axios.defaults.timeout = 20000
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
@@ -28,10 +29,11 @@ axios.interceptors.response.use(response => {
 
   // if (!response.data.status && response.data.message) return message.error(`${response.status}: ${response.data.message}`)
 
-  if (response.status === 203) {
+  if (response.status === 201) {
 
     sessionStorage.clear()
-    window.location.reload()
+
+    createHistory().push('/login')
   }
 
   if (response.status === 207) message.error(response.data.value || '服务器暂时失联，请稍后再试')
