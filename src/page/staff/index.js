@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Table, Button } from 'antd'
+import { Table, Button, Breadcrumb } from 'antd'
 import { staff } from '@/api'
 import { AdminContext } from '@/components/Admin'
 
@@ -82,6 +82,10 @@ function Join () {
 
   return (
     <>
+
+      <Breadcrumb style={{ marginBottom: '10px' }}>
+        <Breadcrumb.Item>公司列表（企业员工）</Breadcrumb.Item>
+      </Breadcrumb>
 
       <Table
         bordered

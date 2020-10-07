@@ -4,7 +4,6 @@ import requestError from  './requestError'
 import { baseURL } from '@/config'
 
 axios.defaults.timeout = 20000
-// axios.defaults.headers.post['Set-Cookie'] = 'HttpOnly;Secure;SameSite=None'
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 axios.defaults.withCredentials = true
 axios.defaults.baseURL = baseURL
@@ -12,8 +11,11 @@ axios.defaults.baseURL = baseURL
 // 请求拦截
 axios.interceptors.request.use(config => {
 
-  // config.headers['base_access_token'] = sessionStorage.getItem('accessToken')
-  config.headers['base_access_token'] = 'eyJhbGciOiJIUzI1NiJ9.CAIQ68HBkswu.UnXtXck1zBIbn5crth-kdcTC1ZCb85z0fc0KI-Pv9gY'
+  const accessToken = sessionStorage.getItem('accessToken')
+
+  if (accessToken) config.headers.base_access_token = sessionStorage.getItem('accessToken')
+
+  // config.headers['base_access_token'] = 'eyJhbGciOiJIUzI1NiJ9.CAIQ68HBkswu.UnXtXck1zBIbn5crth-kdcTC1ZCb85z0fc0KI-Pv9gY'
 
   return config
 }, error => {

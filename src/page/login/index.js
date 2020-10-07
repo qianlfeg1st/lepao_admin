@@ -80,11 +80,13 @@ function Login () {
         secure: secureRef.current,
       })
 
-      if (!state) return
+      if (!state || data.error) return checkLogin()
 
-      checkLogin()
+      sessionStorage.setItem('accessToken', data.accessToken)
 
-      // console.log('checkLogin', data)
+      message.success('登录成功')
+
+      RouteHistory.push('/join')
     } catch (error) {
 
       console.error('~~error~~', error)

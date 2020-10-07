@@ -311,7 +311,7 @@ function Join () {
                 showUploadList={ true }
                 action={ `${baseURL}aliyun/uploadWithFormType` }
                 headers={ {
-                  base_access_token: 'eyJhbGciOiJIUzI1NiJ9.CAIQ68HBkswu.UnXtXck1zBIbn5crth-kdcTC1ZCb85z0fc0KI-Pv9gY',
+                  base_access_token: sessionStorage.getItem('accessToken'),
                 } }
                 onChange={ onChange }
               >

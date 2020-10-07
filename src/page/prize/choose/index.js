@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { useParams } from 'react-router-dom'
-import { Table, Button, Select, Modal, Pagination, Row, Col, Image } from 'antd'
+import { useParams, Link } from 'react-router-dom'
+import { Table, Button, Select, Modal, Pagination, Row, Col, Image, Breadcrumb } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { prize } from '@/api'
 import { AdminContext } from '@/components/Admin'
@@ -19,6 +19,7 @@ function Prize () {
   const [shelfId, setShelfId] = useState('')
   const [goodsIds, setGoodsIds] = useState([])
   const [flag, setFlag] = useState(false)
+  const [companyName, setCompanyName] = useState('')
 
   const { height } = useContext(AdminContext)
 
@@ -57,6 +58,8 @@ function Prize () {
   useEffect(() => {
 
     getShelfList()
+
+    setCompanyName(decodeURIComponent(location.hash.split('?')[1].split('=')[1]))
   }, [])
 
   useEffect(() => {
@@ -142,6 +145,16 @@ function Prize () {
 
   return (
     <>
+
+      <Breadcrumb style={{ marginBottom: '10px' }}>
+        <Breadcrumb.Item>
+          <Link to="/prize">公司列表（企业奖品）</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to={ `/prize/${companyId}?name=${companyName}` }>企业奖品</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>挑选奖品</Breadcrumb.Item>
+      </Breadcrumb>
 
       <div className="searchbar">
         <div className="searchbtn">

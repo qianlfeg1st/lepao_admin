@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
-import { Table, Button, Modal, Form, Image, InputNumber, DatePicker, Input, message, Col, Row, Pagination } from 'antd'
+import { useParams, useHistory, Link } from 'react-router-dom'
+import { Table, Button, Modal, Form, Image, InputNumber, DatePicker, Input, message, Col, Row, Pagination, Breadcrumb } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { prize } from '@/api'
 import styles from './index.module.scss'
@@ -249,12 +249,19 @@ function PrizeDetail () {
   return (
     <>
 
+      <Breadcrumb style={{ marginBottom: '10px' }}>
+        <Breadcrumb.Item>
+          <Link to="/prize">公司列表（企业奖品）</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>企业奖品</Breadcrumb.Item>
+      </Breadcrumb>
+
       <Row className="pagebar">
         <Col span={ 18 }>
           <div className={ styles.title }>{ companyName }奖品列表({ total })</div>
         </Col>
         <Col span={ 6 }>
-          <Button type="primary" onClick={ () => push(`/prize/choose/${companyId}`) }>挑选商品</Button>
+          <Button type="primary" onClick={ () => push(`/prize/choose/${companyId}?name=${companyName}`) }>挑选商品</Button>
         </Col>
       </Row>
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { useParams } from 'react-router-dom'
-import { Table, Button, Modal, Form, Input, Select, InputNumber, Spin, message, Pagination, Row, Col, Radio } from 'antd'
+import { useParams, Link } from 'react-router-dom'
+import { Table, Button, Modal, Form, Input, Select, InputNumber, Spin, message, Pagination, Row, Col, Radio, Breadcrumb } from 'antd'
 import { staff } from '@/api'
 import { AdminContext } from '@/components/Admin'
 import styles from './index.module.scss'
@@ -377,6 +377,13 @@ function StaffDetail () {
 
   return (
     <>
+
+      <Breadcrumb style={{ marginBottom: '10px' }}>
+        <Breadcrumb.Item>
+          <Link to="/staff">公司列表（企业员工）</Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>企业员工</Breadcrumb.Item>
+      </Breadcrumb>
 
       <div className={ styles.title }>{ companyName }员工列表({ total })</div>
 

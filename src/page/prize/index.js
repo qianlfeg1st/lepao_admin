@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Table, Button } from 'antd'
+import { Table, Button, Breadcrumb } from 'antd'
 import { prize } from '@/api'
 import { AdminContext } from '@/components/Admin'
 
@@ -73,7 +73,10 @@ function Prize () {
   return (
     <>
 
-      {/* 表格 */}
+      <Breadcrumb style={{ marginBottom: '10px' }}>
+        <Breadcrumb.Item>公司列表（企业奖品）</Breadcrumb.Item>
+      </Breadcrumb>
+
       <Table
         bordered
         className="fixedWidthTable"
