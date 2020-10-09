@@ -26,6 +26,11 @@ import StepsDetail from './../page/steps/detail/'
 import User from './../page/user/'
 import Goods from './../page/goods/'
 
+// 企业页面
+import Company_index from './../page/company/index/'
+import Company_staff from './../page/company/staff/'
+
+
 // 定义routes
 const routerConfig = [
   {
@@ -50,12 +55,29 @@ const routerConfig = [
     title: '未找到页面',
   },
   {
+    path: '/company/index',
+    component: Company_index,
+    children: <Company_index />,
+    auth: true,
+    title: '首页',
+    navMenu: 'company',
+  },
+  {
+    path: '/company/staff',
+    component: Company_staff,
+    children: <Company_staff />,
+    auth: true,
+    title: '人员',
+    navMenu: 'company',
+  },
+  {
     path: '/join',
     component: Join,
     children: <Join />,
     auth: true,
     title: '企业入驻',
     navMenu: 'company',
+    admin: true,
   },
   {
     path: '/staff',
@@ -64,6 +86,7 @@ const routerConfig = [
     auth: true,
     title: '企业员工',
     navMenu: 'company',
+    admin: true,
   },
   {
     path: '/staff/:companyId',
@@ -72,6 +95,7 @@ const routerConfig = [
     auth: true,
     title: '企业员工',
     navMenu: 'company',
+    admin: true,
   },
   {
     path: '/prize',
@@ -80,6 +104,7 @@ const routerConfig = [
     auth: true,
     title: '企业奖品',
     navMenu: 'company',
+    admin: true,
   },
   {
     path: '/prize/:companyId',
@@ -88,6 +113,7 @@ const routerConfig = [
     auth: true,
     title: '企业奖品',
     navMenu: 'company',
+    admin: true,
   },
   {
     path: '/prize/choose/:companyId',
@@ -96,6 +122,7 @@ const routerConfig = [
     auth: true,
     title: '挑选奖品',
     navMenu: 'company',
+    admin: true,
   },
   {
     path: '/exchange',
@@ -104,6 +131,7 @@ const routerConfig = [
     auth: true,
     title: '企业兑换',
     navMenu: 'company',
+    admin: true,
   },
   {
     path: '/exchange/:companyId',
@@ -112,6 +140,7 @@ const routerConfig = [
     auth: true,
     title: '企业兑换',
     navMenu: 'company',
+    admin: true,
   },
   {
     path: '/point',
@@ -120,6 +149,7 @@ const routerConfig = [
     auth: true,
     title: '企业积分',
     navMenu: 'company',
+    admin: true,
   },
   {
     path: '/steps',
@@ -128,6 +158,7 @@ const routerConfig = [
     auth: true,
     title: '步数统计',
     navMenu: 'company',
+    admin: true,
   },
   {
     path: '/steps/:companyId',
@@ -136,6 +167,7 @@ const routerConfig = [
     auth: true,
     title: '步数统计',
     navMenu: 'company',
+    admin: true,
   },
   {
     path: '/user',
@@ -144,6 +176,7 @@ const routerConfig = [
     auth: true,
     title: '用户管理',
     navMenu: 'user',
+    admin: true,
   },
   {
     path: '/goods',
@@ -152,6 +185,7 @@ const routerConfig = [
     auth: true,
     title: '商品库',
     navMenu: 'goods',
+    admin: true,
   },
   /*
   {

@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import Admin from '@/components/Admin/'
+import Company from '@/components/Company/'
 import { Route, Redirect } from 'react-router-dom'
 import { RouteConfigContext } from '../../router'
 
@@ -35,16 +36,24 @@ function FrontendAuth (props) {
   }
 
   // 已登录
-  if (sessionStorage.getItem('accessToken')) {
+  // if (sessionStorage.getItem('accessToken')) {
+  if (sessionStorage.getItem('accessToken') || true) {
 
-    return (
-      <Route path="/" render={ () =>
+    if (targetRouterConfig.admin) {
+
+      return (
         <Admin targetRouterConfig={ targetRouterConfig }>
           <Route path={ targetRouterConfig.path } component={ targetRouterConfig.component } />
         </Admin>
-      }
-      />
-    )
+      )
+    } else {
+
+      return (
+        <Company targetRouterConfig={ targetRouterConfig }>
+          <Route path={ targetRouterConfig.path } component={ targetRouterConfig.component } />
+        </Company>
+      )
+    }
   } else {
 
     return <Redirect to="/login" />

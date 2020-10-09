@@ -1,7 +1,12 @@
+body {
+  color: #343434;
+}
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  font-family: "mp-quote", -apple-system-font, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif;
 }
 
 a {
@@ -208,4 +213,10 @@ a {
 
 .breadcrumb {
   margin-bottom: 100px;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

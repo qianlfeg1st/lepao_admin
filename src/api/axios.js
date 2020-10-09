@@ -12,11 +12,11 @@ axios.defaults.baseURL = baseURL
 // 请求拦截
 axios.interceptors.request.use(config => {
 
-  const accessToken = sessionStorage.getItem('accessToken')
+  // const accessToken = sessionStorage.getItem('accessToken')
 
-  if (accessToken) config.headers.base_access_token = sessionStorage.getItem('accessToken')
+  // if (accessToken) config.headers.base_access_token = sessionStorage.getItem('accessToken')
 
-  // config.headers['base_access_token'] = 'eyJhbGciOiJIUzI1NiJ9.CAIQ68HBkswu.UnXtXck1zBIbn5crth-kdcTC1ZCb85z0fc0KI-Pv9gY'
+  config.headers.base_access_token = 'eyJhbGciOiJIUzI1NiJ9.CAIQ68HBkswu.UnXtXck1zBIbn5crth-kdcTC1ZCb85z0fc0KI-Pv9gY'
 
   return config
 }, error => {

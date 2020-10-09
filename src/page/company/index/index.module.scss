@@ -1,0 +1,123 @@
+.page {
+  background: #F7F7F7;
+}
+
+.banner {
+  height: 605px;
+  background: transparent url(../../../assets/images/bg.png) no-repeat center center;
+  // background-color: #18142e;
+}
+
+.main {
+  $rule: &;
+  position: relative;
+  width: 100%;
+  height: 596px;
+
+  &__item {
+    position: absolute;
+    top: -50px;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    height: 596px;
+    padding: 0 60px;
+
+    @at-root #{$rule}__wrap {
+      width: 816px;
+      height: 596px;
+      background: #fff;
+      border-radius: 9px;
+      padding: 35px;
+
+      @at-root #{$rule}__title {
+        display: flex;
+        align-items: center;
+        font-size: 22px;
+        font-weight: 500;
+        color: #333;
+
+        &::before {
+          content: '|';
+          font-size: 24px;
+          font-weight: 700;
+          color: #FF9105;
+          margin: 0 6px 0 0;
+        }
+      }
+
+      @at-root #{$rule}__srcoll {
+        width: 100%;
+        height: 470px;
+        margin: 30px 0 0 0;
+        overflow-y: scroll;
+
+        @at-root #{$rule}__row {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          height: 66px;
+
+          &:nth-child(odd) {
+            background: #F9F9F9;
+          }
+
+          &:nth-child(even) {
+            background: #fff;
+          }
+
+          @at-root #{$rule}__left {
+            width: 10%;
+            height: 66px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #000;
+          }
+
+          @at-root #{$rule}__center {
+            display: flex;
+            align-items: center;
+            width: 70%;
+            height: 66px;
+
+            @at-root #{$rule}__face {
+              width: 40px;
+              height: 40px;
+              margin: 0 20px 0 0;
+            }
+
+            @at-root #{$rule}__name {
+              font-size: 18px;
+              font-weight: 500;
+              color: #000;
+              margin: 0;
+            }
+          }
+
+          @at-root #{$rule}__right {
+            width: 20%;
+            height: 66px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #FF5F06;
+          }
+
+          @at-root #{$rule}__box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 70%;
+            height: 66px;
+            // background: red;
+
+            @at-root #{$rule}__user {
+              width: 40px;
+              height: 40px;
+              margin: 0 -10px 0 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}
