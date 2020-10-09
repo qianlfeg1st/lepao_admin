@@ -29,6 +29,8 @@ import Goods from './../page/goods/'
 // 企业页面
 import Company_index from './../page/company/index/'
 import Company_staff from './../page/company/staff/'
+import Company_prize from './../page/company/prize/'
+import Company_goods from './../page/company/goods/'
 
 
 // 定义routes
@@ -68,6 +70,22 @@ const routerConfig = [
     children: <Company_staff />,
     auth: true,
     title: '人员',
+    navMenu: 'company',
+  },
+  {
+    path: '/company/prize',
+    component: Company_prize,
+    children: <Company_prize />,
+    auth: true,
+    title: '挑选奖品',
+    navMenu: 'company',
+  },
+  {
+    path: '/company/goods',
+    component: Company_goods,
+    children: <Company_goods />,
+    auth: true,
+    title: '当前商品',
     navMenu: 'company',
   },
   {
