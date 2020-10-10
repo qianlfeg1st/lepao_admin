@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext, useReducer } from 'react'
-import { useHistory, withRouter } from 'react-router-dom'
+import { useHistory, withRouter, Link } from 'react-router-dom'
 import { RouteConfigContext } from '@/router'
 import { Row, Col, Menu, Dropdown } from 'antd'
-import { UserOutlined, HddOutlined, AuditOutlined, DollarOutlined, GiftOutlined, TransactionOutlined, TeamOutlined, UserAddOutlined, DownOutlined } from '@ant-design/icons'
 import styles from './index.module.scss'
 import 'moment/locale/zh-cn' // 配置moment为中文
 
@@ -27,33 +26,25 @@ function Admin (props) {
 
   // console.log('RouteConfig', RouteConfig)
 
-  const [selectedKeys, setSelectedKeys] = useState(location.pathname)
-  const [current, setCurrent] = useState('company')
+  const [current, setCurrent] = useState('')
 
   useEffect(() => {
 
     // 导航栏路由切换匹配
     const pathname = location.pathname
 
-    // console.log('~~~~useEffect~~~~', pathname, selectedKeys, typeof selectedKeys)
-
     if (!pathname) return
 
-    const targetRoute = RouteConfig.find(item => item.path.split('/')[1] === pathname.split('/')[1])
+    const targetRoute = RouteConfig.find(item => item.path.split('/')[2] === pathname.split('/')[2])
 
     // console.log('~~~~~~~~', pathname)
 
-    // console.log('@@targetRoute@@', targetRoute)
+    console.log('@@targetRoute@@', targetRoute)
 
-    if (targetRoute) {
+    if (!targetRoute) return
 
-      setSelectedKeys(targetRoute.path)
-      setCurrent(targetRoute.navMenu)
-    } else {
-
-      setSelectedKeys()
-    }
-  }, [selectedKeys, current])
+    setCurrent(targetRoute.navMenu)
+  }, [location.pathname])
 
   const handleClick = e => {
 
@@ -69,23 +60,25 @@ function Admin (props) {
   return (
     <>
 
-      <Row className={ `${styles.wrap} ${styles.header}` }>
-        <Col span={ 7 } className={ styles.header__left }>
-          <img className={ styles.header__logo } src={ require('../../assets/images/logo.png') } alt="乐跑健康" />
-          <div className={ styles.header__name }>乐跑健康企业平台</div>
-        </Col>
-        <Col span={ 10 } className={ styles.header__center }>
-          <div className={ `${styles.header__menu} ${styles.header__active}` }>首页</div>
-          <div className={ styles.header__menu }>员工</div>
-          <div className={ styles.header__menu }>奖品</div>
-        </Col>
-        <Col span={ 7 } className={ styles.header__right }>
+      <div className={ styles.wrap }>
+        <Row className={ styles.header }>
+          <Col span={ 7 } className={ styles.header__left }>
+            <img className={ styles.header__logo } src={ require('../../assets/images/logo.png') } alt="乐跑健康" />
+            <div className={ styles.header__name }>乐跑健康企业平台</div>
+          </Col>
+          <Col span={ 10 } className={ styles.header__center }>
+            <Link to="/company/index" className={ `${styles.header__menu} ${current === 'index' && styles.header__active}` }>首页</Link>
+            <Link to="/company/staff" className={ `${styles.header__menu} ${current === 'staff' && styles.header__active}` }>员工</Link>
+            <Link to="/company/goods" className={ `${styles.header__menu} ${current === 'goods' && styles.header__active}` }>奖品</Link>
+          </Col>
+          <Col span={ 7 } className={ styles.header__right }>
 
-        </Col>
-      </Row>
-
+          </Col>
+        </Row>
+      </div>
 
       <div className={ styles.body }>{ children }</div>
+
     </>
   )
 }

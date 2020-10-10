@@ -1,0 +1,83 @@
+.page {
+  padding: 0 0 30px 0;
+}
+
+.main {
+  $rule: &;
+  width: 966px;
+  margin: 35px auto 0 auto;
+  background: #fff;
+  border-radius: 10px;
+  padding: 36px;
+
+  &__title {
+    font-size: 20px;
+    font-weight: bolder;
+    color: #343434;
+
+    &:before {
+      content: '|';
+      font-size: 22px;
+      color: #FF9206;
+      margin: 0 20px 0 0;
+    }
+  }
+
+  &__wrap {
+    display: flex;
+    width: 100%;
+    margin: 38px 0 0 0;
+
+    @at-root #{$rule}__left {
+      display: flex;
+      align-items: center;
+      width: 70%;
+
+      @at-root #{$rule}__label {
+        width: 100px;
+        font-size: 18px;
+        font-weight: bolder;
+        color: #666;
+      }
+
+      @at-root #{$rule}__info {
+        font-size: 18px;
+        font-weight: bolder;
+        color: #000;
+
+        @at-root #{$rule}__logo {
+          width: 62px;
+          height: 62px;
+          border-radius: 50%;
+        }
+      }
+    }
+
+    @at-root #{$rule}__right {
+      width: 30%;
+      color: #1E88EC;
+      font-size: 18px;
+      font-weight: bolder;
+      cursor: pointer;
+    }
+  }
+}
+
+.tip {
+  font-size: 18px;
+  font-weight: bolder;
+  color: #343434;
+  text-align: center;
+}
+
+.phone {
+  font-size: 18px;
+  font-weight: bolder;
+  color: #1E88EC;
+  text-align: center;
+}
+
+.input {
+  margin: 20px 0 0 0;
+  width: 100%;
+}

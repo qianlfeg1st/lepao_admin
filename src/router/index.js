@@ -31,7 +31,11 @@ import Company_index from './../page/company/index/'
 import Company_staff from './../page/company/staff/'
 import Company_prize from './../page/company/prize/'
 import Company_goods from './../page/company/goods/'
-
+import Company_inventory from './../page/company/inventory/'
+import Company_exchange from './../page/company/exchange/'
+import Company_account from './../page/company/account/'
+import Company_address from './../page/company/address/'
+import Company_gold from './../page/company/gold/'
 
 // 定义routes
 const routerConfig = [
@@ -62,7 +66,31 @@ const routerConfig = [
     children: <Company_index />,
     auth: true,
     title: '首页',
-    navMenu: 'company',
+    navMenu: 'index',
+  },
+  {
+    path: '/company/account',
+    component: Company_account,
+    children: <Company_account />,
+    auth: true,
+    title: '账号管理',
+    navMenu: 'index',
+  },
+  {
+    path: '/company/address',
+    component: Company_address,
+    children: <Company_address />,
+    auth: true,
+    title: '收货地址',
+    navMenu: 'index',
+  },
+  {
+    path: '/company/gold',
+    component: Company_gold,
+    children: <Company_gold />,
+    auth: true,
+    title: '积分管理',
+    navMenu: 'index',
   },
   {
     path: '/company/staff',
@@ -70,7 +98,7 @@ const routerConfig = [
     children: <Company_staff />,
     auth: true,
     title: '人员',
-    navMenu: 'company',
+    navMenu: 'staff',
   },
   {
     path: '/company/prize',
@@ -78,7 +106,7 @@ const routerConfig = [
     children: <Company_prize />,
     auth: true,
     title: '挑选奖品',
-    navMenu: 'company',
+    navMenu: 'goods',
   },
   {
     path: '/company/goods',
@@ -86,7 +114,23 @@ const routerConfig = [
     children: <Company_goods />,
     auth: true,
     title: '当前商品',
-    navMenu: 'company',
+    navMenu: 'goods',
+  },
+  {
+    path: '/company/inventory',
+    component: Company_inventory,
+    children: <Company_inventory />,
+    auth: true,
+    title: '库存管理',
+    navMenu: 'goods',
+  },
+  {
+    path: '/company/exchange',
+    component: Company_exchange,
+    children: <Company_exchange />,
+    auth: true,
+    title: '兑换管理',
+    navMenu: 'goods',
   },
   {
     path: '/join',

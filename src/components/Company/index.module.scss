@@ -1,18 +1,19 @@
 .wrap {
-  width: 1190px;
+  width: 100%;
+  height: 70px;
   background: #fff;
+  box-shadow: 0 5px 4px -4px rgba(0, 0, 0, 0.3);
 }
 
 .header {
   $rule: &;
+  width: 1190px;
   height: 70px;
   margin: 0 auto;
-  box-shadow: 0 5px 4px -4px rgba(0, 0, 0, 0.3);
 
   &__left {
     display: flex;
     align-items: center;
-    // background: red;
 
     @at-root #{$rule}__logo {
       width: 34px;
@@ -40,6 +41,11 @@
       border-radius: 18px;
       font-size: 18px;
       cursor: pointer;
+
+      &:hover {
+        color: #ffd04b;
+        font-weight: bolder;
+      }
     }
 
     @at-root #{$rule}__active {

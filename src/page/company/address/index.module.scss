@@ -1,0 +1,41 @@
+.page {
+  padding: 0 0 30px 0;
+}
+
+.main {
+  width: 966px;
+  margin: 35px auto 0 auto;
+  background: #fff;
+  border-radius: 10px;
+  padding: 36px;
+
+  &__title {
+    font-size: 20px;
+    font-weight: bolder;
+    color: #343434;
+
+    &:before {
+      content: '|';
+      font-size: 22px;
+      color: #FF9206;
+      margin: 0 20px 0 0;
+    }
+  }
+
+  &__form {
+    margin-top: 36px;
+  }
+
+  &__btn {
+    width: 146px;
+    height: 44px;
+    margin: 38px auto 0 auto;
+    background: linear-gradient(-90deg, #FF5E06 0%, #FF9306 100%);
+    box-shadow: 1px 2px 4px 0px rgba(255, 59, 6, 0.27);
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bolder;
+    color: #fff;
+    cursor: pointer;
+  }
+}

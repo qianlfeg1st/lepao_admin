@@ -30,7 +30,7 @@ function Goods () {
             <p className={ `${styles.goods__label1} center` }>所需积分 23434</p>
             <p className={ `${styles.goods__label2} center` }>剩余数量  3</p>
           </div>
-          <div className={ `${styles.goods__btn} center` }>打开小程序兑换</div>
+          <div className={ `${styles.goods__btn} center` }>编辑</div>
         </div>
 
         <div className={ styles.goods__wrap }>
@@ -40,7 +40,7 @@ function Goods () {
             <p className={ `${styles.goods__label1} center` }>所需积分 23434</p>
             <p className={ `${styles.goods__label2} center` }>剩余数量  3</p>
           </div>
-          <div className={ `${styles.goods__btn} center` }>打开小程序兑换</div>
+          <div className={ `${styles.goods__btn} center` }>编辑</div>
         </div>
 
         <div className={ styles.goods__wrap }>
@@ -50,7 +50,7 @@ function Goods () {
             <p className={ `${styles.goods__label1} center` }>所需积分 23434</p>
             <p className={ `${styles.goods__label2} center` }>剩余数量  3</p>
           </div>
-          <div className={ `${styles.goods__btn} center` }>打开小程序兑换</div>
+          <div className={ `${styles.goods__btn} center` }>编辑</div>
         </div>
 
         <div className={ styles.goods__wrap }>
@@ -60,7 +60,7 @@ function Goods () {
             <p className={ `${styles.goods__label1} center` }>所需积分 23434</p>
             <p className={ `${styles.goods__label2} center` }>剩余数量  3</p>
           </div>
-          <div className={ `${styles.goods__btn} center` }>打开小程序兑换</div>
+          <div className={ `${styles.goods__btn} center` }>编辑</div>
         </div>
 
         <div className={ styles.goods__wrap }>
@@ -70,7 +70,7 @@ function Goods () {
             <p className={ `${styles.goods__label1} center` }>所需积分 23434</p>
             <p className={ `${styles.goods__label2} center` }>剩余数量  3</p>
           </div>
-          <div className={ `${styles.goods__btn} center` }>打开小程序兑换</div>
+          <div className={ `${styles.goods__btn} center` }>编辑</div>
         </div>
 
         <div className={ styles.goods__wrap }>
@@ -80,7 +80,7 @@ function Goods () {
             <p className={ `${styles.goods__label1} center` }>所需积分 23434</p>
             <p className={ `${styles.goods__label2} center` }>剩余数量  3</p>
           </div>
-          <div className={ `${styles.goods__btn} center` }>打开小程序兑换</div>
+          <div className={ `${styles.goods__btn} center` }>编辑</div>
         </div>
 
         <div className={ styles.goods__wrap }>
@@ -90,7 +90,7 @@ function Goods () {
             <p className={ `${styles.goods__label1} center` }>所需积分 23434</p>
             <p className={ `${styles.goods__label2} center` }>剩余数量  3</p>
           </div>
-          <div className={ `${styles.goods__btn} center` }>打开小程序兑换</div>
+          <div className={ `${styles.goods__btn} center` }>编辑</div>
         </div>
 
         <div className={ styles.goods__wrap }>
@@ -100,27 +100,11 @@ function Goods () {
             <p className={ `${styles.goods__label1} center` }>所需积分 23434</p>
             <p className={ `${styles.goods__label2} center` }>剩余数量  3</p>
           </div>
-          <div className={ `${styles.goods__btn} center` } onClick={ () => setModal(true) }>打开小程序兑换</div>
+          <div className={ `${styles.goods__btn} center` } onClick={ () => setModal(true) }>编辑</div>
         </div>
 
       </div>
 
-
-      <Modal
-        // title="兑换"
-        closable={ false }
-        visible={ modal }
-        onCancel={ handleCancel }
-        footer={[
-          <Button key="cancel" type="default" size="default" onClick={ handleCancel }>关闭</Button>,
-        ]}
-        width="380px"
-      >
-        <div className={ styles.code }>
-          <img className={ styles.code__img } src={ require(`../../../assets/images/111.png`) } />
-          <p className={ styles.code__tip }>打开微信小程序，兑换奖品</p>
-        </div>
-      </Modal>
 
     </div>
   )
