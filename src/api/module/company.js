@@ -59,3 +59,33 @@ export const editGoldSetting = params => {
     ...params,
   })
 }
+
+// 获取部门列表
+export const getEmpInfo = () => {
+
+  return axios.get('cpy_emp/emp_info')
+}
+
+// 获取部门详情
+export const getEmpsDept = params => {
+
+  return axios.get('cpy_emp/emps_dept', {
+    params: {
+      ...params,
+    },
+  })
+}
+
+// 获取当前奖品
+export const getCurrentGoods = params => {
+
+  return axios.post('cpy_goods/list_current', {
+    ...params,
+  })
+}
+
+// 获取奖品分类
+export const getShelf = () => {
+
+  return axios.get('cpy_goods/list_shelf')
+}

@@ -1,113 +1,114 @@
 import React, { useState, useEffect } from 'react'
-import { Radio, Image, Modal, Button } from 'antd'
+import { Radio, Image, Modal, Button, Spin, Empty } from 'antd'
 import styles from './index.module.scss'
+import { company } from '@/api'
 
 function Goods () {
 
   const [modal, setModal] = useState(false)
+  const [shelf, setShelf] = useState([])
+  const [goods, setGoods] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [currentShelf, setCurrentShelf] = useState([])
+
+  useEffect(() => {
+
+    getShelf()
+  }, [])
+
+  useEffect(() => {
+
+    if (shelf.length) getCurrentGoods()
+  }, [currentShelf])
+
+  const getShelf = async () => {
+
+    try {
+
+      const { state, data } = await company.getShelf()
+
+      if (!state) return
+
+      setShelf(data.list)
+      setCurrentShelf(data.list[0].shelfId)
+    } catch (error) {
+
+      console.error('~~error~~', error)
+    }
+  }
+
+  const getCurrentGoods = async () => {
+
+    try {
+
+      setLoading(true)
+
+      const { state, data } = await company.getCurrentGoods({
+        firstResult: 0,
+        shelfId: currentShelf,
+      })
+
+      if (!state) return
+
+      setGoods(data.items)
+    } catch (error) {
+
+      console.error('~~error~~', error)
+    } finally {
+
+      setLoading(false)
+    }
+  }
 
   const handleCancel = () => {
 
     setModal(false)
   }
 
+  const radioChange = e => {
+
+    setCurrentShelf(e.target.value)
+  }
+
   return (
     <div className={ styles.page }>
 
-      <Radio.Group defaultValue="a" buttonStyle="solid" size="large" className={ styles.radio }>
-        <Radio.Button value="a">全部</Radio.Button>
-        <Radio.Button value="b">儿童玩具</Radio.Button>
-        <Radio.Button value="c">儿童玩具</Radio.Button>
-        <Radio.Button value="d">儿童玩具</Radio.Button>
+      <Radio.Group value={ currentShelf } buttonStyle="solid" size="large" className={ styles.radio } onChange={ radioChange }>
+        {
+          shelf.map(item => <Radio.Button key={ item.shelfId } value={ item.shelfId }>{ item.title }</Radio.Button>)
+        }
       </Radio.Group>
 
-      <div className={ styles.goods }>
+      <Spin size="large" spinning={ loading }>
+        {
+          goods.length
+            ?
+            <div className={ styles.goods }>
+              {
+                goods.map(item => {
 
-        <div className={ styles.goods__wrap }>
-          <Image className={ styles.goods__img } width={ 220 } height={ 220 } src="http://file.jianchedashi.com/ViolationPlate/89727C732A477E9CCA131BF11949DF74.jpg" />
-          <div className={ styles.goods__name }>伊岛除湿机家用抽湿机静音静音卧室空气吸湿器除潮伊岛除湿机家用抽湿机静音静音卧室空气吸湿器除潮</div>
-          <div className={ styles.goods__box }>
-            <p className={ `${styles.goods__label1} center` }>所需积分 23434</p>
-            <p className={ `${styles.goods__label2} center` }>剩余数量  3</p>
-          </div>
-          <div className={ `${styles.goods__btn} center` }>打开小程序兑换</div>
-        </div>
+                  return (
+                    <div className={ styles.goods__wrap } key={ item.companyGoodsId }>
+                      <Image className={ styles.goods__img } width={ 220 } height={ 220 } src={ item.thumb } />
+                      <div className={ styles.goods__name }>{ item.name }</div>
+                      <div className={ styles.goods__box }>
+                        <p className={ `${styles.goods__label1} center` }>所需积分 { item.gold }</p>
+                        <p className={ `${styles.goods__label2} center` }>剩余数量  { item.storeCount }</p>
+                      </div>
+                      <div className={ `${styles.goods__btn} center` } onClick={ () => setModal(true) }>打开小程序兑换</div>
+                    </div>
+                  )
+                })
+              }
+            </div>
+            :
+            <Empty />
+        }
 
-        <div className={ styles.goods__wrap }>
-          <Image className={ styles.goods__img } width={ 220 } height={ 220 } src="http://file.jianchedashi.com/ViolationPlate/89727C732A477E9CCA131BF11949DF74.jpg" />
-          <div className={ styles.goods__name }>伊岛除湿机家用抽湿机静音静音卧室空气吸湿器除潮伊岛除湿机家用抽湿机静音静音卧室空气吸湿器除潮</div>
-          <div className={ styles.goods__box }>
-            <p className={ `${styles.goods__label1} center` }>所需积分 23434</p>
-            <p className={ `${styles.goods__label2} center` }>剩余数量  3</p>
-          </div>
-          <div className={ `${styles.goods__btn} center` }>打开小程序兑换</div>
-        </div>
-
-        <div className={ styles.goods__wrap }>
-          <Image className={ styles.goods__img } width={ 220 } height={ 220 } src="http://file.jianchedashi.com/ViolationPlate/89727C732A477E9CCA131BF11949DF74.jpg" />
-          <div className={ styles.goods__name }>伊岛除湿机家用抽湿机静音静音卧室空气吸湿器除潮伊岛除湿机家用抽湿机静音静音卧室空气吸湿器除潮</div>
-          <div className={ styles.goods__box }>
-            <p className={ `${styles.goods__label1} center` }>所需积分 23434</p>
-            <p className={ `${styles.goods__label2} center` }>剩余数量  3</p>
-          </div>
-          <div className={ `${styles.goods__btn} center` }>打开小程序兑换</div>
-        </div>
-
-        <div className={ styles.goods__wrap }>
-          <Image className={ styles.goods__img } width={ 220 } height={ 220 } src="http://file.jianchedashi.com/ViolationPlate/89727C732A477E9CCA131BF11949DF74.jpg" />
-          <div className={ styles.goods__name }>伊岛除湿机家用抽湿机静音静音卧室空气吸湿器除潮伊岛除湿机家用抽湿机静音静音卧室空气吸湿器除潮</div>
-          <div className={ styles.goods__box }>
-            <p className={ `${styles.goods__label1} center` }>所需积分 23434</p>
-            <p className={ `${styles.goods__label2} center` }>剩余数量  3</p>
-          </div>
-          <div className={ `${styles.goods__btn} center` }>打开小程序兑换</div>
-        </div>
-
-        <div className={ styles.goods__wrap }>
-          <Image className={ styles.goods__img } width={ 220 } height={ 220 } src="http://file.jianchedashi.com/ViolationPlate/89727C732A477E9CCA131BF11949DF74.jpg" />
-          <div className={ styles.goods__name }>伊岛除湿机家用抽湿机静音静音卧室空气吸湿器除潮伊岛除湿机家用抽湿机静音静音卧室空气吸湿器除潮</div>
-          <div className={ styles.goods__box }>
-            <p className={ `${styles.goods__label1} center` }>所需积分 23434</p>
-            <p className={ `${styles.goods__label2} center` }>剩余数量  3</p>
-          </div>
-          <div className={ `${styles.goods__btn} center` }>打开小程序兑换</div>
-        </div>
-
-        <div className={ styles.goods__wrap }>
-          <Image className={ styles.goods__img } width={ 220 } height={ 220 } src="http://file.jianchedashi.com/ViolationPlate/89727C732A477E9CCA131BF11949DF74.jpg" />
-          <div className={ styles.goods__name }>伊岛除湿机家用抽湿机静音静音卧室空气吸湿器除潮伊岛除湿机家用抽湿机静音静音卧室空气吸湿器除潮</div>
-          <div className={ styles.goods__box }>
-            <p className={ `${styles.goods__label1} center` }>所需积分 23434</p>
-            <p className={ `${styles.goods__label2} center` }>剩余数量  3</p>
-          </div>
-          <div className={ `${styles.goods__btn} center` }>打开小程序兑换</div>
-        </div>
-
-        <div className={ styles.goods__wrap }>
-          <Image className={ styles.goods__img } width={ 220 } height={ 220 } src="http://file.jianchedashi.com/ViolationPlate/89727C732A477E9CCA131BF11949DF74.jpg" />
-          <div className={ styles.goods__name }>伊岛除湿机家用抽湿机静音静音卧室空气吸湿器除潮伊岛除湿机家用抽湿机静音静音卧室空气吸湿器除潮</div>
-          <div className={ styles.goods__box }>
-            <p className={ `${styles.goods__label1} center` }>所需积分 23434</p>
-            <p className={ `${styles.goods__label2} center` }>剩余数量  3</p>
-          </div>
-          <div className={ `${styles.goods__btn} center` }>打开小程序兑换</div>
-        </div>
-
-        <div className={ styles.goods__wrap }>
-          <Image className={ styles.goods__img } width={ 220 } height={ 220 } src="http://file.jianchedashi.com/ViolationPlate/89727C732A477E9CCA131BF11949DF74.jpg" />
-          <div className={ styles.goods__name }>伊岛除湿机家用抽湿机静音静音卧室空气吸湿器除潮伊岛除湿机家用抽湿机静音静音卧室空气吸湿器除潮</div>
-          <div className={ styles.goods__box }>
-            <p className={ `${styles.goods__label1} center` }>所需积分 23434</p>
-            <p className={ `${styles.goods__label2} center` }>剩余数量  3</p>
-          </div>
-          <div className={ `${styles.goods__btn} center` } onClick={ () => setModal(true) }>打开小程序兑换</div>
-        </div>
-
-      </div>
+      </Spin>
 
 
       <Modal
-        // title="兑换"
         closable={ false }
         visible={ modal }
         onCancel={ handleCancel }

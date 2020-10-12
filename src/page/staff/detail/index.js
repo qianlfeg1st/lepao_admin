@@ -370,8 +370,6 @@ function StaffDetail () {
 
   const onChangeRadio = e => {
 
-    // console.log('onChangeRadio', e)
-
     setRadioValue(e.target.value)
   }
 
