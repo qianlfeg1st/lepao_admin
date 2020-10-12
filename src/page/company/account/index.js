@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Steps, InputNumber } from 'antd'
 import styles from './index.module.scss'
+import { company } from '@/api'
 
 const { Step } = Steps
 
@@ -9,6 +10,7 @@ function Account () {
   const [tip, setTip] = useState(false)
   const [modal, setModal] = useState(false)
   const [current, setCurrent] = useState(0)
+  const [account, setAccount] = useState({})
 
   const steps = [
     {
@@ -19,7 +21,27 @@ function Account () {
       title: '输入验证码',
       content: 'Second-content',
     },
-  ];
+  ]
+
+  useEffect(() => {
+
+    getAccountDetail()
+  }, [])
+
+  const getAccountDetail = async () => {
+
+    try {
+
+      const { state, data } = await company.getAccountDetail()
+
+      if (!state) return
+
+      setAccount(data)
+    } catch (error) {
+
+      console.error('~~error~~', error)
+    }
+  }
 
   const next = () => {
 
@@ -60,7 +82,7 @@ function Account () {
         <div className={ styles.main__wrap }>
           <div className={ styles.main__left }>
             <div className={ styles.main__label }>昵称</div>
-            <div className={ styles.main__info }>张春花</div>
+            <div className={ styles.main__info }>{ account.nickName }</div>
           </div>
           <div className={ styles.main__right } onClick={ () => setTip(true) }>变更绑定的微信号 &#62;</div>
         </div>
@@ -68,9 +90,9 @@ function Account () {
         <div className={ styles.main__wrap }>
           <div className={ styles.main__left }>
             <div className={ styles.main__label }>手机号</div>
-            <div className={ styles.main__info }>15858155190</div>
+            <div className={ styles.main__info }>{ account.phoneNumber }</div>
           </div>
-          <div className={ styles.main__right } onClick={ () => setModal(true) }>变更手机号 &#62;</div>
+          {/* <div className={ styles.main__right } onClick={ () => setModal(true) }>变更手机号 &#62;</div> */}
         </div>
 
       </section>

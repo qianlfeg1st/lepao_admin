@@ -39,7 +39,7 @@ function Admin (props) {
 
     // console.log('~~~~~~~~', pathname)
 
-    console.log('@@targetRoute@@', targetRoute)
+    // console.log('@@targetRoute@@', targetRoute)
 
     if (!targetRoute) return
 

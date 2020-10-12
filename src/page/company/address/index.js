@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Radio, Modal, Button, DatePicker, Input, Form, Spin, InputNumber, Cascader } from 'antd'
+import { Input, Form, Spin, InputNumber, Cascader } from 'antd'
 import styles from './index.module.scss'
 import options from '@/utils/city'
+import { company } from '@/api'
 
 function Account () {
 
@@ -13,11 +14,60 @@ function Account () {
 
   const [ form ] = Form.useForm()
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
-  const submit = values => {
+  useEffect(() => {
+
+    getCompanyAddress()
+  }, [])
+
+  const getCompanyAddress = async () => {
+
+    try {
+
+      const { state, data } = await company.getCompanyAddress({
+        companyId: 1,
+      })
+
+      if (!state) return
+
+      const { contactAddressLocation, contactName, contactPhoneNumber } = data
+
+      form.setFieldsValue({
+        contactAddressLocation,
+        contactName,
+        contactPhoneNumber,
+      })
+    } catch (error) {
+
+      console.error('~~error~~', error)
+    } finally {
+
+      setLoading(false)
+    }
+  }
+
+  const submit = async values => {
 
     console.log('~submit~', values)
+
+    try {
+
+      const { state } = await company.editCompanyAddress({
+        ...values,
+        contactAddressAreaId: values.contactAddressAreaId.slice(-1)[0],
+        companyId: 1,
+      })
+
+      if (!state) return
+
+      getCompanyAddress()
+
+      message.success('修改成功')
+    } catch (error) {
+
+      console.error('~~error~~', error)
+    }
   }
 
   return (
@@ -27,7 +77,7 @@ function Account () {
 
         <div className={ styles.main__title }>企业收寄地址</div>
 
-        <Spin spinning={ loading }>
+        <Spin size="large" spinning={ loading }>
           <Form id="form" form={ form } { ...formItemLayout } onFinish={ submit } className={ styles.main__form }>
 
             <Form.Item label="企业收件人" name="contactName" rules={[{required: true, message: '请输入收件人姓名'}]}>
@@ -38,11 +88,11 @@ function Account () {
               <InputNumber size="large" placeholder="请输入联系人手机" maxLength={ 11 } style={{ width: '100%' }} />
             </Form.Item>
 
-            <Form.Item label="省市区" name="city" rules={[{required: true, message: '请选择省市区'}]}>
+            <Form.Item label="省市区" name="contactAddressAreaId" rules={[{required: true, message: '请选择省市区'}]}>
               <Cascader size="large" options={ options } placeholder="请选择省市区" />
             </Form.Item>
 
-            <Form.Item label="详细地址" name="address" rules={[{required: true, message: '请输入详细地址'}]}>
+            <Form.Item label="详细地址" name="contactAddressLocation" rules={[{required: true, message: '请输入详细地址'}]}>
               <Input size="large" placeholder="请输入详细地址" maxLength={ 40 } />
             </Form.Item>
 
