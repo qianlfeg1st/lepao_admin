@@ -30,7 +30,6 @@ function PrizeDetail () {
   const [ form ] = Form.useForm()
   const [editModel, setEditModel] = useState(false)
   const [goodsId, setGoodsId] = useState('')
-
   const [companyName, setCompanyName] = useState('')
 
   const { height } = useContext(AdminContext)

@@ -89,3 +89,19 @@ export const getShelf = () => {
 
   return axios.get('cpy_goods/list_shelf')
 }
+
+// 获取奖品库存列表
+export const getGoodsStore = params => {
+
+  return axios.post('cpy_goods/list_goods_store', {
+    ...params,
+  })
+}
+
+// 编辑奖品库存
+export const editGoodsStore = params => {
+
+  return axios.post('cpy_goods/setting', {
+    ...params,
+  })
+}
