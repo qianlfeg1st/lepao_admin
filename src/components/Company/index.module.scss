@@ -57,10 +57,75 @@
   &__right {
     display: flex;
     align-items: center;
+
+    @at-root #{$rule}__address {
+      font-size: 16px;
+      color: #666;
+
+      img {
+        width: 14px;
+        height: 16px;
+        margin: 0 4px 0 0;
+      }
+    }
+
+    @at-root #{$rule}__account {
+      font-size: 16px;
+      color: #666;
+
+      img {
+        width: 17px;
+        height: 16px;
+        margin: 0 4px 0 22px;
+      }
+    }
+
+    @at-root #{$rule}__line {
+      font-size: 26px;
+      color: #dcdcdc;
+      margin: 0 22px;
+    }
+
+    @at-root #{$rule}__user {
+      font-size: 16px;
+      color: #666;
+
+      img {
+        width: 30px;
+        height: 30px;
+        margin: 0 10px 0 0;
+        border-radius: 50%;
+      }
+    }
+
+    @at-root #{$rule}__service {
+      font-size: 16px;
+      color: #666;
+
+      img {
+        width: 16px;
+        height: 15px;
+        margin: 0 4px 0 22px;
+      }
+    }
   }
 }
 
 .body {
   height: auto;
   margin: 0 auto;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 1200px;
+  font-size: 16px;
+  margin: 30px auto 0 auto;
+
+  &__item {
+    margin: 0 30px 0 0;
+    color: #343434;
+  }
 }

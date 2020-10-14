@@ -63,6 +63,8 @@ function Gold () {
       const { state, data } = await company.getGoldSetting()
 
       if (!state) return
+
+      setSetting(data)
     } catch (error) {
 
       console.error('~~error~~', error)

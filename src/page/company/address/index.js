@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Input, Form, Spin, InputNumber, Cascader } from 'antd'
+import { Input, Form, Spin, InputNumber, Cascader, message } from 'antd'
 import styles from './index.module.scss'
 import options from '@/utils/city'
 import { company } from '@/api'
@@ -25,18 +25,19 @@ function Account () {
 
     try {
 
-      const { state, data } = await company.getCompanyAddress({
-        companyId: 1,
-      })
+      setLoading(true)
+
+      const { state, data } = await company.getCompanyAddress()
 
       if (!state) return
 
-      const { contactAddressLocation, contactName, contactPhoneNumber } = data
+      const { contactAddressLocation, contactName, contactPhoneNumber, contactAddressArea } = data
 
       form.setFieldsValue({
         contactAddressLocation,
         contactName,
         contactPhoneNumber,
+        contactAddressAreaId: contactAddressArea.areaIdPath.map(item => String(item)),
       })
     } catch (error) {
 

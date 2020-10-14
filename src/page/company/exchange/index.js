@@ -1,8 +1,36 @@
 import React, { useState, useEffect } from 'react'
 import { Radio, Image, Modal, Button, DatePicker, Input } from 'antd'
 import styles from './index.module.scss'
+import { company } from '@/api'
 
-function Goods () {
+function Exchange () {
+
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+
+    getExchangeList()
+  }, [])
+
+  const getExchangeList = async () => {
+
+    try {
+
+      const { state, data } = await company.getExchangeList({
+        firstResult: 0,
+        // nickName: '',
+        yearMonth: '2020-10',
+      })
+
+      if (!state) return
+    } catch (error) {
+
+      console.error('~~error~~', error)
+    } finally {
+
+      setLoading(false)
+    }
+  }
 
   return (
     <div className={ styles.page }>
@@ -231,4 +259,4 @@ function Goods () {
   )
 }
 
-export default Goods
+export default Exchange

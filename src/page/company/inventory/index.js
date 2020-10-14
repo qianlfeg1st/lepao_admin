@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Radio, Image, Modal, Button, Spin, Empty, Form, Input, InputNumber, DatePicker } from 'antd'
+import { Radio, Image, Modal, Button, Spin, Empty, Form, Input, InputNumber, DatePicker, message } from 'antd'
 import styles from './index.module.scss'
 import { company } from '@/api'
 import moment from 'moment'
@@ -76,6 +76,8 @@ function Inventory () {
 
     setModal(false)
 
+    setCompanyGoodsId('')
+
     form.resetFields()
   }
 
@@ -85,8 +87,6 @@ function Inventory () {
   }
 
   const showModal = e => {
-
-    console.log('~showModal~', e)
 
     const { name, storeCount, gold, downTime, upTime, recommend, companyGoodsId } = e
 
@@ -105,8 +105,6 @@ function Inventory () {
 
   const submit = e => {
 
-    console.log('~submit~', e, companyGoodsId)
-
     Modal.confirm({
       title: '提示',
       centered: true,
@@ -121,18 +119,17 @@ function Inventory () {
             downTime: formatDate(e.upDownTime[0].valueOf()),
             upTime: formatDate(e.upDownTime[1].valueOf()),
             upDownTime: undefined,
+            name: undefined,
             recommend: !!e.recommend,
           })
 
           if (!state) return
 
+          getGoodsStore()
+
           message.success('编辑成功')
 
-          // setEditModel(false)
-
-          // setFlag(!flag)
-
-          form.resetFields()
+          handleCancel()
         } catch (error) {
 
           console.error('~~error~~', error)

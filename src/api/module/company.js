@@ -31,7 +31,7 @@ export const getCompanyAddress = params => {
 // 编辑企业收件地址
 export const editCompanyAddress = params => {
 
-  return axios.post('cpy/prep_edit_company_address', {
+  return axios.post('cpy/edit_company_address', {
     ...params,
   })
 }
@@ -49,7 +49,7 @@ export const getGoldInfo = params => {
 // 获取企业积分配置
 export const getGoldSetting = () => {
 
-  return axios.get('cpy_gold/find_gold_info')
+  return axios.get('cpy_gold/prep_gold_setting')
 }
 
 // 编辑企业积分配置
@@ -102,6 +102,14 @@ export const getGoodsStore = params => {
 export const editGoodsStore = params => {
 
   return axios.post('cpy_goods/setting', {
+    ...params,
+  })
+}
+
+// 获取兑换订单列表
+export const getExchangeList = params => {
+
+  return axios.post('cpy_order/list_orders', {
     ...params,
   })
 }
