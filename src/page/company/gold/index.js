@@ -162,6 +162,8 @@ function Gold () {
 
   const monthChange = e => {
 
+    if (!e) return
+
     setYearMonth(formatMonth(e._d))
   }
 
