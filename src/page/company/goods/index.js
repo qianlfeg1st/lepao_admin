@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Radio, Image, Modal, Button, Spin, Empty } from 'antd'
+import { Radio, Image, Modal, Button, Spin, Empty, Pagination } from 'antd'
 import styles from './index.module.scss'
 import { company } from '@/api'
 
@@ -10,6 +10,10 @@ function Goods () {
   const [goods, setGoods] = useState([])
   const [loading, setLoading] = useState(true)
   const [currentShelf, setCurrentShelf] = useState([])
+  const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [size, setSize] = useState(20)
+  const [flag, setFlag] = useState(false)
 
   useEffect(() => {
 
@@ -19,7 +23,31 @@ function Goods () {
   useEffect(() => {
 
     if (shelf.length) getCurrentGoods()
-  }, [currentShelf])
+  }, [currentShelf, flag])
+
+  const getCurrentGoods = async () => {
+
+    try {
+
+      setLoading(true)
+
+      const { state, data } = await company.getCurrentGoods({
+        firstResult: (page - 1) * size,
+        shelfId: currentShelf,
+      })
+
+      if (!state) return
+
+      setGoods(data.items)
+      setTotal(+data.pageable.resultCount)
+    } catch (error) {
+
+      console.error('~~error~~', error)
+    } finally {
+
+      setLoading(false)
+    }
+  }
 
   const getShelf = async () => {
 
@@ -34,29 +62,6 @@ function Goods () {
     } catch (error) {
 
       console.error('~~error~~', error)
-    }
-  }
-
-  const getCurrentGoods = async () => {
-
-    try {
-
-      setLoading(true)
-
-      const { state, data } = await company.getCurrentGoods({
-        firstResult: 0,
-        shelfId: currentShelf,
-      })
-
-      if (!state) return
-
-      setGoods(data.items)
-    } catch (error) {
-
-      console.error('~~error~~', error)
-    } finally {
-
-      setLoading(false)
     }
   }
 
@@ -107,6 +112,20 @@ function Goods () {
 
       </Spin>
 
+      <div className={ `pagebar ${styles.pagebar}` }>
+        <Pagination
+          onChange={ e => {
+
+            setPage(e)
+            setFlag(!flag)
+          } }
+          total={ total }
+          showTotal={ total => `共 ${total} 条` }
+          pageSize={ size }
+          current={ page }
+          defaultCurrent={ page }
+        />
+      </div>
 
       <Modal
         closable={ false }

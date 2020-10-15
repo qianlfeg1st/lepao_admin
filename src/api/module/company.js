@@ -113,3 +113,61 @@ export const getExchangeList = params => {
     ...params,
   })
 }
+
+// 获取客服联系方式
+export const getServiceInfo = () => {
+
+  return axios.get('cpy/kefu')
+}
+
+// 获取待审核员工列表
+export const getWaitStaff = () => {
+
+  return axios.get('cpy_emp/emps_wait_audit')
+}
+
+// 移除员工
+export const removeStaff = params => {
+
+  return axios.get('cpy_emp/remove', {
+    params: {
+      ...params,
+    },
+  })
+}
+
+// 审核通过员工
+export const passStaff = params => {
+
+  return axios.get('cpy_emp/remove', {
+    params: {
+      ...params,
+    },
+  })
+}
+
+// 可选奖品列表
+export const getUnusedList = params => {
+
+  return axios.post('cpy_goods/list_unused', {
+    ...params,
+  })
+}
+
+// 已选奖品列表
+export const getUsedList = params => {
+
+  return axios.post('cpy_goods/list_used', {
+    ...params,
+  })
+}
+
+// 选择或取消奖品
+export const selectGoods = params => {
+
+  return axios.get('cpy_goods/select', {
+    params: {
+      ...params,
+    },
+  })
+}

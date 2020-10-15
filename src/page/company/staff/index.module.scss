@@ -108,3 +108,14 @@
     background: transparent url(../../../assets/images/btn.png) no-repeat center center;
   }
 }
+
+.joined {
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 16px;
+    height: 18px;
+    margin: 0 12px 0 0;
+  }
+}

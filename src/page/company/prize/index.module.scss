@@ -1,6 +1,6 @@
 .page {
   width: 966px;
-  height: 1400px;
+  min-height: 100vh;
   background: #fff;
   margin: 30px auto 0 auto;
   border-radius: 10px;
@@ -90,6 +90,7 @@
       border-radius: 27px;
       font-size: 20px;
       color: #fff;
+      cursor: pointer;
     }
   }
 }

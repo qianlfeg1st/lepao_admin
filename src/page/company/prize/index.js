@@ -1,134 +1,157 @@
 import React, { useState, useEffect } from 'react'
-import { Radio, Table, Image } from 'antd'
+import { Radio, Image, Empty, Spin, Modal } from 'antd'
 import styles from './index.module.scss'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { company } from '@/api'
 
 function Prize () {
 
-  const columns = [
-    {
-      dataIndex: 'img',
-      width: 100,
-      render (e) {
+  const [current, setCurrent] = useState('getUnusedList')
+  const [currentShelf, setCurrentShelf] = useState('')
+  const [shelf, setShelf] = useState([])
+  const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [size, setSize] = useState(20)
+  const [goods, setGoods] = useState([])
+  const [loading, setLoading] = useState(true)
 
-        return <Image width={ 186 } height={ 186 } src={ e } />
+  useEffect(() => {
+
+    getShelf()
+  }, [])
+
+  useEffect(() => {
+
+    if (currentShelf.length) getGoodsList()
+  }, [current, currentShelf])
+
+  const selectGoods = ({ uesd, companyGoodsId }) => {
+
+    Modal.confirm({
+      title: '提示',
+      icon: <ExclamationCircleOutlined />,
+      centered: true,
+      content: `确定${ uesd ? '移除' : '选中' }商品吗？`,
+      okText: '确定',
+      cancelText: '取消',
+      onCancel: () => {},
+      onOk: async () => {
+
+        try {
+
+          const { state } = await company.selectGoods({
+            used: !uesd,
+            companyGoodsId,
+          })
+
+          if (!state) return
+
+          getGoodsList()
+
+          message.success('操作成功')
+        } catch (error) {
+
+          console.error('~~error~~', error)
+        }
       }
-    },
-    {
-      width: 500,
-      render (e) {
+    })
+  }
 
-        // console.log('~~~~', e)
-        return (
-          <>
-            <h1 className={ `` }>伊岛除湿机家用抽湿机静音卧室空气吸湿器除潮地下室小型干燥D15</h1>
-          </>
-        )
-      }
-    },
-    {
-      width: 100,
-    },
-  ]
+  const getShelf = async () => {
 
-  const data = [
-    {
-      id: '1',
-      a: '钱立峰',
-      b: '15858155190',
-      c: '审核通过',
-      img: 'http://file.jianchedashi.com/ViolationPlate/89727C732A477E9CCA131BF11949DF74.jpg'
-    },
-    {
-      id: '2',
-      a: '钱立峰',
-      b: '15858155190',
-      c: '审核通过',
-      img: 'http://file.jianchedashi.com/ViolationPlate/89727C732A477E9CCA131BF11949DF74.jpg'
-    },
-  ]
+    try {
+
+      const { state, data } = await company.getShelf()
+
+      if (!state) return
+
+      const shelfId = data.list[0].shelfId
+
+      setShelf(data.list)
+      setCurrentShelf(shelfId)
+    } catch (error) {
+
+      console.error('~~error~~', error)
+    }
+  }
+
+  const getGoodsList = async ()  => {
+
+    try {
+
+      setLoading(true)
+
+      const { state, data } = await company[current]({
+        firstResult: (page - 1) * size,
+        shelfId: currentShelf,
+      })
+
+      if (!state) return
+
+      setGoods(data.items)
+      setTotal(+data.pageable.resultCount)
+    } catch (error) {
+
+      console.error('~~error~~', error)
+    } finally {
+
+      setLoading(false)
+    }
+  }
+
+  const radioChange = e => {
+
+    setCurrentShelf(e.target.value)
+  }
+
+  const currentChange = e => {
+
+    setCurrent(e.target.value)
+  }
 
   return (
     <div className={ styles.page }>
 
-      <Radio.Group defaultValue="a" buttonStyle="solid" size="large" className={ styles.radio }>
-        <Radio.Button value="a">可选奖品</Radio.Button>
-        <Radio.Button value="b">已选奖品清单（28）</Radio.Button>
+      <Radio.Group value={ current } buttonStyle="solid" size="large" className={ styles.radio } onChange={ currentChange }>
+        <Radio.Button value="getUnusedList">可选奖品</Radio.Button>
+        <Radio.Button value="getUsedList">已选奖品清单</Radio.Button>
       </Radio.Group>
 
-      <Radio.Group defaultValue="a" buttonStyle="solid" size="large" className={ styles.radio }>
-        <Radio.Button value="a">全部</Radio.Button>
-        <Radio.Button value="b">儿童玩具</Radio.Button>
-        <Radio.Button value="c">儿童玩具</Radio.Button>
-        <Radio.Button value="d">儿童玩具</Radio.Button>
+      <Radio.Group value={ currentShelf } buttonStyle="solid" size="large" className={ styles.radio } onChange={ radioChange }>
+        {
+          shelf.map(item => <Radio.Button key={ item.shelfId } value={ item.shelfId }>{ item.title }</Radio.Button>)
+        }
       </Radio.Group>
 
-      <div className={ styles.goods }>
-        <div className={ `${styles.goods__left} center` }>
-          <Image className={ styles.goods__img } width={ 186 } height={ 186 } src="http://file.jianchedashi.com/ViolationPlate/89727C732A477E9CCA131BF11949DF74.jpg" />
-        </div>
-        <div className={ styles.goods__center }>
-          <p className={ styles.goods__name }>伊岛除湿机家用抽湿机静音卧室空气吸湿器除潮地下室小型干燥D15伊岛除湿机家用抽湿机静音卧室空气吸湿器除潮地下室小型干燥D15</p>
-          <p className={ styles.goods__label }>家居生活</p>
-          <div>
-            <p className={ styles.goods__label2 }>标准价 ¥123</p>
-            <p className={ styles.goods__label3 }>采购价 ¥100</p>
-          </div>
-        </div>
-        <div className={ `${styles.goods__right} center` }>
-          <span className={ `${styles.goods__btn} center` }>已选</span>
-        </div>
-      </div>
+      <Spin spinning={ loading }>
+        {
+          goods.length
+            ?
+            goods.map(({ thumb, name, shelfName, price, companyPrice, uesd, companyGoodsId }) => {
 
-      <div className={ styles.goods }>
-        <div className={ `${styles.goods__left} center` }>
-          <Image className={ styles.goods__img } width={ 186 } height={ 186 } src="http://file.jianchedashi.com/ViolationPlate/89727C732A477E9CCA131BF11949DF74.jpg" />
-        </div>
-        <div className={ styles.goods__center }>
-          <p className={ styles.goods__name }>伊岛除湿机家用抽湿机静音卧室空气吸湿器除潮地下室小型干燥D15伊岛除湿机家用抽湿机静音卧室空气吸湿器除潮地下室小型干燥D15</p>
-          <p className={ styles.goods__label }>家居生活</p>
-          <div>
-            <p className={ styles.goods__label2 }>标准价 ¥123</p>
-            <p className={ styles.goods__label3 }>采购价 ¥100</p>
-          </div>
-        </div>
-        <div className={ `${styles.goods__right} center` }>
-          <span className={ `${styles.goods__btn} center` }>已选</span>
-        </div>
-      </div>
-
-      <div className={ styles.goods }>
-        <div className={ `${styles.goods__left} center` }>
-          <Image className={ styles.goods__img } width={ 186 } height={ 186 } src="http://file.jianchedashi.com/ViolationPlate/89727C732A477E9CCA131BF11949DF74.jpg" />
-        </div>
-        <div className={ styles.goods__center }>
-          <p className={ styles.goods__name }>伊岛除湿机家用抽湿机静音卧室空气吸湿器除潮地下室小型干燥D15伊岛除湿机家用抽湿机静音卧室空气吸湿器除潮地下室小型干燥D15</p>
-          <p className={ styles.goods__label }>家居生活</p>
-          <div>
-            <p className={ styles.goods__label2 }>标准价 ¥123</p>
-            <p className={ styles.goods__label3 }>采购价 ¥100</p>
-          </div>
-        </div>
-        <div className={ `${styles.goods__right} center` }>
-          <span className={ `${styles.goods__btn} center` }>已选</span>
-        </div>
-      </div>
-
-      <div className={ styles.goods }>
-        <div className={ `${styles.goods__left} center` }>
-          <Image className={ styles.goods__img } width={ 186 } height={ 186 } src="http://file.jianchedashi.com/ViolationPlate/89727C732A477E9CCA131BF11949DF74.jpg" />
-        </div>
-        <div className={ styles.goods__center }>
-          <p className={ styles.goods__name }>伊岛除湿机家用抽湿机静音卧室空气吸湿器除潮地下室小型干燥D15伊岛除湿机家用抽湿机静音卧室空气吸湿器除潮地下室小型干燥D15</p>
-          <p className={ styles.goods__label }>家居生活</p>
-          <div>
-            <p className={ styles.goods__label2 }>标准价 ¥123</p>
-            <p className={ styles.goods__label3 }>采购价 ¥100</p>
-          </div>
-        </div>
-        <div className={ `${styles.goods__right} center` }>
-          <span className={ `${styles.goods__btn} center` }>未选</span>
-        </div>
-      </div>
+              return (
+                <div className={ styles.goods } key={ companyGoodsId }>
+                  <div className={ `${styles.goods__left} center` }>
+                    <Image className={ styles.goods__img } width={ 186 } height={ 186 } src={ thumb } />
+                  </div>
+                  <div className={ styles.goods__center }>
+                    <p className={ styles.goods__name }>{ name }</p>
+                    <p className={ styles.goods__label }>{ shelfName }</p>
+                    <div>
+                      <p className={ styles.goods__label2 }>标准价 ¥{ price }</p>
+                      <p className={ styles.goods__label3 }>采购价 ¥{ companyPrice } </p>
+                    </div>
+                  </div>
+                  <div className={ `${styles.goods__right} center` }>
+                    <span className={ `${styles.goods__btn} center` } onClick={ () => selectGoods({ companyGoodsId, uesd }) }>{ uesd ? '已选' : '未选' }</span>
+                  </div>
+                </div>
+              )
+            })
+            :
+            <Empty />
+        }
+      </Spin>
 
     </div>
   )

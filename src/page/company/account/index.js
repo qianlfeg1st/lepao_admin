@@ -74,7 +74,7 @@ function Account () {
           <div className={ styles.main__left }>
             <div className={ styles.main__label }>头像</div>
             <div className={ styles.main__info }>
-              <img className={ styles.main__logo } src="http://file.jianchedashi.com/ViolationPlate/89727C732A477E9CCA131BF11949DF74.jpg" />
+              <img className={ styles.main__logo } src={ account.headicon } />
             </div>
           </div>
         </div>

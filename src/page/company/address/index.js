@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Input, Form, Spin, InputNumber, Cascader, message } from 'antd'
+import { Input, Form, Spin, InputNumber, Cascader, message, Modal } from 'antd'
 import styles from './index.module.scss'
 import options from '@/utils/city'
 import { company } from '@/api'
@@ -48,27 +48,33 @@ function Account () {
     }
   }
 
-  const submit = async values => {
+  const submit = values => {
 
-    console.log('~submit~', values)
+    Modal.confirm({
+      title: '提示',
+      content: '确认修改吗？',
+      centered: true,
+      onOk: async () => {
 
-    try {
+        try {
 
-      const { state } = await company.editCompanyAddress({
-        ...values,
-        contactAddressAreaId: values.contactAddressAreaId.slice(-1)[0],
-        companyId: 1,
-      })
+          const { state } = await company.editCompanyAddress({
+            ...values,
+            contactAddressAreaId: values.contactAddressAreaId.slice(-1)[0],
+            companyId: 1,
+          })
 
-      if (!state) return
+          if (!state) return
 
-      getCompanyAddress()
+          getCompanyAddress()
 
-      message.success('修改成功')
-    } catch (error) {
+          message.success('修改成功')
+        } catch (error) {
 
-      console.error('~~error~~', error)
-    }
+          console.error('~~error~~', error)
+        }
+      }
+    })
   }
 
   return (

@@ -1,18 +1,52 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { useHistory, withRouter, Link } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 import { RouteConfigContext } from '@/router'
-import { Row, Col } from 'antd'
+import { Row, Col, Modal, Button, Spin } from 'antd'
 import styles from './index.module.scss'
+import { company } from '@/api'
 
-const topMenu = {
-  company: '/join',
-  goods: '/goods',
-  user: '/user'
-}
+const topMenu = [
+  {
+    name: '首页',
+    value: '/company/index',
+    menu: 'index',
+  },
+  {
+    name: '员工',
+    value: '/company/staff',
+    menu: 'staff',
+  },
+  {
+    name: '奖品',
+    value: '/company/goods',
+    menu: 'goods',
+  },
+]
+
+const goodsMenu = [
+  {
+    name: '当前奖品',
+    value: '/company/goods',
+  },
+  {
+    name: '挑选奖品',
+    value: '/company/prize',
+  },
+  {
+    name: '奖品库存管理',
+    value: '/company/inventory',
+  },
+  {
+    name: '积分管理',
+    value: '/company/gold',
+  },
+  {
+    name: '员工兑换订单',
+    value: '/company/exchange',
+  },
+]
 
 function Admin (props) {
-
-  const history = useHistory()
 
   const { location, children } = props
 
@@ -22,6 +56,9 @@ function Admin (props) {
   // console.log('RouteConfig', RouteConfig)
 
   const [current, setCurrent] = useState('')
+  const [modal, setModal] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [service, setService] = useState(true)
 
   useEffect(() => {
 
@@ -41,6 +78,32 @@ function Admin (props) {
     setCurrent(targetRoute.navMenu)
   }, [location.pathname])
 
+  const handleCancel = () => {
+
+    setModal(false)
+  }
+
+  const getServiceInfo = async () => {
+
+    try {
+
+      setLoading(true)
+      setModal(true)
+
+      const { state, data } = await company.getServiceInfo()
+
+      if (!state) return
+
+      setService(data)
+    } catch (error) {
+
+      console.error('~~error~~', error)
+    } finally {
+
+      setLoading(false)
+    }
+  }
+
   return (
     <>
 
@@ -53,9 +116,20 @@ function Admin (props) {
           </Col>
 
           <Col span={ 9 } className={ styles.header__center }>
-            <Link to="/company/index" className={ `${styles.header__menu} ${current === 'index' && styles.header__active}` }>首页</Link>
-            <Link to="/company/staff" className={ `${styles.header__menu} ${current === 'staff' && styles.header__active}` }>员工</Link>
-            <Link to="/company/goods" className={ `${styles.header__menu} ${current === 'goods' && styles.header__active}` }>奖品</Link>
+            {
+              topMenu.map(({ value, name, menu }) => {
+
+                return (
+                  <Link
+                    key={ value }
+                    to={ value }
+                    className={ `${styles.header__menu} ${current === menu && styles.header__active}` }
+                  >
+                    { name }
+                  </Link>
+                )
+              })
+            }
           </Col>
 
           <Col span={ 10 } className={ styles.header__right }>
@@ -76,7 +150,7 @@ function Admin (props) {
               管理员
             </div>
 
-            <div className={ styles.header__service }>
+            <div className={ styles.header__service } onClick={ getServiceInfo }>
               <img src={ require('../../assets/images/service.png') } />
               在线客服
             </div>
@@ -85,21 +159,48 @@ function Admin (props) {
       </div>
 
       <div className={ styles.body }>
-
         {
-          ['/company/goods', '/company/prize', '/company/inventory', '/company/gold', '/company/exchange'].includes(location.pathname) && (
+          goodsMenu.map(({value}) => value).includes(location.pathname)
+            ?
             <div className={ styles.nav }>
-              <Link to="/company/goods" className={ styles.nav__item }>{ location.pathname === '/company/goods' && '>' }当前奖品</Link>
-              <Link to="/company/prize" className={ styles.nav__item }>{ location.pathname === '/company/prize' && '>' }挑选奖品</Link>
-              <Link to="/company/inventory" className={ styles.nav__item }>{ location.pathname === '/company/inventory' && '>' }奖品库存管理</Link>
-              <Link to="/company/gold" className={ styles.nav__item }>{ location.pathname === '/company/gold' && '>' }积分管理</Link>
-              <Link to="/company/exchange" className={ styles.nav__item }>{ location.pathname === '/company/exchange' && '>' }员工兑换订单</Link>
+              {
+                goodsMenu.map(item => {
+
+                  return (
+                    <Link
+                      key={ item.value }
+                      to={ item.value }
+                      className={ `${styles.nav__item} ${location.pathname === item.value && styles.nav__active}` }
+                    >
+                      { location.pathname === item.value && '>' }{ item.name }
+                    </Link>
+                  )
+                })
+              }
             </div>
-          )
+            :
+            null
         }
 
         { children }
       </div>
+
+      <Modal
+        closable={ false }
+        visible={ modal }
+        onCancel={ handleCancel }
+        footer={[
+          <Button key="cancel" type="default" size="default" onClick={ handleCancel }>关闭</Button>,
+        ]}
+        width="440px"
+      >
+        <Spin spinning={ loading }>
+          <div className={ styles.service }>
+            <img className={ styles.service__img } src={ service.qrImage } />
+            <p className={ styles.service__phone }>联系方式：{ service.phoneNumber }</p>
+          </div>
+        </Spin>
+      </Modal>
 
     </>
   )
