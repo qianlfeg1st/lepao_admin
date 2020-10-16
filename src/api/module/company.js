@@ -171,3 +171,13 @@ export const selectGoods = params => {
     },
   })
 }
+
+// 审批兑换订单
+export const settingCompanyorder = params => {
+
+  return axios.get('cpy_order/setting_companyorder', {
+    params: {
+      ...params,
+    },
+  })
+}

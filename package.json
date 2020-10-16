@@ -1,5 +1,5 @@
 {
-  "name": "g_admin",
+  "name": "lepao",
   "version": "1.0.0",
   "private": true,
   "homepage": "./",
@@ -26,9 +26,7 @@
   "scripts": {
     "start": "cross-env REACT_APP_ENV=dev react-app-rewired start",
     "build:test": "cross-env REACT_APP_ENV=test GENERATE_SOURCEMAP=true react-app-rewired build",
-    "postbuild:test": "cross-env REACT_APP_ENV=test gulp output",
     "build:prod": "cross-env REACT_APP_ENV=prod GENERATE_SOURCEMAP=false react-app-rewired build",
-    "postbuild:prod": "cross-env REACT_APP_ENV=prod gulp output",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject"
   },
@@ -53,9 +51,6 @@
     "eslint": "^6.6.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-react": "^7.20.0",
-    "eslint-plugin-react-hooks": "^4.1.0",
-    "gulp": "^4.0.2",
-    "gulp-rename": "^2.0.0",
-    "gulp-zip": "^5.0.2"
+    "eslint-plugin-react-hooks": "^4.1.0"
   }
 }

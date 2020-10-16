@@ -213,6 +213,9 @@ function Staff () {
       if (!state) return
 
       const index = dept.deptInfo.findIndex(item => item.deptId === deptId)
+
+      if (index < 0) return
+
       const clone = cloneDeep(dept)
 
       clone.deptInfo[index].data = data

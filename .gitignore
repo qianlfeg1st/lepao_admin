@@ -11,8 +11,7 @@
 # production
 /build
 /admin
-g_admin_test.zip
-g_admin_prod.zip
+*.zip
 
 # misc
 .DS_Store
