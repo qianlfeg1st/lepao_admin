@@ -28,30 +28,6 @@ function Login () {
     }
   }, [])
 
-  const login = async values => {
-
-    try {
-
-      setLoginLoading(true)
-
-      const { data } = await common.login({
-        ...values,
-      })
-
-      sessionStorage.setItem('accessToken', data.accessToken)
-
-      message.success('登录成功')
-
-      RouteHistory.push('/join')
-    } catch (error) {
-
-      console.error('~~error~~', error)
-    } finally {
-
-      setLoginLoading(false)
-    }
-  }
-
   const getSecure = async () => {
 
     try {
@@ -86,7 +62,13 @@ function Login () {
 
       message.success('登录成功')
 
-      RouteHistory.push('/join')
+      if (data.rolePrivilege.findIndex(role => role === 'PBUserRolePrivilegeCompanyMgr') > -1) {
+
+        RouteHistory.push('/company/index')
+      } else {
+
+        RouteHistory.push('/join')
+      }
     } catch (error) {
 
       console.error('~~error~~', error)

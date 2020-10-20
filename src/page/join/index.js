@@ -37,12 +37,12 @@ function Join () {
     {
       title: '企业编号',
       dataIndex: 'companyId',
-      width: 100,
+      width: 50,
     },
     {
       title: '企业名称',
       dataIndex: 'companyName',
-      width: 100,
+      width: 200,
     },
     {
       title: '企业状态',
@@ -64,7 +64,7 @@ function Join () {
     },
     {
       title: '操作',
-      width: 200,
+      width: 100,
       render (e) {
 
         return (
