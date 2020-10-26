@@ -37,7 +37,7 @@ function Account () {
         contactAddressLocation,
         contactName,
         contactPhoneNumber,
-        contactAddressAreaId: contactAddressArea.areaIdPath.map(item => String(item)),
+        contactAddressAreaId: contactAddressArea ? contactAddressArea.areaIdPath.map(item => String(item)) : undefined,
       })
     } catch (error) {
 

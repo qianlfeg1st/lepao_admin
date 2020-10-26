@@ -64,10 +64,10 @@ function Login () {
 
       if (data.rolePrivilege.findIndex(role => role === 'PBUserRolePrivilegeCompanyMgr') > -1) {
 
-        RouteHistory.push('/company/index')
+        RouteHistory.replace('/company/index')
       } else {
 
-        RouteHistory.push('/join')
+        RouteHistory.replace('/join')
       }
     } catch (error) {
 

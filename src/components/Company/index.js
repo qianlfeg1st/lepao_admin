@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, memo } from 'react'
 import { withRouter, Link } from 'react-router-dom'
 import { RouteConfigContext } from '@/router'
 import { Row, Col, Modal, Button, Spin } from 'antd'
@@ -208,4 +208,4 @@ function Admin (props) {
 
 export const AdminContext = React.createContext()
 
-export default withRouter(Admin)
+export default memo(withRouter(Admin))

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Radio, Image, Empty, Spin, Modal } from 'antd'
+import { Radio, Image, Empty, Spin, Modal, Pagination } from 'antd'
 import styles from './index.module.scss'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { company } from '@/api'
@@ -14,6 +14,7 @@ function Prize () {
   const [size, setSize] = useState(20)
   const [goods, setGoods] = useState([])
   const [loading, setLoading] = useState(true)
+  const [flag, setFlag] = useState(false)
 
   useEffect(() => {
 
@@ -23,15 +24,15 @@ function Prize () {
   useEffect(() => {
 
     if (currentShelf.length) getGoodsList()
-  }, [current, currentShelf])
+  }, [current, currentShelf, flag])
 
-  const selectGoods = ({ uesd, companyGoodsId }) => {
+  const selectGoods = ({ used, companyGoodsId }) => {
 
     Modal.confirm({
       title: '提示',
       icon: <ExclamationCircleOutlined />,
       centered: true,
-      content: `确定${ uesd ? '移除' : '选中' }商品吗？`,
+      content: `确定${ used ? '移除' : '选中' }商品吗？`,
       okText: '确定',
       cancelText: '取消',
       onCancel: () => {},
@@ -40,7 +41,7 @@ function Prize () {
         try {
 
           const { state } = await company.selectGoods({
-            used: !uesd,
+            used: !used,
             companyGoodsId,
           })
 
@@ -90,6 +91,7 @@ function Prize () {
 
       setGoods(data.items)
       setTotal(+data.pageable.resultCount)
+      setSize(+data.pageable.resultSize)
     } catch (error) {
 
       console.error('~~error~~', error)
@@ -127,7 +129,7 @@ function Prize () {
         {
           goods.length
             ?
-            goods.map(({ thumb, name, shelfName, price, companyPrice, uesd, companyGoodsId }) => {
+            goods.map(({ thumb, name, shelfName, price, companyPrice, used, companyGoodsId }) => {
 
               return (
                 <div className={ styles.goods } key={ companyGoodsId }>
@@ -143,7 +145,7 @@ function Prize () {
                     </div>
                   </div>
                   <div className={ `${styles.goods__right} center` }>
-                    <span className={ `${styles.goods__btn} center` } onClick={ () => selectGoods({ companyGoodsId, uesd }) }>{ uesd ? '已选' : '未选' }</span>
+                    <span className={ `${styles.goods__btn} center` } onClick={ () => selectGoods({ companyGoodsId, used }) }>{ used ? '已选' : '未选' }</span>
                   </div>
                 </div>
               )
@@ -152,6 +154,21 @@ function Prize () {
             <Empty />
         }
       </Spin>
+
+      <div className={ `pagebar ${styles.pagebar}` }>
+        <Pagination
+          onChange={ e => {
+
+            setPage(e)
+            setFlag(!flag)
+          } }
+          total={ total }
+          showTotal={ total => `共 ${total} 条` }
+          pageSize={ size }
+          current={ page }
+          defaultCurrent={ page }
+        />
+      </div>
 
     </div>
   )

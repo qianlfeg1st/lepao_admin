@@ -62,7 +62,7 @@ function PrizeDetail () {
     {
       title: '商品标价',
       dataIndex: 'priceLabel',
-      width: 50,
+      width: 55,
     },
     {
       title: '采购价',
@@ -86,7 +86,7 @@ function PrizeDetail () {
     },
     {
       title: '操作',
-      width: 120,
+      width: 115,
       render (e) {
 
         return (
@@ -111,9 +111,7 @@ function PrizeDetail () {
 
   const getGoodsDetail = e => {
 
-    setEditModel(true)
-
-    const { name, shelfTitle, priceLabel, companyPriceLabel, gold, storeCount, companyGoodsId } = e
+    const { name, shelfTitle, priceLabel, companyPriceLabel, gold, storeCount, companyGoodsId, updownTime } = e
 
     form.setFieldsValue({
       name,
@@ -122,10 +120,11 @@ function PrizeDetail () {
       companyPriceLabel,
       gold,
       storeCount,
-      updownTime: [moment(1600411009340), moment(1601452009340)],
+      updownTime: [moment(new Date(updownTime.split('-')[0])), moment(new Date(updownTime.split('-')[1]))],
     })
 
     setGoodsId(companyGoodsId)
+    setEditModel(true)
   }
 
   const load = async () => {
@@ -143,6 +142,7 @@ function PrizeDetail () {
 
       setListData(data.items)
       setTotal(+data.pageable.resultCount)
+      setSize(+data.pageable.resultSize)
     } catch (error) {
 
       console.error('~~error~~', error)
@@ -160,9 +160,6 @@ function PrizeDetail () {
   }
 
   const submit = async values => {
-
-    console.log('~submit~', values)
-    console.log('~goodsId~', goodsId)
 
     const { storeCount, gold, updownTime, companyPriceLabel } = values
     const data = listData.find((item => item.companyGoodsId === goodsId))
@@ -287,6 +284,7 @@ function PrizeDetail () {
           pageSize={ size }
           current={ page }
           defaultCurrent={ page }
+          showSizeChanger={ false }
         />
       </div>
 
@@ -304,10 +302,6 @@ function PrizeDetail () {
         ]}
       >
         <Form id="edit" form={ form } { ...formItemLayout } onFinish={ submit }>
-
-          <Form.Item label="商品名称" name="name">
-            <Input size="large" disabled />
-          </Form.Item>
 
           <Form.Item label="商品名称" name="name">
             <Input size="large" disabled />
@@ -335,9 +329,9 @@ function PrizeDetail () {
 
           <Form.Item label="上架时间" name="updownTime" rules={[{ required: true, message: '请选择上架时间' }]}>
             <RangePicker
+              style={{ width: '100%' }}
               size="large"
-              showTime={{ format: 'HH:mm' }}
-              format="YYYY-MM-DD HH:mm"
+              format="YYYY/MM/DD"
             />
           </Form.Item>
 

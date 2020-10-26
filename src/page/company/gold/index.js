@@ -100,7 +100,7 @@ function Gold () {
 
   const submit = () => {
 
-    console.log('~submit~', setting)
+    if (!(setting.dayGoldLimit && setting.inviteReward && setting.convertRate.gold && setting.convertRate.step && setting.rankingAwardGold[0] && setting.rankingAwardGold[1] && setting.rankingAwardGold[2])) return message.error('数据不完整，请检查')
 
     Modal.confirm({
       title: '提示',

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useReducer } from 'react'
+import React, { useState, useEffect, useContext, useReducer, memo } from 'react'
 import { useHistory, withRouter } from 'react-router-dom'
 import { RouteConfigContext } from '@/router'
 import { Row, Col, Menu, Dropdown } from 'antd'
@@ -8,8 +8,6 @@ import 'moment/locale/zh-cn' // 配置moment为中文
 import { common } from '@/api'
 import * as reducer from '@/reducer'
 
-// const { SubMenu } = Menu
-
 const topMenu = {
   company: '/join',
   goods: '/goods',
@@ -17,8 +15,6 @@ const topMenu = {
 }
 
 function Admin (props) {
-
-  // console.log('Admin-props', props)
 
   const history = useHistory()
 
@@ -111,13 +107,14 @@ function Admin (props) {
     <div className={ styles.pageWrapper }>
 
       <Row className={ styles.header } id="header">
+
         <Col span={ 6 } className={ styles.header__left }>
           <img className={ styles.header__logo } src={ require(`../../assets/images/logo.png`) } alt="" />
-          <div className={ styles.header__name }>企业乐跑管理后台</div>
+          <div className={ styles.header__name } onClick={ () => history.replace('/company/index') }>企业乐跑管理后台</div>
         </Col>
+
         <Col span={ 12 } className={ styles.header__center }>
-          {/* <img className={ styles.header__logo } src={ require(`../../assets/logo.png`) } alt="" />
-          <div className={ styles.header__name }>控制台</div> */}
+
           <Menu onClick={ handleClick } selectedKeys={ [current] } mode="horizontal" style={{
             background: 'transparent',
             color: '#fff',
@@ -134,7 +131,9 @@ function Admin (props) {
               <span className={ current === 'user' ? styles.active : styles.unActive }>用户管理</span>
             </Menu.Item>
           </Menu>
+
         </Col>
+
         <Col span={ 6 } className={ styles.header__right }>
           <Dropdown overlay={ menu } trigger={['click']}>
             <span>
@@ -200,4 +199,4 @@ function Admin (props) {
 
 export const AdminContext = React.createContext()
 
-export default withRouter(Admin)
+export default memo(withRouter(Admin))

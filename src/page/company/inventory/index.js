@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Radio, Image, Modal, Button, Spin, Empty, Form, Input, InputNumber, DatePicker, message } from 'antd'
+import { Radio, Image, Modal, Button, Spin, Empty, Form, Input, InputNumber, DatePicker, message, Pagination } from 'antd'
 import styles from './index.module.scss'
 import { company } from '@/api'
 import moment from 'moment'
@@ -22,6 +22,10 @@ function Inventory () {
   const [loading, setLoading] = useState(true)
   const [currentShelf, setCurrentShelf] = useState([])
   const [companyGoodsId, setCompanyGoodsId] = useState('')
+  const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [size, setSize] = useState(20)
+  const [flag, setFlag] = useState(false)
 
   useEffect(() => {
 
@@ -31,7 +35,7 @@ function Inventory () {
   useEffect(() => {
 
     if (shelf.length) getGoodsStore()
-  }, [currentShelf])
+  }, [currentShelf, flag])
 
   const getShelf = async () => {
 
@@ -56,13 +60,15 @@ function Inventory () {
       setLoading(true)
 
       const { state, data } = await company.getGoodsStore({
-        firstResult: 0,
+        firstResult: (page - 1) * size,
         shelfId: currentShelf,
       })
 
       if (!state) return
 
       setGoods(data.items)
+      setTotal(+data.pageable.resultCount)
+      setSize(+data.pageable.resultSize)
     } catch (error) {
 
       console.error('~~error~~', error)
@@ -84,6 +90,9 @@ function Inventory () {
   const radioChange = e => {
 
     setCurrentShelf(e.target.value)
+    setPage(1)
+    setTotal(0)
+    setSize(20)
   }
 
   const showModal = e => {
@@ -175,6 +184,20 @@ function Inventory () {
 
       </Spin>
 
+      <div className={ `pagebar ${styles.pagebar}` }>
+        <Pagination
+          onChange={ e => {
+
+            setPage(e)
+            setFlag(!flag)
+          } }
+          total={ total }
+          showTotal={ total => `共 ${total} 条` }
+          pageSize={ size }
+          current={ page }
+          defaultCurrent={ page }
+        />
+      </div>
 
       <Modal
         visible={ modal }

@@ -189,8 +189,6 @@ function StaffDetail () {
 
   const submit = values => {
 
-    // console.log('~~values~~', values)
-
     Modal.confirm({
       title: '提示',
       centered: true,
@@ -236,6 +234,7 @@ function StaffDetail () {
 
       setOffinData(data.items)
       setTotal(+data.pageable.resultCount)
+      setSize(+data.pageable.resultSize)
     } catch (error) {
 
       console.error('~~error~~', error)
@@ -261,6 +260,7 @@ function StaffDetail () {
 
       setListData(data.items)
       setTotal(+data.pageable.resultCount)
+      setSize(+data.pageable.resultSize)
     } catch (error) {
 
       console.error('~~error~~', error)
@@ -385,33 +385,26 @@ function StaffDetail () {
 
       <div className={ styles.title }>{ companyName }员工列表({ total })</div>
 
-      <div className="searchbar">
-
-        <Row>
-          <Col span={ 12 }>
-            <Radio.Group
-              options={ radioOptions }
-              onChange={ onChangeRadio }
-              value={ radioValue }
-              optionType="button"
-              buttonStyle="solid"
-            />
-          </Col>
-          <Col span={ 12 } className={ styles.qrcode }>
-            {
-              radioValue !== 'offin'
-                ?
-                <>
-                  <p className={ styles.text }>点击放大右侧二维码，添加{ radioValue === 'PBCompanyEmpQueryManager' ? '管理员' : '企业员工' }</p>
-                  <QrcodeOutlined onClick={ () => setQrcodeModel(true) } />
-                </>
-                :
-                null
-            }
-
-          </Col>
-        </Row>
-
+      <div className={ styles.searchbar }>
+        <Radio.Group
+          options={ radioOptions }
+          onChange={ onChangeRadio }
+          value={ radioValue }
+          optionType="button"
+          buttonStyle="solid"
+        />
+        <div className={ styles.qrcode }>
+          {
+            radioValue !== 'offin'
+              ?
+              <>
+                <p className={ styles.text }>点击放大右侧二维码，添加{ radioValue === 'PBCompanyEmpQueryManager' ? '管理员' : '企业员工' }</p>
+                <QrcodeOutlined onClick={ () => setQrcodeModel(true) } />
+              </>
+              :
+              null
+          }
+        </div>
       </div>
 
       <Table

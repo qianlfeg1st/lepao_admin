@@ -4,6 +4,7 @@ import { Table, Button, Select, Modal, Pagination, Row, Col, Image, Breadcrumb }
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { prize } from '@/api'
 import { AdminContext } from '@/components/Admin'
+import styles from './index.module.scss'
 
 const { Option } = Select
 
@@ -192,25 +193,22 @@ function Prize () {
         pagination={ false }
       />
 
-      <Row className="pagebar">
-        <Col span={ 18 }>
-          <Button type="primary" disabled={ !goodsIds.length } onClick={ selPrize }>选为奖品</Button>
-        </Col>
-        <Col span={ 6 }>
-          <Pagination
-            onChange={ e => {
+      <view className={ styles.pagebar }>
+        <Button type="primary" disabled={ !goodsIds.length } onClick={ selPrize }>选为奖品</Button>
+        <Pagination
+          onChange={ e => {
 
-              setPage(e)
-              setFlag(!flag)
-            } }
-            total={ total }
-            showTotal={ total => `共 ${total} 条` }
-            pageSize={ size }
-            current={ page }
-            defaultCurrent={ page }
-          />
-        </Col>
-      </Row>
+            setPage(e)
+            setFlag(!flag)
+          } }
+          total={ total }
+          showTotal={ total => `共 ${total} 条` }
+          pageSize={ size }
+          current={ page }
+          defaultCurrent={ page }
+          showSizeChanger={ false }
+        />
+      </view>
 
     </>
   )

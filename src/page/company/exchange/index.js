@@ -37,6 +37,7 @@ function Exchange () {
 
       setOrder(data.items)
       setTotal(+data.pageable.resultCount)
+      setSize(+data.pageable.resultSize)
     } catch (error) {
 
       console.error('~~error~~', error)
