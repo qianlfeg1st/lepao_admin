@@ -59,6 +59,7 @@ function Login () {
       if (!state || data.error) return checkLogin()
 
       sessionStorage.setItem('accessToken', data.accessToken)
+      sessionStorage.setItem('role', JSON.stringify(data.rolePrivilege))
 
       message.success('登录成功')
 
@@ -77,8 +78,6 @@ function Login () {
 
   return (
     <div className={ styles.body }>
-
-      {/* <button onClick={ () => { RouteHistory.push('/join') } }>TEST</button> */}
 
       <img src={ require(`../../assets/images/title.png`) } className={ styles.body__title } alt="" />
 

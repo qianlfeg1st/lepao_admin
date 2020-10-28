@@ -103,6 +103,13 @@ function Admin (props) {
     </Menu>
   )
 
+  const toCompany = () => {
+
+    const role = JSON.parse(sessionStorage.getItem('role')) || []
+
+    if (role.includes('PBUserRolePrivilegeCompanyMgr')) history.replace('/company/index')
+  }
+
   return (
     <div className={ styles.pageWrapper }>
 
@@ -110,7 +117,7 @@ function Admin (props) {
 
         <Col span={ 6 } className={ styles.header__left }>
           <img className={ styles.header__logo } src={ require(`../../assets/images/logo.png`) } alt="" />
-          <div className={ styles.header__name } onClick={ () => history.replace('/company/index') }>企业乐跑管理后台</div>
+          <div className={ styles.header__name } onClick={ toCompany }>企业乐跑管理后台</div>
         </Col>
 
         <Col span={ 12 } className={ styles.header__center }>

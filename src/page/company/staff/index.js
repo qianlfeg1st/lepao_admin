@@ -64,11 +64,6 @@ function Staff () {
         return <>{ e.phoneNumber || '未授权' }</>
       }
     },
-    // {
-    //   title: '部门',
-    //   dataIndex: 'nickName',
-    //   width: 100,
-    // },
     {
       title: '操作',
       width: 100,
@@ -250,7 +245,7 @@ function Staff () {
       </section>
 
       <div className={ styles.code }>
-        <img className={ styles.code__img } src={ `${baseURL}cpy_emp/invite_join_companyemp?base_access_token=eyJhbGciOiJIUzI1NiJ9.CBQQm5zRwtou.1GwyO5NuO4RXNXYPpCev6WKG0QD9jYfbbMy2I2uXpeg` } />
+        <img className={ styles.code__img } src={ `${baseURL}cpy_emp/invite_join_companyemp?base_access_token=${sessionStorage.getItem('accessToken')}` } />
         <h1 className={ styles.code__name }>{ dept.companyName }</h1>
         <p className={ styles.code__tip }>微信扫一扫，加为企业员工</p>
         <div className={ styles.code__btn }>保存到本地</div>

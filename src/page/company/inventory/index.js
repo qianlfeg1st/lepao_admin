@@ -89,10 +89,8 @@ function Inventory () {
 
   const radioChange = e => {
 
-    setCurrentShelf(e.target.value)
     setPage(1)
-    setTotal(0)
-    setSize(20)
+    setCurrentShelf(e.target.value)
   }
 
   const showModal = e => {

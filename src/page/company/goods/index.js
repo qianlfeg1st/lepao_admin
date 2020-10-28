@@ -73,6 +73,7 @@ function Goods () {
 
   const radioChange = e => {
 
+    setPage(1)
     setCurrentShelf(e.target.value)
   }
 

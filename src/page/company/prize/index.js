@@ -103,11 +103,13 @@ function Prize () {
 
   const radioChange = e => {
 
+    setPage(1)
     setCurrentShelf(e.target.value)
   }
 
   const currentChange = e => {
 
+    setPage(1)
     setCurrent(e.target.value)
   }
 

@@ -104,6 +104,13 @@ function Admin (props) {
     }
   }
 
+  const toAdmin = () => {
+
+    const role = JSON.parse(sessionStorage.getItem('role')) || []
+
+    if (role.includes('PBUserRolePrivilegeAdmin')) history.replace('/join')
+  }
+
   return (
     <>
 
@@ -112,7 +119,7 @@ function Admin (props) {
 
           <Col span={ 5 } className={ styles.header__left }>
             <img className={ styles.header__logo } src={ require('../../assets/images/logo.png') } alt="乐跑健康" />
-            <div className={ styles.header__name }>乐跑健康企业平台</div>
+            <div className={ styles.header__name } onClick={ toAdmin }>乐跑健康企业平台</div>
           </Col>
 
           <Col span={ 9 } className={ styles.header__center }>
@@ -145,10 +152,10 @@ function Admin (props) {
 
             <div className={ styles.header__line }>|</div>
 
-            <div className={ styles.header__user }>
+            {/* <div className={ styles.header__user }>
               <img src={ require('../../assets/images/111.png') } />
               管理员
-            </div>
+            </div> */}
 
             <div className={ styles.header__service } onClick={ getServiceInfo }>
               <img src={ require('../../assets/images/service.png') } />

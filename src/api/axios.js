@@ -28,7 +28,7 @@ axios.interceptors.request.use(config => {
 // 响应拦截
 axios.interceptors.response.use(response => {
 
-  // if (!response.data.status && response.data.message) return message.error(`${response.status}: ${response.data.message}`)
+  if ('base_access_token_update' in response.headers) sessionStorage.setItem('accessToken', response.headers.base_access_token_update)
 
   if (response.status === 201) {
 
