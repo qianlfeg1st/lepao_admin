@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, memo } from 'react'
-import { withRouter, Link } from 'react-router-dom'
+import { withRouter, Link, useHistory } from 'react-router-dom'
 import { RouteConfigContext } from '@/router'
 import { Row, Col, Modal, Button, Spin } from 'antd'
 import styles from './index.module.scss'
@@ -47,6 +47,8 @@ const goodsMenu = [
 ]
 
 function Admin (props) {
+
+  const history = useHistory()
 
   const { location, children } = props
 
@@ -108,6 +110,8 @@ function Admin (props) {
 
     const role = JSON.parse(sessionStorage.getItem('role')) || []
 
+    console.log('~~~~~', role)
+
     if (role.includes('PBUserRolePrivilegeAdmin')) history.replace('/join')
   }
 
@@ -161,6 +165,8 @@ function Admin (props) {
               <img src={ require('../../assets/images/service.png') } />
               在线客服
             </div>
+
+            <div className={ styles.header__service } onClick={ toAdmin } style={{ marginLeft: '20px' }}>乐跑平台</div>
           </Col>
         </Row>
       </div>

@@ -139,7 +139,7 @@ export const removeStaff = params => {
 // 审核通过员工
 export const passStaff = params => {
 
-  return axios.get('cpy_emp/remove', {
+  return axios.get('cpy_emp/audit_pass', {
     params: {
       ...params,
     },
