@@ -6,6 +6,7 @@ import * as point from './module/point'
 import * as prize from './module/prize'
 import * as steps from './module/steps'
 import * as user from './module/user'
+import * as goods from './module/goods'
 import * as company from './module/company'
 
 export {
@@ -22,5 +23,6 @@ export {
   prize,
   steps,
   user,
+  goods,
   company,
 }
