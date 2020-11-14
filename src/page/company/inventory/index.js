@@ -123,8 +123,8 @@ function Inventory () {
           const { state } = await company.editGoodsStore({
             ...e,
             companyGoodsId,
-            downTime: formatDate(e.upDownTime[0].valueOf()),
-            upTime: formatDate(e.upDownTime[1].valueOf()),
+            downTime: formatDate(e.upDownTime[1].valueOf()),
+            upTime: formatDate(e.upDownTime[0].valueOf()),
             upDownTime: undefined,
             name: undefined,
             recommend: !!e.recommend,

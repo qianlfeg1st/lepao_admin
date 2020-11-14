@@ -248,10 +248,6 @@ function Join () {
     console.log('closeTag', index)
 
     setDepartment(department => department.filter((_, idx) => idx !== index))
-
-    // form.setFieldsValue({
-    //   department: department,
-    // })
   }
 
   return (

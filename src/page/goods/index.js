@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import { Table, Button, Modal, Spin, Form, Input } from 'antd'
-import { point } from '@/api'
+import React, { useState, useEffect, useContext } from 'react'
+import { Table, Button, Modal, Spin, Form, Input, Pagination, Image, InputNumber, Select, Upload } from 'antd'
+import { goods } from '@/api'
+import { AdminContext } from '@/components/Admin'
+import { baseURL } from '@/config'
+import { PlusOutlined } from '@ant-design/icons'
 
 const formItemLayout = {
   labelCol: { span: 5, offset: 2, },
@@ -8,80 +11,81 @@ const formItemLayout = {
   labelAlign: 'left',
 }
 
+const { Option } = Select
+
 function Join () {
 
   const [form] = Form.useForm()
   const [listLoading, setListLoading] = useState(false)
   const [companyModal, setCompanyModal] = useState(false)
   const [detailLoading, setDetailLoading] = useState(false)
-  const [listData, setListData] = useState([
-    {
-      a: 1,
-    }
-  ])
-  const [page, setPage] = useState(0)
+  const [listData, setListData] = useState([])
+  const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [size, setSize] = useState(20)
   const [flag, setFlag] = useState(false)
 
+  const [goodsModal, setGoodsModal] = useState(false)
+  const [shelfSelect, setShelfSelect] = useState([])
+  const [fileList, setFileList] = useState([])
+
+  const { height } = useContext(AdminContext)
+
   const listColumns = [
     {
-      title: '企业编号',
-      dataIndex: 'companyId',
+      title: '商品ID',
+      dataIndex: 'goodsId',
+      width: 70,
+    },
+    {
+      title: '分类',
+      dataIndex: 'shelfTitle',
       width: 100,
     },
     {
-      title: '企业名称',
-      dataIndex: 'companyName',
+      title: '商品名称',
+      dataIndex: 'name',
+      width: 210,
+    },
+    {
+      title: '商品封面',
+      width: 80,
+      render (e) {
+
+        return <Image width={ 36 } src={ e.thumb } />
+      }
+    },
+    {
+      title: '进货价',
+      dataIndex: 'originPriceLabel',
+      width: 80,
+    },
+    {
+      title: '企业采购价',
+      dataIndex: 'priceLabel',
       width: 100,
     },
     {
-      title: '已发放积分',
-      dataIndex: '',
-      width: 100,
+      title: '库存',
+      dataIndex: 'storeCountLabel',
+      width: 80,
     },
     {
-      title: '已兑换积分',
-      dataIndex: '',
-      width: 100,
-    },
-    {
-      title: '人均积分持有数',
-      dataIndex: '',
-      width: 100,
-    },
-    {
-      title: '步数积分比',
-      dataIndex: '',
-      width: 100,
-    },
-    {
-      title: '单日积分上限',
-      dataIndex: '',
-      width: 100,
-    },
-    {
-      title: '周积分奖励',
-      dataIndex: '',
-      width: 100,
-    },
-    {
-      title: '排名积分奖励',
-      dataIndex: '',
-      width: 100,
-    },
-    {
-      title: '邀请积分奖励',
-      dataIndex: '',
+      title: '推荐兑换积分',
+      dataIndex: 'gold',
       width: 100,
     },
     {
       title: '操作',
-      width: 200,
+      width: 220,
       render (e) {
 
         return (
-          <Button type="primary" onClick={ () => getCompanyDetail(e.companyId) }>编辑</Button>
+          <>
+            <Button className="btn" type="primary" onClick={ () => getGoodsDetail(e.goodsId) }>编辑</Button>
+            <Button className="btn" type="primary" onClick={ () => getCompanyDetail(e.companyId) }>上架</Button>
+            <Button className="btn" type="danger" onClick={ () => getCompanyDetail(e.companyId) }>下架</Button>
+          </>
         )
       }
     },
@@ -89,47 +93,59 @@ function Join () {
 
   useEffect(() => {
 
-    // load()
+    getGoodsList()
   }, [flag])
 
-  const getCompanyDetail = async companyId => {
+  const onChange = e => {
 
-    try {
+    const list = e.fileList[0]
 
-      setCompanyModal(true)
+    setFileList(e.fileList.slice(-1))
 
-      const { state, data } = await point.getCompanyDetail({
-        companyId,
-      })
+    if (list) {
 
-      if (!state) return
+      if (list?.status !== 'done') return
+
+      if (list.xhr?.status === 200) {
+
+        form.setFieldsValue({
+          thumb: list.response.stringValue,
+        })
+      } else {
+
+        form.setFieldsValue({
+          thumb: undefined,
+        })
+
+        // 清除缩略图
+        setFileList([])
+      }
+    } else {
 
       form.setFieldsValue({
-        ...data,
+        companyLogo: undefined,
       })
-    } catch (error) {
-
-      console.error('~~error~~', error)
-    } finally {
-
-      // setDetailLoading(false)
     }
   }
 
-  const load = async () => {
+  const getGoodsList = async () => {
 
     try {
 
       setListLoading(true)
 
-      const { state, data } = await point.getCompanyList({
-        // page,
-        // size,
+      const { state, data } = await goods.getGoodsList({
+        pageable: {
+          firstResult: (page - 1) * size,
+          resultSize: 20,
+        },
       })
 
       if (!state) return
 
-      setListData(data.data)
+      setListData(data.list)
+      setTotal(+data.pageable.resultCount)
+      setSize(+data.pageable.resultSize)
     } catch (error) {
 
       console.error('~~error~~', error)
@@ -139,9 +155,81 @@ function Join () {
     }
   }
 
-  const submit = () => {
+  const getGoodsDetail = async goodsId => {
 
-    console.log('~~~~~~~~')
+    try {
+
+      setGoodsModal(true)
+      setDetailLoading(true)
+
+      const { state, data } = await goods.getGoodsDetail({
+        goodsId,
+      })
+
+      if (!state) return
+
+      const { name, originPrice, price, gold, storeCount, sourceLink, shelfSelect } = data
+
+      setShelfSelect(shelfSelect)
+      setFileList([{
+        uid: '-1',
+        name: 'image.jpg',
+        url: data.thumb,
+      }])
+
+      form.setFieldsValue({
+        name,
+        originPrice,
+        price,
+        gold,
+        storeCount,
+        sourceLink,
+      })
+    } catch (error) {
+
+      console.error('~~error~~', error)
+    } finally {
+
+      setDetailLoading(false)
+    }
+  }
+
+  const submit = values => {
+
+    console.log('~~values~~', values)
+
+    // const text = type === 'add' ? '创建' : '修改'
+
+    // Modal.confirm({
+    //   title: '提示',
+    //   centered: true,
+    //   content: `确认${text}吗？`,
+    //   onOk: async () => {
+
+    //     try {
+
+    //       const { state } = await goods.addOrEditGoods({
+    //         ...values,
+    //         department: undefined,
+    //         deptNames: department,
+    //         companyId,
+    //       })
+
+    //       if (!state) return
+
+    //       message.success(`${text}成功`)
+
+    //       setAddCompanyModal(false)
+
+    //       setFlag(!flag)
+
+    //       form.resetFields()
+    //     } catch (error) {
+
+    //       console.error('~~error~~', error)
+    //     }
+    //   },
+    // })
   }
 
   return (
@@ -150,47 +238,91 @@ function Join () {
       <Table
         bordered
         className="fixedWidthTable"
-        scroll={{ x: 'calc(100vw - 400px)', y: `calc(100vh)` }}
-        rowKey={ e => e.companyId }
+        scroll={{ x: 'calc(100vw - 300px)', y: `calc(100vh - ${height}px)` }}
+        rowKey={ e => e.goodsId }
         loading={ listLoading }
         columns={ listColumns }
         dataSource={ listData }
         pagination={ false }
       />
 
+      <div className="pagebar">
+        <Pagination
+          onChange={ e => {
+
+            setPage(e)
+            setFlag(!flag)
+          } }
+          total={ total }
+          showTotal={ total => `共 ${total} 条` }
+          pageSize={ size }
+          current={ page }
+          defaultCurrent={ page }
+          showSizeChanger={ false }
+        />
+      </div>
+
       <Modal
-        visible={ companyModal }
+        visible={ goodsModal }
         title="编辑"
-        onCancel={ () => ( setAddCompanyModal(false), form.resetFields() ) }
+        onCancel={ () => ( setGoodsModal(false), form.resetFields() ) }
         onOk={ null }
         maskClosable={ false }
         centered
         width="40vw"
         footer={[
           <Button form="addForm" key="save" type="primary" htmlType="submit" size="default">确定</Button>,
-          <Button key="cancel" type="default" size="default" onClick={ () => ( setAddCompanyModal(false), form.resetFields() ) }>取消</Button>,
+          <Button key="cancel" type="default" size="default" onClick={ () => ( setGoodsModal(false), form.resetFields() ) }>取消</Button>,
         ]}
       >
         <Spin spinning={ detailLoading }>
           <Form id="form" form={ form } { ...formItemLayout } onFinish={ submit }>
-            <Form.Item label="步数积分比" name="1" rules={[{required: true, message: '请输入步数积分比'}]}>
-              <Input size="large" placeholder="请输入步数积分比" />
+
+            <Form.Item label="商品缩略图" name="thumb" rules={[{required: true, message: '请输上传商品缩略图'}]}>
+              <Upload
+                fileList={ fileList }
+                listType="picture-card"
+                className="avatar-uploader"
+                showUploadList={ true }
+                action={ `${baseURL}aliyun/uploadWithFormType` }
+                headers={ {
+                  base_access_token: sessionStorage.getItem('accessToken'),
+                } }
+                onChange={ onChange }
+              >
+                <PlusOutlined />
+                <div className="ant-upload-text">上传</div>
+              </Upload>
             </Form.Item>
 
-            <Form.Item label="单日积分上限" name="2" rules={[{required: true, message: '请输入单日积分上限'}]}>
-              <Input size="large" placeholder="请输入单日积分上限" />
+            <Form.Item label="商品名称" name="name" rules={[{required: true, message: '请输入商品名称'}]}>
+              <Input size="large" placeholder="请输入商品名称" />
             </Form.Item>
 
-            <Form.Item label="周积分奖励" name="3" rules={[{required: true, message: '请输入周积分奖励'}]}>
-              <Input size="large" placeholder="请输入周积分奖励" />
+            <Form.Item label="商品分类" name="shelfId" rules={[{required: true, message: '请选择商品分类'}]}>
+              <Select placeholder="请选择商品分类" size="large">
+                { shelfSelect.map(item => <Option key={ item.shelfId } value={ item.shelfId }>{ item.shelfTitle }</Option>) }
+              </Select>
             </Form.Item>
 
-            <Form.Item label="排名积分奖励" name="4" rules={[{required: true, message: '请输入排名积分奖励'}]}>
-              <Input size="large" placeholder="请输入排名积分奖励" />
+            <Form.Item label="进货价" name="originPrice" rules={[{ required: true, message: '请输入进货价' }]}>
+              <InputNumber size="large" style={{ width: '100%' }} placeholder="请输入进货价" />
             </Form.Item>
 
-            <Form.Item label="邀请积分奖励" name="5" rules={[{required: true, message: '请输入邀请积分奖励'}]}>
-              <Input size="large" placeholder="请输入邀请积分奖励" />
+            <Form.Item label="企业采购价" name="price" rules={[{ required: true, message: '请输入企业采购价' }]}>
+              <InputNumber size="large" style={{ width: '100%' }} placeholder="请输入企业采购价" />
+            </Form.Item>
+
+            <Form.Item label="推荐兑换积分" name="gold" rules={[{ required: true, message: '请输入推荐兑换积分' }]}>
+              <InputNumber size="large" style={{ width: '100%' }} placeholder="请输入推荐兑换积分" />
+            </Form.Item>
+
+            <Form.Item label="库存数" name="storeCount" rules={[{ required: true, message: '请输入库存数' }]}>
+              <InputNumber size="large" style={{ width: '100%' }} placeholder="请输入库存数" />
+            </Form.Item>
+
+            <Form.Item label="来源备注" name="sourceLink" rules={[{required: true, message: '请输入来源备注'}]}>
+              <Input size="large" placeholder="请输入来源备注" />
             </Form.Item>
 
           </Form>
