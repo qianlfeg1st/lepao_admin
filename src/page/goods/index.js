@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Table, Button, Modal, Spin, Form, Input, Pagination, Image, InputNumber, Select, Upload } from 'antd'
+import { Table, Button, Modal, Spin, Form, Input, Pagination, Image, InputNumber, Select, Upload, message } from 'antd'
 import { goods } from '@/api'
 import { AdminContext } from '@/components/Admin'
 import { baseURL } from '@/config'
@@ -13,11 +13,10 @@ const formItemLayout = {
 
 const { Option } = Select
 
-function Join () {
+function Goods () {
 
-  const [form] = Form.useForm()
+  const [ form ] = Form.useForm()
   const [listLoading, setListLoading] = useState(false)
-  const [companyModal, setCompanyModal] = useState(false)
   const [detailLoading, setDetailLoading] = useState(false)
   const [listData, setListData] = useState([])
   const [page, setPage] = useState(1)
@@ -28,6 +27,8 @@ function Join () {
   const [goodsModal, setGoodsModal] = useState(false)
   const [shelfSelect, setShelfSelect] = useState([])
   const [fileList, setFileList] = useState([])
+  const [type, setType] = useState('')
+  const [imageList, setImageList] = useState([])
 
   const { height } = useContext(AdminContext)
 
@@ -83,8 +84,13 @@ function Join () {
         return (
           <>
             <Button className="btn" type="primary" onClick={ () => getGoodsDetail(e.goodsId) }>编辑</Button>
-            <Button className="btn" type="primary" onClick={ () => getCompanyDetail(e.companyId) }>上架</Button>
-            <Button className="btn" type="danger" onClick={ () => getCompanyDetail(e.companyId) }>下架</Button>
+            {
+              e.remove
+                ?
+                <Button className="btn" type="primary" onClick={ () => upGoods(e.goodsId) }>上架</Button>
+                :
+                <Button className="btn" type="danger" onClick={ () => removeGoods(e.goodsId) }>下架</Button>
+            }
           </>
         )
       }
@@ -94,7 +100,80 @@ function Join () {
   useEffect(() => {
 
     getGoodsList()
+    getShelfList()
   }, [flag])
+
+  const getShelfList = async () => {
+
+    try {
+
+      const { state, data } = await goods.getShelfList()
+
+      if (!state) return
+
+      setShelfSelect(data.shelfs)
+    } catch (error) {
+
+      console.error('~~error~~', error)
+    } finally {
+
+      setListLoading(false)
+    }
+  }
+
+  const removeGoods = goodsId => {
+
+    Modal.confirm({
+      title: '提示',
+      content: '确认下架吗？',
+      centered: true,
+      onOk: async () => {
+
+        try {
+
+          const { state } = await goods.removeGoods({
+            goodsId
+          })
+
+          if (!state) return
+
+          message.success('下架成功')
+
+          setFlag(!flag)
+        } catch (error) {
+
+          console.error('~~error~~', error)
+        }
+      }
+    })
+  }
+
+  const upGoods = goodsId => {
+
+    Modal.confirm({
+      title: '提示',
+      content: '确认上架吗？',
+      centered: true,
+      onOk: async () => {
+
+        try {
+
+          const { state } = await goods.upGoods({
+            goodsId
+          })
+
+          if (!state) return
+
+          message.success('上架成功')
+
+          setFlag(!flag)
+        } catch (error) {
+
+          console.error('~~error~~', error)
+        }
+      }
+    })
+  }
 
   const onChange = e => {
 
@@ -194,6 +273,11 @@ function Join () {
     }
   }
 
+  const handleChange =  ({ fileList }) => {
+
+    setImageList(fileList)
+  }
+
   const submit = values => {
 
     console.log('~~values~~', values)
@@ -235,6 +319,22 @@ function Join () {
   return (
     <>
 
+      <div className="searchbar">
+        <div className="searchbtn">
+          <Button className="btn" icon={ <PlusOutlined /> } type="primary" size="large" onClick={ () => {
+
+            form.resetFields()
+            // setDepartment([])
+            setDetailLoading(false)
+            // setCompanyId(undefined)
+            setGoodsModal(true)
+            setFileList([])
+
+            setType('add')
+          } }>新增商品</Button>
+        </div>
+      </div>
+
       <Table
         bordered
         className="fixedWidthTable"
@@ -271,7 +371,7 @@ function Join () {
         centered
         width="40vw"
         footer={[
-          <Button form="addForm" key="save" type="primary" htmlType="submit" size="default">确定</Button>,
+          <Button form="form" key="save" type="primary" htmlType="submit" size="default">确定</Button>,
           <Button key="cancel" type="default" size="default" onClick={ () => ( setGoodsModal(false), form.resetFields() ) }>取消</Button>,
         ]}
       >
@@ -295,13 +395,29 @@ function Join () {
               </Upload>
             </Form.Item>
 
+            <Form.Item label="商品详情图" name="images" rules={[{required: true, message: '请输上传商品详情图'}]}>
+              <Upload
+                action={ `${baseURL}aliyun/uploadWithFormType` }
+                headers={ {
+                  base_access_token: sessionStorage.getItem('accessToken'),
+                } }
+                listType="picture-card"
+                fileList={ imageList }
+                // onPreview={this.handlePreview}
+                onChange={ handleChange }
+              >
+                <PlusOutlined />
+                <div className="ant-upload-text">上传</div>
+              </Upload>
+            </Form.Item>
+
             <Form.Item label="商品名称" name="name" rules={[{required: true, message: '请输入商品名称'}]}>
               <Input size="large" placeholder="请输入商品名称" />
             </Form.Item>
 
             <Form.Item label="商品分类" name="shelfId" rules={[{required: true, message: '请选择商品分类'}]}>
               <Select placeholder="请选择商品分类" size="large">
-                { shelfSelect.map(item => <Option key={ item.shelfId } value={ item.shelfId }>{ item.shelfTitle }</Option>) }
+                { shelfSelect.map(item => <Option key={ item.shelfId } value={ item.shelfId }>{ item.shelfTitle || item.title }</Option>) }
               </Select>
             </Form.Item>
 
@@ -333,4 +449,4 @@ function Join () {
   )
 }
 
-export default Join
+export default Goods

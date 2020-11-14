@@ -25,3 +25,29 @@ export const addOrEditGoods = params => {
     ...params,
   })
 }
+
+// 下架商品
+export const removeGoods = params => {
+
+  return axios.get('plat_goods/remove_goods', {
+    params: {
+      ...params,
+    },
+  })
+}
+
+// 上架商品
+export const upGoods = params => {
+
+  return axios.get('plat_goods/up_goods', {
+    params: {
+      ...params,
+    },
+  })
+}
+
+// 货架列表
+export const getShelfList = () => {
+
+  return axios.get('plat_shelf/list_shelf')
+}
