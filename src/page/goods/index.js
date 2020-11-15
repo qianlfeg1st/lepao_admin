@@ -29,6 +29,7 @@ function Goods () {
   const [fileList, setFileList] = useState([])
   const [type, setType] = useState('')
   const [imageList, setImageList] = useState([])
+  const [goodsId, setGoodsId] = useState('')
 
   const { height } = useContext(AdminContext)
 
@@ -240,6 +241,7 @@ function Goods () {
 
       setGoodsModal(true)
       setDetailLoading(true)
+      setType('edit')
 
       const { state, data } = await goods.getGoodsDetail({
         goodsId,
@@ -247,7 +249,7 @@ function Goods () {
 
       if (!state) return
 
-      const { name, originPrice, price, gold, storeCount, sourceLink, shelfSelect } = data
+      const { name, originPrice, price, gold, storeCount, sourceLink, shelfSelect, images, shelfId, thumb } = data
 
       setShelfSelect(shelfSelect)
       setFileList([{
@@ -255,6 +257,15 @@ function Goods () {
         name: 'image.jpg',
         url: data.thumb,
       }])
+      setImageList(images.map((item, index) => {
+
+        return {
+          uid: index,
+          name: `${index}.jpg`,
+          url: item,
+        }
+      }))
+      setGoodsId(data.goodsId)
 
       form.setFieldsValue({
         name,
@@ -263,6 +274,9 @@ function Goods () {
         gold,
         storeCount,
         sourceLink,
+        shelfId,
+        thumb,
+        images,
       })
     } catch (error) {
 
@@ -273,47 +287,49 @@ function Goods () {
     }
   }
 
-  const handleChange =  ({ fileList }) => {
+  const handleChange =  ({ fileList, event }) => {
 
     setImageList(fileList)
+
+    form.setFieldsValue({
+      images: fileList.map(item => item.url || item?.response?.stringValue),
+    })
   }
 
   const submit = values => {
 
-    console.log('~~values~~', values)
+    // console.log('~~values~~', values)
 
-    // const text = type === 'add' ? '创建' : '修改'
+    const text = type === 'add' ? '创建' : '修改'
 
-    // Modal.confirm({
-    //   title: '提示',
-    //   centered: true,
-    //   content: `确认${text}吗？`,
-    //   onOk: async () => {
+    Modal.confirm({
+      title: '提示',
+      centered: true,
+      content: `确认${text}吗？`,
+      onOk: async () => {
 
-    //     try {
+        try {
 
-    //       const { state } = await goods.addOrEditGoods({
-    //         ...values,
-    //         department: undefined,
-    //         deptNames: department,
-    //         companyId,
-    //       })
+          const { state } = await goods.addOrEditGoods({
+            ...values,
+            goodsId: type === 'edit' ? goodsId : undefined,
+          })
 
-    //       if (!state) return
+          if (!state) return
 
-    //       message.success(`${text}成功`)
+          message.success(`${text}成功`)
 
-    //       setAddCompanyModal(false)
+          setGoodsModal(false)
 
-    //       setFlag(!flag)
+          setFlag(!flag)
 
-    //       form.resetFields()
-    //     } catch (error) {
+          form.resetFields()
+        } catch (error) {
 
-    //       console.error('~~error~~', error)
-    //     }
-    //   },
-    // })
+          console.error('~~error~~', error)
+        }
+      },
+    })
   }
 
   return (
@@ -324,11 +340,11 @@ function Goods () {
           <Button className="btn" icon={ <PlusOutlined /> } type="primary" size="large" onClick={ () => {
 
             form.resetFields()
-            // setDepartment([])
             setDetailLoading(false)
-            // setCompanyId(undefined)
+            setGoodsId(undefined)
             setGoodsModal(true)
             setFileList([])
+            setImageList([])
 
             setType('add')
           } }>新增商品</Button>
@@ -364,7 +380,7 @@ function Goods () {
 
       <Modal
         visible={ goodsModal }
-        title="编辑"
+        title={ `${type === 'add' ? '新增' : '编辑'}商品` }
         onCancel={ () => ( setGoodsModal(false), form.resetFields() ) }
         onOk={ null }
         maskClosable={ false }
