@@ -49,3 +49,13 @@ export const uploadImage = params => {
     ...params,
   })
 }
+
+// 管理企业
+export const switchCompany = params => {
+
+  return axios.get('company/switch_to_company', {
+    params: {
+      ...params,
+    },
+  })
+}

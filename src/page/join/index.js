@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Table, Modal, Button, Form, Input, InputNumber, Select, Tag, Upload, message, Spin } from 'antd'
-import { join } from '@/api'
+import { join, common } from '@/api'
 import { PlusOutlined } from '@ant-design/icons'
 import styles from './index.module.scss'
 import { joinState } from '@/stores'
@@ -18,6 +19,8 @@ function Join () {
     wrapperCol: { span: 14, },
     labelAlign: 'left',
   }
+
+  const { push } = useHistory()
 
   const [ form ] = Form.useForm()
   const [addCompanyModal, setAddCompanyModal] = useState(false)
@@ -68,7 +71,10 @@ function Join () {
       render (e) {
 
         return (
-          <Button type="primary" onClick={ () => getCompanyDetail(e.companyId) }>编辑</Button>
+          <>
+            <Button type="primary" onClick={ () => getCompanyDetail(e.companyId) }>编辑</Button>
+            <Button style={{ marginLeft: '16px' }} type="primary" onClick={ () => switchCompany(e.companyId) }>管理</Button>
+          </>
         )
       }
     },
@@ -115,6 +121,23 @@ function Join () {
       form.setFieldsValue({
         companyLogo: undefined,
       })
+    }
+  }
+
+  const switchCompany = async companyId => {
+
+    try {
+
+      const { state } = await common.switchCompany({
+        companyId,
+      })
+
+      if (!state) return
+
+      push('/company/goods')
+    } catch (error) {
+
+      console.error('~~error~~', error)
     }
   }
 

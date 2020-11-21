@@ -110,8 +110,6 @@ function Admin (props) {
 
     const role = JSON.parse(sessionStorage.getItem('role')) || []
 
-    console.log('~~~~~', role)
-
     if (role.includes('PBUserRolePrivilegeAdmin')) history.replace('/join')
   }
 
