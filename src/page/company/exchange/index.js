@@ -92,7 +92,7 @@ function Exchange () {
           <DatePicker picker="month" size="large" style={{ margin: '0 14px' }} value={ yearMonth ? moment(new Date(yearMonth)) : '' } onChange={ monthChange } />
           <Input placeholder="请输入姓名" size="large" style={{ width: '140px' }} onChange={ e => setNickName(e.target.value) } />
           <div className={ `${styles.nav__btn} center` } onClick={ () => setFlag(!flag) }>查找</div>
-          <div className={ `${styles.nav__export} center` }>导出EXCEL</div>
+          {/* <div className={ `${styles.nav__export} center` }>导出EXCEL</div> */}
         </section>
 
         <Spin spinning={ loading }>

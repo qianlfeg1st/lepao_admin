@@ -13,13 +13,15 @@ function Gold () {
   const [goldLoading, setGoldLoading] = useState(true)
   const [settingLoading, setSettingLoading] = useState(false)
   const [setting, setSetting] = useState({
-    "convertRate": {
-      "gold": 0,
-      "step": 0
+    convertRate: {
+      gold: 0,
+      step: 0
     },
-    "dayGoldLimit": 0,
-    "inviteReward": 0,
-    "rankingAwardGold": [
+    dayGoldLimit: 0,
+    inviteReward: 0,
+    newuserGoldReward: 0,
+    newuserStepReward: 0,
+    rankingAwardGold: [
       1000,
       500,
       100,
@@ -151,6 +153,22 @@ function Gold () {
     })
   }
 
+  const newuserStepRewardChange = newuserStepReward => {
+
+    setSetting({
+      ...setting,
+      newuserStepReward,
+    })
+  }
+
+  const newuserGoldRewardChange = newuserGoldReward => {
+
+    setSetting({
+      ...setting,
+      newuserGoldReward,
+    })
+  }
+
   const rankingAwardGoldChange = (e, index) => {
 
     const clone = cloneDeep(setting)
@@ -211,7 +229,7 @@ function Gold () {
           </div>
 
           <div className={ styles.main__wrap }>
-            <div className={ styles.main__left }>员工单日获得积分数上限</div>
+            <div className={ styles.main__left }>员工单日获得步数上限</div>
             <div className={ styles.main__right }>
               <InputNumber value={ setting.dayGoldLimit } onChange={ dayGoldLimitChange } size="large" className={ styles.main__input } />
             </div>
@@ -227,9 +245,23 @@ function Gold () {
           </div>
 
           <div className={ styles.main__wrap }>
-            <div className={ styles.main__left }>邀请员工积分奖励</div>
+            <div className={ styles.main__left }>邀请员工步数奖励</div>
             <div className={ styles.main__right }>
               <InputNumber value={ setting.inviteReward } onChange={ inviteRewardChange } size="large" className={ styles.main__input } />
+            </div>
+          </div>
+
+          <div className={ styles.main__wrap }>
+            <div className={ styles.main__left }>邀请员工步数奖励</div>
+            <div className={ styles.main__right }>
+              <InputNumber value={ setting.newuserStepReward } onChange={ newuserStepRewardChange } size="large" className={ styles.main__input } />
+            </div>
+          </div>
+
+          <div className={ styles.main__wrap }>
+            <div className={ styles.main__left }>新加入送积分</div>
+            <div className={ styles.main__right }>
+              <InputNumber value={ setting.newuserGoldReward } onChange={ newuserGoldRewardChange } size="large" className={ styles.main__input } />
             </div>
           </div>
         </Spin>

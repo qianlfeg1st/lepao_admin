@@ -194,7 +194,7 @@ function Prize () {
       />
 
       <view className={ styles.pagebar }>
-        <Button type="primary" disabled={ !goodsIds.length } onClick={ selPrize }>选为奖品</Button>
+        <Button type="primary" disabled={ !goodsIds.length } onClick={ selPrize }>为企业分配商品</Button>
         <Pagination
           onChange={ e => {
 

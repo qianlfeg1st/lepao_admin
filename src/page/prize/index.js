@@ -24,12 +24,12 @@ function Prize () {
       width: 200,
     },
     {
-      title: '已选商品',
+      title: '已分配商品',
       dataIndex: 'recommendGoodsTotal',
       width: 100,
     },
     {
-      title: '推荐的热门商品',
+      title: '已选用商品',
       dataIndex: 'goodsTotal',
       width: 100,
     },

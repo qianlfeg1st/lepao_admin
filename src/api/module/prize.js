@@ -33,7 +33,7 @@ export const getPrizeList = params => {
 // 分类列表
 export const getShelfList = () => {
 
-  return axios.get('goods/list_shelf')
+  return axios.get('plat_goods/list_shelf')
 }
 
 // 选为奖品

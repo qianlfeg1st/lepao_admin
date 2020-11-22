@@ -89,7 +89,7 @@ function PrizeDetail () {
       dataIndex: 'companyUsed',
       width: 50,
       render: (e) => (
-        <>{ e ? '已选用' : '未选用' }</>
+        <>{ e ? '已分配' : '未分配' }</>
       ),
     },
     {
@@ -101,7 +101,7 @@ function PrizeDetail () {
           <>
             <Button className="btn" type="primary" onClick={ () => getGoodsDetail(e) }>编辑</Button>
             <Button className="btn" type="danger" onClick={ () => deleted(+e.companyGoodsId) }>移除</Button>
-            <Button className="btn" type="primary" onClick={ () => selectGoods({ companyGoodsId: e.companyGoodsId, used: e.companyUsed } ) }>{ e.companyUsed ? '不选用' : '选用' }</Button>
+            <Button className="btn" type="primary" onClick={ () => selectGoods({ companyGoodsId: e.companyGoodsId, used: e.companyUsed } ) }>{ e.companyUsed ? '不分配' : '分配' }</Button>
           </>
         )
       }
@@ -298,7 +298,7 @@ function PrizeDetail () {
           <div className={ styles.title }>{ companyName }奖品列表({ total })</div>
         </Col>
         <Col span={ 6 }>
-          <Button type="primary" onClick={ () => push(`/prize/choose/${companyId}?name=${companyName}`) }>挑选商品</Button>
+          <Button type="primary" onClick={ () => push(`/prize/choose/${companyId}?name=${companyName}`) }>分配商品</Button>
         </Col>
       </Row>
 
