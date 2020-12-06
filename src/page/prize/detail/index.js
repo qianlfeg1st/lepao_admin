@@ -89,7 +89,7 @@ function PrizeDetail () {
       dataIndex: 'companyUsed',
       width: 50,
       render: (e) => (
-        <>{ e ? '已分配' : '未分配' }</>
+        <>{ e ? '已挑选' : '未挑选' }</>
       ),
     },
     {
@@ -101,7 +101,7 @@ function PrizeDetail () {
           <>
             <Button className="btn" type="primary" onClick={ () => getGoodsDetail(e) }>编辑</Button>
             <Button className="btn" type="danger" onClick={ () => deleted(+e.companyGoodsId) }>移除</Button>
-            <Button className="btn" type="primary" onClick={ () => selectGoods({ companyGoodsId: e.companyGoodsId, used: e.companyUsed } ) }>{ e.companyUsed ? '不分配' : '分配' }</Button>
+            <Button className="btn" type="primary" onClick={ () => selectGoods({ companyGoodsId: e.companyGoodsId, used: e.companyUsed } ) }>{ e.companyUsed ? '不挑选' : '挑选' }</Button>
           </>
         )
       }

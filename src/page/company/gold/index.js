@@ -252,7 +252,7 @@ function Gold () {
           </div>
 
           <div className={ styles.main__wrap }>
-            <div className={ styles.main__left }>邀请员工步数奖励</div>
+            <div className={ styles.main__left }>新加入送步数</div>
             <div className={ styles.main__right }>
               <InputNumber value={ setting.newuserStepReward } onChange={ newuserStepRewardChange } size="large" className={ styles.main__input } />
             </div>

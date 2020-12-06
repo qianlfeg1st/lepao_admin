@@ -25,12 +25,12 @@ function Prize () {
     },
     {
       title: '已分配商品',
-      dataIndex: 'recommendGoodsTotal',
+      dataIndex: 'goodsTotal',
       width: 100,
     },
     {
       title: '已选用商品',
-      dataIndex: 'goodsTotal',
+      dataIndex: 'recommendGoodsTotal',
       width: 100,
     },
     {
