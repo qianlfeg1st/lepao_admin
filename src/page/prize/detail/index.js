@@ -219,7 +219,7 @@ function PrizeDetail () {
                 ...data,
                 storeCount,
                 gold,
-                companyPrice: companyPriceLabel,
+                companyPrice: companyPriceLabel * 100,
                 recommend: data.recommendLablel === '是',
                 downTime: formatDate(updownTime[1].valueOf()),
                 upTime: formatDate(updownTime[0].valueOf()),
@@ -356,8 +356,8 @@ function PrizeDetail () {
             <Input size="large" disabled />
           </Form.Item>
 
-          <Form.Item label="采购价" name="companyPriceLabel">
-            <Input size="large" disabled />
+          <Form.Item label="采购价" name="companyPriceLabel" rules={[{ required: true, message: '请输入采购价' }]}>
+            <InputNumber size="large" style={{ width: '100%' }} maxLength="6" />
           </Form.Item>
 
           <Form.Item label="兑换积分" name="gold" rules={[{ required: true, message: '请输入兑换积分' }]}>
