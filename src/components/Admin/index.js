@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useReducer, memo } from 'react'
 import { useHistory, withRouter } from 'react-router-dom'
 import { RouteConfigContext } from '@/router'
 import { Row, Col, Menu, Dropdown } from 'antd'
-import { UserOutlined, HddOutlined, AuditOutlined, DollarOutlined, GiftOutlined, TransactionOutlined, TeamOutlined, UserAddOutlined, DownOutlined } from '@ant-design/icons'
+import { UserOutlined, HddOutlined, ContainerOutlined, GiftOutlined, TeamOutlined, UserAddOutlined, DownOutlined } from '@ant-design/icons'
 import styles from './index.module.scss'
 import 'moment/locale/zh-cn' // 配置moment为中文
 import { common } from '@/api'
@@ -163,7 +163,7 @@ function Admin (props) {
 
                 <Menu.Item icon={ <GiftOutlined /> } key="/prize" onClick={ () => history.push('/prize') }>企业奖品</Menu.Item>
 
-                {/* <Menu.Item icon={ <TransactionOutlined /> } key="/exchange" onClick={ () => history.push('/exchange') }>企业兑换</Menu.Item> */}
+                <Menu.Item icon={ <ContainerOutlined /> } key="/bill" onClick={ () => history.push('/bill') }>企业账单</Menu.Item>
 
                 {/* <Menu.Item icon={ <DollarOutlined /> } key="/point" onClick={ () => history.push('/point') }>企业积分</Menu.Item> */}
 

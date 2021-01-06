@@ -1,7 +1,7 @@
 import axios from '@/api/axios'
 
 // 企业列表
-export const getCompanyList = params => {
+export const getCompanyList = () => {
 
   return axios.get('company/list_company')
 }

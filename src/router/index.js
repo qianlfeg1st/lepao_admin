@@ -1,41 +1,44 @@
 import React from 'react'
 import { HashRouter as Router, Switch } from 'react-router-dom'
 
-// 引入路由
 import FrontendAuth from '@/components/FrontendAuth/'
-import NotFound from './../page/notFound/'
-import Login from './../page/login/'
+import NotFound from '@/page/notFound/'
+import Login from '@/page/login/'
 
-import Join from './../page/join/'
+import Join from '@/page/join/'
 
-import Staff from './../page/staff/'
-import StaffDetail from './../page/staff/detail/'
+import Staff from '@/page/staff/'
+import StaffDetail from '@/page/staff/detail/'
 
-import Prize from './../page/prize/'
-import PrizeDetail from './../page/prize/detail/'
-import PrizeChoose from './../page/prize/choose/'
+import Prize from '@/page/prize/'
+import PrizeDetail from '@/page/prize/detail/'
+import PrizeChoose from '@/page/prize/choose/'
 
-import Exchange from './../page/exchange/'
-import ExchangeDetail from './../page/exchange/detail/'
+import Exchange from '@/page/exchange/'
+import ExchangeDetail from '@/page/exchange/detail/'
 
-import Point from './../page/point/'
+import Point from '@/page/point/'
 
-import Steps from './../page/steps/'
-import StepsDetail from './../page/steps/detail/'
+import Steps from '@/page/steps/'
+import StepsDetail from '@/page/steps/detail/'
 
-import User from './../page/user/'
-import Goods from './../page/goods/'
+import User from '@/page/user/'
+import Goods from '@/page/goods/'
+
+import Bill from '@/page/bill/'
+import BillDetail from '@/page/bill/detail/'
+import BillInfo from '@/page/bill/info/'
 
 // 企业页面
-import Company_index from './../page/company/index/'
-import Company_staff from './../page/company/staff/'
-import Company_prize from './../page/company/prize/'
-import Company_goods from './../page/company/goods/'
-import Company_inventory from './../page/company/inventory/'
-import Company_exchange from './../page/company/exchange/'
-import Company_account from './../page/company/account/'
-import Company_address from './../page/company/address/'
-import Company_gold from './../page/company/gold/'
+import Company_index from '@/page/company/index/'
+import Company_staff from '@/page/company/staff/'
+import Company_prize from '@/page/company/prize/'
+import Company_goods from '@/page/company/goods/'
+import Company_inventory from '@/page/company/inventory/'
+import Company_exchange from '@/page/company/exchange/'
+import Company_account from '@/page/company/account/'
+import Company_address from '@/page/company/address/'
+import Company_gold from '@/page/company/gold/'
 
 // 定义routes
 const routerConfig = [
@@ -131,6 +134,33 @@ const routerConfig = [
     auth: true,
     title: '兑换管理',
     navMenu: 'goods',
+  },
+  {
+    path: '/bill',
+    component: Bill,
+    children: <Bill />,
+    auth: true,
+    title: '企业账单',
+    navMenu: 'company',
+    admin: true,
+  },
+  {
+    path: '/bill/:companyId',
+    component: BillDetail,
+    children: <BillDetail />,
+    auth: true,
+    title: '企业账单',
+    navMenu: 'company',
+    admin: true,
+  },
+  {
+    path: '/bill/info/:billId',
+    component: BillInfo,
+    children: <BillInfo />,
+    auth: true,
+    title: '账单详情',
+    navMenu: 'company',
+    admin: true,
   },
   {
     path: '/join',
