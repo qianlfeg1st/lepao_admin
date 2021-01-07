@@ -58,29 +58,6 @@ function BillDetail () {
       dataIndex: 'createTimeLabel',
       width: 100,
     },
-    // {
-    //   title: '兑换积分',
-    //   dataIndex: 'gold',
-    //   width: 60,
-    // },
-    // {
-    //   title: '库存',
-    //   dataIndex: 'storeCount',
-    //   width: 50,
-    // },
-    // {
-    //   title: '上架时间',
-    //   dataIndex: 'updownTime',
-    //   width: 110,
-    // },
-    // {
-    //   title: '状态',
-    //   dataIndex: 'companyUsed',
-    //   width: 50,
-    //   render: (e) => (
-    //     <>{ e ? '已挑选' : '未挑选' }</>
-    //   ),
-    // },
     {
       title: '操作',
       width: 100,
@@ -88,7 +65,7 @@ function BillDetail () {
 
         return (
           <>
-            <Button className="btn" type="primary" onClick={ () => push(`/bill/info/${e.billId}?name=${companyName}&companyId=${companyId}&type=bill`) }>开始结算</Button>
+            <Button className="btn" type="primary" onClick={ () => push(`/bill/info/${e.billId}?name=${companyName}&companyId=${companyId}&type=bill`) }>结算</Button>
             <Button className="btn" type="primary" onClick={ () => push(`/bill/info/${e.billId}?name=${companyName}&companyId=${companyId}&type=detail`) }>详情</Button>
           </>
         )
@@ -147,7 +124,7 @@ function BillDetail () {
         bordered
         className="fixedWidthTable"
         scroll={{ x: 'calc(100vw - 300px)', y: `calc(100vh - ${height}px)` }}
-        rowKey={ e => e.companyGoodsId }
+        rowKey={ e => e.billId }
         loading={ listLoading }
         columns={ listColumns }
         dataSource={ listData }

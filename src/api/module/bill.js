@@ -25,3 +25,30 @@ export const getBillDetail = params => {
     },
   })
 }
+
+
+// 准备结算
+export const getBillPrep = params => {
+
+  return axios.get('company_bill/prep_settlement_bill', {
+    params: {
+      ...params,
+    },
+  })
+}
+
+// 结算
+export const postBill = params => {
+
+  return axios.post('company_bill/settlement_bill', {
+    ...params,
+  })
+}
+
+// 结算
+export const updateBill = params => {
+
+  return axios.post('company_bill/modify_settlement_bill', {
+    ...params,
+  })
+}
