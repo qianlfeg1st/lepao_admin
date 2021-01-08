@@ -87,6 +87,7 @@ function BillDetail () {
       if (!state) return
 
       setListData(data.orders)
+      setRealMoneyTotal(data.realMoneyTotal / 100)
       setDetail({
         ...data,
         orders: undefined,
@@ -146,14 +147,18 @@ function BillDetail () {
 
           setLoading(true)
 
-          const { state, data } = await bill.postBill({
+          const { state } = await bill[Number(detail.billId) > 0 ? 'updateBill' : 'postBill']({
             billId,
             companyId,
             endDateLabel: endDateStr,
-            realMoneyTotal,
+            realMoneyTotal: realMoneyTotal * 100,
           })
 
           if (!state) return
+
+          setFlag(!flag)
+
+          message.success('操作成功')
         } catch (error) {
 
           console.error('~~error~~', error)
@@ -223,18 +228,13 @@ function BillDetail () {
           </Row>
           <div className={ styles.box2 }>
             <span className={ styles.bolder }>实付金额：</span>
-            {
-              type === 'detail'
-                ?
-                <span className={ styles.border }>{ detail.realMoneyTotalLabel }</span>
-                :
-                <InputNumber
-                  value={ realMoneyTotal }
-                  formatter={ value => `￥${value}`}
-                  size="large"
-                  style={{ width: '160px' }}
-                />
-            }
+            <InputNumber
+              value={ realMoneyTotal }
+              formatter={ value => `￥${value}`}
+              size="large"
+              style={{ width: '160px' }}
+              onChange={ e => setRealMoneyTotal(e) }
+            />
           </div>
         </section>
 
@@ -250,16 +250,10 @@ function BillDetail () {
           pagination={ false }
         />
 
-        {
-          type === 'bill'
-            ?
-            <div className={ styles.footer }>
-              <Button size="large" style={{ margin: '0 20px 0 0' }} onClick={ reset }>重置</Button>
-              <Button type="primary" size="large" onClick={ postBill }>确定</Button>
-            </div>
-            :
-            null
-        }
+        <div className={ styles.footer }>
+          <Button size="large" style={{ margin: '0 20px 0 0' }} onClick={ reset }>重置</Button>
+          <Button type="primary" size="large" onClick={ postBill }>确定</Button>
+        </div>
       </Spin>
 
     </>

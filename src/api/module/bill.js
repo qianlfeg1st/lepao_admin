@@ -45,7 +45,7 @@ export const postBill = params => {
   })
 }
 
-// 结算
+// 修改结算
 export const updateBill = params => {
 
   return axios.post('company_bill/modify_settlement_bill', {

@@ -65,8 +65,13 @@ function BillDetail () {
 
         return (
           <>
-            <Button className="btn" type="primary" onClick={ () => push(`/bill/info/${e.billId}?name=${companyName}&companyId=${companyId}&type=bill`) }>结算</Button>
-            <Button className="btn" type="primary" onClick={ () => push(`/bill/info/${e.billId}?name=${companyName}&companyId=${companyId}&type=detail`) }>详情</Button>
+            {
+              Number(e.billId) > 0
+                ?
+                <Button className="btn" type="primary" onClick={ () => push(`/bill/info/${e.billId}?name=${companyName}&companyId=${companyId}&type=detail`) }>编辑</Button>
+                :
+                <Button className="btn" type="primary" onClick={ () => push(`/bill/info/${e.billId}?name=${companyName}&companyId=${companyId}&type=bill`) }>结算</Button>
+            }
           </>
         )
       }
@@ -118,7 +123,7 @@ function BillDetail () {
         <Breadcrumb.Item>企业账单</Breadcrumb.Item>
       </Breadcrumb>
 
-      <div className={ styles.title }>{ companyName }已结算账单</div>
+      <div className={ styles.title }>{ companyName }结算账单</div>
 
       <Table
         bordered
