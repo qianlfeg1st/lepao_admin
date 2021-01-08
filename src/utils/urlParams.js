@@ -1,6 +1,6 @@
-export default str => {
+export default (str = '') => {
 
-  if (!str) return
+  if (!str) return {}
 
   if (typeof str !== 'string') throw new Error('[str]的类型必须是字符串')
 
