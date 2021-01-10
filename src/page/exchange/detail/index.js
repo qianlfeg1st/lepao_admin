@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Table, Button, Modal, message } from 'antd'
+import { Table, Button, Modal, message, Pagination } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { exchange } from '@/api'
-import { auditStatus } from '@/stores'
 
 const formItemLayout = {
   labelCol: { span: 5, offset: 2, },
   wrapperCol: { span: 14, },
   labelAlign: 'left',
+}
+
+const auditStatus = {
+  PBPayOrderStateWaitAduit: '等待审核',
+  PBPayOrderStateWaitSend: '通过',
+  PBPayOrderStateReject: '拒绝',
+  PBPayOrderStateRejectBackGold: '退回',
 }
 
 function Join () {
@@ -25,17 +31,17 @@ function Join () {
     {
       title: '订单编号',
       dataIndex: 'orderId',
-      width: 100,
+      width: 60,
     },
     {
       title: '兑换时间',
       dataIndex: 'createTimeLabel',
-      width: 100,
+      width: 110,
     },
     {
       title: '消耗积分',
       dataIndex: 'gold',
-      width: 100,
+      width: 60,
     },
     {
       title: '姓名',
@@ -45,7 +51,7 @@ function Join () {
     {
       title: '手机号',
       dataIndex: 'phoneNumber',
-      width: 100,
+      width: 80,
     },
     {
       title: '商品名',
@@ -55,35 +61,32 @@ function Join () {
     {
       title: '商品编号',
       dataIndex: 'goodsId',
-      width: 100,
+      width: 60,
     },
     {
       title: '企业采购价',
       dataIndex: 'companyGoodsPrice',
-      width: 100,
+      width: 60,
     },
     {
       title: '企业审核',
-      dataIndex: 'auditPass',
-      width: 100,
-      render: (e) => (
-        <>{ auditStatus[e] }</>
-      ),
+      dataIndex: 'stateLabel',
+      width: 60,
     },
     {
       title: '操作',
-      width: 200,
-      render ({ orderId, auditPass }) {
+      width: 150,
+      render ({ orderId, state }) {
 
         return (
           <>
             {
-              auditPass === 'UNRECOGNIZED'
+              state === 'PBPayOrderStateWaitSend'
                 ?
                 [
-                  <Button key="pass" className="btn" type="primary" onClick={ () => verifyExchange({ orderId, auditState: 'PBOrderAuditStatePass' }) }>通过</Button>,
-                  <Button key="unpass" className="btn" type="danger" onClick={ () => verifyExchange({ orderId, auditState: 'PBOrderAuditStateUnPass' }) }>拒绝</Button>,
-                  <Button key="back" className="btn" type="primary" onClick={ () => verifyExchange({ orderId, auditState: 'PBOrderAuditStateBack' }) }>回退</Button>,
+                  <Button key="pass" className="btn" type="primary" onClick={ () => verifyExchange({ orderId, auditState: 'PBPayOrderStateWaitSend' }) }>通过</Button>,
+                  <Button key="unpass" className="btn" type="danger" onClick={ () => verifyExchange({ orderId, auditState: 'PBPayOrderStateReject' }) }>拒绝</Button>,
+                  <Button key="back" className="btn" type="danger" onClick={ () => verifyExchange({ orderId, auditState: 'PBPayOrderStateRejectBackGold' }) }>回退</Button>,
                 ]
                 :
                 null
@@ -106,30 +109,19 @@ function Join () {
       setListLoading(true)
 
       const { state, data } = await exchange.getExchangeList({
-        companyId,
         query: {
           firstResult: 0,
-          month: 0,
+          yearMonth: '2020-12',
           nickName: '',
+          companyId,
         },
       })
 
       if (!state) return
 
-      setListData([
-        {
-          "auditPass": "UNRECOGNIZED",
-          "companyGoodsPrice": "string",
-          "createTimeLabel": "string",
-          "gold": 0,
-          "goodsId": 0,
-          "goodsName": "string",
-          "name": "string",
-          "nickName": "string",
-          "orderId": 1,
-          "phoneNumber": "string"
-        }
-      ])
+      setListData(data.items)
+      setTotal(+data.pageable.resultCount)
+      setSize(+data.pageable.resultSize)
     } catch (error) {
 
       console.error('~~error~~', error)
@@ -151,14 +143,14 @@ function Join () {
 
         try {
 
-          const { state } = await api.exchange.verifyExchange({
+          const { state } = await exchange.verifyExchange({
             orderId,
-            auditState,
+            state: auditState,
           })
 
           if (!state) return
 
-          message.success(`${content}操作成功`)
+          message.success('操作成功')
 
           setFlag(!flag)
         } catch (error) {
@@ -231,6 +223,21 @@ function Join () {
         dataSource={ listData }
         pagination={ false }
       />
+
+      <div className="pagebar">
+        <Pagination
+          onChange={ e => {
+
+            setPage(e)
+            setFlag(!flag)
+          } }
+          total={ total }
+          showTotal={ total => `共 ${total} 条` }
+          pageSize={ size }
+          current={ page }
+          defaultCurrent={ page }
+        />
+      </div>
 
     </>
   )

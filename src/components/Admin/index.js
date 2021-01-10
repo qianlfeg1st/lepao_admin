@@ -165,6 +165,8 @@ function Admin (props) {
 
                 <Menu.Item icon={ <ContainerOutlined /> } key="/bill" onClick={ () => history.push('/bill') }>企业账单</Menu.Item>
 
+                <Menu.Item icon={ <ContainerOutlined /> } key="/exchange" onClick={ () => history.push('/exchange') }>企业兑换</Menu.Item>
+
                 {/* <Menu.Item icon={ <DollarOutlined /> } key="/point" onClick={ () => history.push('/point') }>企业积分</Menu.Item> */}
 
                 {/* <Menu.Item icon={ <AuditOutlined /> } key="/steps" onClick={ () => history.push('/steps') }>步数统计</Menu.Item> */}

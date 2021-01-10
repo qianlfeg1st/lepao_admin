@@ -7,9 +7,9 @@ export const getCompanyList = params => {
 }
 
 // 兑换奖品列表
-export const getExchangeList = ({ companyId, ...params }) => {
+export const getExchangeList = ({ ...params }) => {
 
-  return axios.post(`company_order/list_companyorder?companyId=${companyId}`, {
+  return axios.post('company_order/list_companyorder', {
     ...params.query,
   })
 }

@@ -33,7 +33,7 @@ function Join () {
     },
     {
       title: '操作',
-      width: 200,
+      width: 100,
       render (e) {
 
         return (
