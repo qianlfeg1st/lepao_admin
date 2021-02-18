@@ -243,7 +243,7 @@ function BillDetail () {
         <Table
           bordered
           className={ `fixedWidthTable ${styles.table}` }
-          scroll={{ y: `calc(100vh - 600px)` }}
+          // scroll={{ y: `calc(100vh - 600px)` }}
           rowKey={ e => e.orderId }
           columns={ listColumns }
           dataSource={ listData }
