@@ -205,11 +205,11 @@ function Gold () {
           </div>
           <div className={ styles.gold__item }>
             <span className={ styles.gold__title }>员工未兑换积分</span>
-            <span className={ styles.gold__num }>{ gold.empAvgUnConvertGold }</span>
+            <span className={ styles.gold__num }>{ gold.empUnConvertGold }</span>
           </div>
           <div className={ styles.gold__item }>
-            <span className={ styles.gold__title }>均未兑换积分</span>
-            <span className={ styles.gold__num }>{ gold.empUnConvertGold }</span>
+            <span className={ styles.gold__title }>人均未兑换积分</span>
+            <span className={ styles.gold__num }>{ gold.empAvgUnConvertGold }</span>
           </div>
         </div>
       </Spin>
