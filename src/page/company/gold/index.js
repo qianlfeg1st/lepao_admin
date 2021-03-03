@@ -17,6 +17,7 @@ function Gold () {
       gold: 0,
       step: 0
     },
+    dayStepTarget: 0,
     dayGoldLimit: 0,
     inviteReward: 0,
     newuserGoldReward: 0,
@@ -102,7 +103,7 @@ function Gold () {
 
   const submit = () => {
 
-    if (!(setting.dayGoldLimit && setting.inviteReward && setting.convertRate.gold && setting.convertRate.step && setting.rankingAwardGold[0] && setting.rankingAwardGold[1] && setting.rankingAwardGold[2])) return message.error('数据不完整，请检查')
+    if (!(setting.dayStepTarget && setting.dayGoldLimit && setting.inviteReward && setting.convertRate.gold && setting.convertRate.step && setting.rankingAwardGold[0] && setting.rankingAwardGold[1] && setting.rankingAwardGold[2])) return message.error('数据不完整，请检查')
 
     Modal.confirm({
       title: '提示',
@@ -134,6 +135,14 @@ function Gold () {
         ...setting.convertRate,
         gold,
       }
+    })
+  }
+
+  const dayStepTargetChange = dayStepTarget => {
+
+    setSetting({
+      ...setting,
+      dayStepTarget,
     })
   }
 
@@ -225,6 +234,13 @@ function Gold () {
               <InputNumber value={ setting.convertRate.step } onChange={ stepChange } size="large" className={ styles.main__input } />
               <span className={ styles.main__label1 }>兑换</span>
               <InputNumber value={ setting.convertRate.gold } onChange={ goldChange } size="large" className={ styles.main__input } />
+            </div>
+          </div>
+
+          <div className={ styles.main__wrap }>
+            <div className={ styles.main__left }>员工单日目标达成</div>
+            <div className={ styles.main__right }>
+              <InputNumber value={ setting.dayStepTarget } onChange={ dayStepTargetChange } size="large" className={ styles.main__input } />
             </div>
           </div>
 
