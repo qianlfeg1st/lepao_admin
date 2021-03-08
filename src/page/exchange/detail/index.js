@@ -22,7 +22,7 @@ function Join () {
   const { companyId } = useParams()
   const [listLoading, setListLoading] = useState(false)
   const [listData, setListData] = useState([])
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [size, setSize] = useState(20)
   const [flag, setFlag] = useState(false)
@@ -110,8 +110,8 @@ function Join () {
 
       const { state, data } = await exchange.getExchangeList({
         query: {
-          firstResult: 0,
-          yearMonth: '2020-12',
+          firstResult: (page - 1) * size,
+          yearMonth: '2021-03',
           nickName: '',
           companyId,
         },
