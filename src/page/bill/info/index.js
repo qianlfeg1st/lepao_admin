@@ -5,7 +5,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { bill } from '@/api'
 import styles from './index.module.scss'
 import moment from 'moment'
-import { AdminContext } from '@/components/Admin'
+import { baseURL } from '@/config'
 import urlParams from '@/utils/urlParams'
 import formatDate from '@/utils/formatDate'
 
@@ -203,6 +203,18 @@ function BillDetail () {
                   setEndDateStr(dateString)
                   setFlag(!flag)
                 } } />
+              </div>
+
+              <div className="searchitem">
+                <Button type="primary" size="large">
+                  <a href={ `${baseURL}company_bill/export_settlement_bill?base_access_token=${sessionStorage.getItem('accessToken')}&companyId=${companyId}&endDateStr=${endDateStr}` } target="_blank" rel="noopener noreferrer">导出已结算订单</a>
+                </Button>
+              </div>
+
+              <div className="searchitem">
+                <Button type="primary" size="large">
+                  <a href={ `${baseURL}company_bill/export_un_settlement_bill?base_access_token=${sessionStorage.getItem('accessToken')}&companyId=${companyId}&endDateStr=${endDateStr}` } target="_blank" rel="noopener noreferrer">导出未结算订单</a>
+                </Button>
               </div>
 
             </div>
