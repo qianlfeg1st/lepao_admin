@@ -207,13 +207,13 @@ function BillDetail () {
 
               <div className="searchitem">
                 <Button type="primary" size="large">
-                  <a href={ `${baseURL}company_bill/export_settlement_bill?base_access_token=${sessionStorage.getItem('accessToken')}&companyId=${companyId}&endDateStr=${endDateStr}` } target="_blank" rel="noopener noreferrer">导出已结算订单</a>
+                  <a href={ `${baseURL}company_bill/export_settlement_bill?base_access_token=${sessionStorage.getItem('accessToken')}&billId=${billId}` } target="_blank" rel="noopener noreferrer">导出已结算订单</a>
                 </Button>
               </div>
 
               <div className="searchitem">
                 <Button type="primary" size="large">
-                  <a href={ `${baseURL}company_bill/export_un_settlement_bill?base_access_token=${sessionStorage.getItem('accessToken')}&companyId=${companyId}&endDateStr=${endDateStr}` } target="_blank" rel="noopener noreferrer">导出未结算订单</a>
+                  <a href={ `${baseURL}company_bill/export_un_settlement_bill?base_access_token=${sessionStorage.getItem('accessToken')}&billId=${billId}` } target="_blank" rel="noopener noreferrer">导出未结算订单</a>
                 </Button>
               </div>
 
