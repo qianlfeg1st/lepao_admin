@@ -81,13 +81,20 @@ function Join () {
         return (
           <>
             {
+              state === 'PBPayOrderStateWaitAduit'
+                ?
+                <>
+                  <Button key="pass" className="btn" type="primary" onClick={ () => verifyExchange({ orderId, auditState: 'PBPayOrderStateWaitSend' }) }>通过</Button>
+                  <Button key="unpass" className="btn" type="danger" onClick={ () => verifyExchange({ orderId, auditState: 'PBPayOrderStateReject' }) }>拒绝</Button>
+                  <Button key="back" className="btn" type="danger" onClick={ () => verifyExchange({ orderId, auditState: 'PBPayOrderStateRejectBackGold' }) }>回退</Button>
+                </>
+                :
+                null
+            }
+            {
               state === 'PBPayOrderStateWaitSend'
                 ?
-                [
-                  <Button key="pass" className="btn" type="primary" onClick={ () => verifyExchange({ orderId, auditState: 'PBPayOrderStateWaitSend' }) }>通过</Button>,
-                  <Button key="unpass" className="btn" type="danger" onClick={ () => verifyExchange({ orderId, auditState: 'PBPayOrderStateReject' }) }>拒绝</Button>,
-                  <Button key="back" className="btn" type="danger" onClick={ () => verifyExchange({ orderId, auditState: 'PBPayOrderStateRejectBackGold' }) }>回退</Button>,
-                ]
+                <Button key="deliver" className="btn" type="primary">发货</Button>
                 :
                 null
             }
