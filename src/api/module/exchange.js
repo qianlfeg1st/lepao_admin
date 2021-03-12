@@ -1,7 +1,7 @@
 import axios from '@/api/axios'
 
 // 企业列表
-export const getCompanyList = params => {
+export const getCompanyList = () => {
 
   return axios.get('company_order/list_company')
 }
@@ -21,5 +21,23 @@ export const verifyExchange = params => {
     params: {
       ...params,
     },
+  })
+}
+
+// 发货详情
+export const getOrderDetail = params => {
+
+  return axios.get('company_order/prep_send', {
+    params: {
+      ...params,
+    },
+  })
+}
+
+// 发货
+export const sendOrder = ({ ...params }) => {
+
+  return axios.post('company_order/send', {
+    ...params,
   })
 }

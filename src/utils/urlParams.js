@@ -2,7 +2,7 @@ export default (str = '') => {
 
   if (!str) return {}
 
-  if (typeof str !== 'string') throw new Error('[str]的类型必须是字符串')
+  if (typeof str !== 'string') throw new Error('str must be a string')
 
   const content = str.split('?')[Number(str.includes('?'))]
 

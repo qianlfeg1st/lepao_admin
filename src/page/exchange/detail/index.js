@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Table, Button, Modal, message, Pagination } from 'antd'
+import { Table, Button, Modal, message, Pagination, Form, Input, Select } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { exchange } from '@/api'
 
@@ -26,6 +26,9 @@ function Join () {
   const [total, setTotal] = useState(0)
   const [size, setSize] = useState(20)
   const [flag, setFlag] = useState(false)
+  const [detailModel, setDetailModel] = useState(false)
+  const [ form ] = Form.useForm()
+  const [kdiList, setkdiList] = useState([])
 
   const listColumns = [
     {
@@ -94,7 +97,7 @@ function Join () {
             {
               state === 'PBPayOrderStateWaitSend'
                 ?
-                <Button key="deliver" className="btn" type="primary">发货</Button>
+                <Button key="deliver" className="btn" type="primary" onClick={ () => getOrderDetail(orderId) }>发货</Button>
                 :
                 null
             }
@@ -108,6 +111,43 @@ function Join () {
 
     load()
   }, [flag])
+
+
+  const submit = values => {
+
+    Modal.confirm({
+      title: '提示',
+      centered: true,
+      content: '确认发货吗？',
+      onOk: async () => {
+
+        try {
+
+          const { costPrice, kdiNo, orderId, kdi } = values
+
+          const { state } = await exchange.sendOrder({
+            costPrice,
+            kdiNo,
+            orderId,
+            kdi: kdiList[kdi],
+          })
+
+          if (!state) return
+
+          message.success('发货成功')
+
+          setDetailModel(false)
+
+          setFlag(!flag)
+
+          form.resetFields()
+        } catch (error) {
+
+          console.error('~~error~~', error)
+        }
+      },
+    })
+  }
 
   const load = async () => {
 
@@ -129,6 +169,42 @@ function Join () {
       setListData(data.items)
       setTotal(+data.pageable.resultCount)
       setSize(+data.pageable.resultSize)
+    } catch (error) {
+
+      console.error('~~error~~', error)
+    } finally {
+
+      setListLoading(false)
+    }
+  }
+
+  const getOrderDetail = async id => {
+
+    try {
+
+      setDetailModel(true)
+
+      const { state, data } = await exchange.getOrderDetail({
+        orderId: id,
+      })
+
+      if (!state) return
+
+      const { orderId, sourceLink, goodsName, goodsPriceLabel, goldLabel, addressLabel, goodsStoreCountLabel, orderCreateDateLabel, costPrice } = data.detail
+
+      form.setFieldsValue({
+        orderId,
+        sourceLink,
+        goodsName,
+        goodsPriceLabel,
+        goldLabel,
+        addressLabel,
+        goodsStoreCountLabel,
+        orderCreateDateLabel,
+        costPrice,
+      })
+
+      setkdiList(data.kdiSelect)
     } catch (error) {
 
       console.error('~~error~~', error)
@@ -170,14 +246,9 @@ function Join () {
 
   const onCancel = () => {
 
-    setEditModel(false)
+    setDetailModel(false)
 
     form.resetFields()
-  }
-
-  const submit = async values => {
-
-    console.log()
   }
 
   const deleted = e => {
@@ -186,7 +257,6 @@ function Join () {
       title: '提示',
       icon: <ExclamationCircleOutlined />,
       centered: true,
-      // content: `确定${true ? '加入' : '移除'}【${'钱立峰'}】吗？`,
       content: `确定操作吗？`,
       okText: '确定',
       cancelText: '取消',
@@ -245,6 +315,70 @@ function Join () {
           defaultCurrent={ page }
         />
       </div>
+
+      <Modal
+        visible={ detailModel }
+        title="发货"
+        onCancel={ onCancel }
+        onOk={ null }
+        maskClosable={ false }
+        centered
+        width="670px"
+        footer={[
+          <Button form="detail" key="save" type="primary" htmlType="submit" size="default">确定</Button>,
+          <Button key="cancel" type="default" size="default" onClick={ onCancel }>取消</Button>,
+        ]}
+      >
+        <Form id="detail" form={ form } { ...formItemLayout } onFinish={ submit }>
+
+          <Form.Item label="订单编号" name="orderId">
+            <Input size="large" disabled />
+          </Form.Item>
+
+          <Form.Item label="商品来源" name="sourceLink">
+            <Input size="large" disabled />
+          </Form.Item>
+
+          <Form.Item label="商品名称" name="goodsName">
+            <Input size="large" disabled />
+          </Form.Item>
+
+          <Form.Item label="商品价格" name="goodsPriceLabel">
+            <Input size="large" disabled />
+          </Form.Item>
+
+          <Form.Item label="成本价格" name="costPrice">
+            <Input size="large" disabled />
+          </Form.Item>
+
+          <Form.Item label="兑换积分" name="goldLabel">
+            <Input size="large" disabled />
+          </Form.Item>
+
+          <Form.Item label="发货地址" name="addressLabel" rules={[{required: true, message: '请输入发货地址'}]}>
+            <Input size="large" />
+          </Form.Item>
+
+          <Form.Item label="物流公司" name="kdi" rules={[{required: true, message: '请选择物流公司'}]}>
+            <Select placeholder="请选择物流公司" size="large">
+              { kdiList.map(({ name, type }, index) => <Select.Option key={ type } value={ index }>{ name }</Select.Option>) }
+            </Select>
+          </Form.Item>
+
+          <Form.Item label="物流单号" name="kdiNo" rules={[{required: true, message: '请输入物流单号'}]}>
+            <Input size="large" />
+          </Form.Item>
+
+          <Form.Item label="库存" name="goodsStoreCountLabel">
+            <Input size="large" disabled />
+          </Form.Item>
+
+          <Form.Item label="下单时间" name="orderCreateDateLabel">
+            <Input size="large" disabled />
+          </Form.Item>
+
+        </Form>
+      </Modal>
 
     </>
   )
