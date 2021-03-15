@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useParams } from 'react-router-dom'
-import { Table, Button, Modal, message, Pagination, Form, Input, Select } from 'antd'
+import { Table, Button, Modal, message, Pagination, Form, Input, Select, DatePicker } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { AdminContext } from '@/components/Admin'
 import { exchange } from '@/api'
+import moment from 'moment'
+import formatMonth from '@/utils/formatMonth'
 
 const formItemLayout = {
   labelCol: { span: 5, offset: 2, },
@@ -17,7 +20,7 @@ const auditStatus = {
   PBPayOrderStateRejectBackGold: '退回',
 }
 
-function Join () {
+function ExchangeDetail () {
 
   const { companyId } = useParams()
   const [listLoading, setListLoading] = useState(false)
@@ -29,6 +32,8 @@ function Join () {
   const [detailModel, setDetailModel] = useState(false)
   const [ form ] = Form.useForm()
   const [kdiList, setkdiList] = useState([])
+  const [yearMonth, setYearMonth] = useState(formatMonth(+new Date()))
+  const { height } = useContext(AdminContext)
 
   const listColumns = [
     {
@@ -94,13 +99,7 @@ function Join () {
                 :
                 null
             }
-            {
-              state === 'PBPayOrderStateWaitSend'
-                ?
-                <Button key="deliver" className="btn" type="primary" onClick={ () => getOrderDetail(orderId) }>发货</Button>
-                :
-                null
-            }
+            { state === 'PBPayOrderStateWaitSend' && <Button key="deliver" className="btn" type="primary" onClick={ () => getOrderDetail(orderId) }>发货</Button> }
           </>
         )
       }
@@ -158,7 +157,7 @@ function Join () {
       const { state, data } = await exchange.getExchangeList({
         query: {
           firstResult: (page - 1) * size,
-          yearMonth: '2021-03',
+          yearMonth,
           nickName: '',
           companyId,
         },
@@ -290,10 +289,24 @@ function Join () {
   return (
     <>
 
+      <div className="searchbar">
+        <div className="searchitems">
+
+          <div className="searchitem">
+            <p>兑换月份：</p>
+            <DatePicker picker="month" value={ moment(yearMonth) } disabledDate={ current => current && current > moment().endOf('day') } onChange={ (_, dateString) => {
+
+              setYearMonth(dateString)
+              setFlag(!flag)
+            } } />
+          </div>
+        </div>
+      </div>
+
       <Table
         bordered
         className="fixedWidthTable"
-        scroll={{ x: 'calc(100vw - 400px)', y: `calc(100vh)` }}
+        scroll={{ x: 'calc(100vw - 300px)', y: `calc(100vh - ${height}px)` }}
         rowKey={ e => e.orderId }
         loading={ listLoading }
         columns={ listColumns }
@@ -384,4 +397,4 @@ function Join () {
   )
 }
 
-export default Join
+export default ExchangeDetail

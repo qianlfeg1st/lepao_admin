@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { useParams, useHistory, Link } from 'react-router-dom'
-import { Table, Button, Modal, Form, Image, InputNumber, DatePicker, Input, message, Col, Row, Pagination, Breadcrumb, Spin } from 'antd'
+import React, { useState, useEffect } from 'react'
+import { useParams, Link } from 'react-router-dom'
+import { Table, Button, Modal, InputNumber, DatePicker, message, Col, Row, Breadcrumb, Spin } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { bill } from '@/api'
 import styles from './index.module.scss'
@@ -11,7 +11,6 @@ import formatDate from '@/utils/formatDate'
 
 function BillDetail () {
 
-  const { push } = useHistory()
   const { billId } = useParams()
 
   const [loading, setLoading] = useState(false)
@@ -258,7 +257,6 @@ function BillDetail () {
         <Table
           bordered
           className={ `fixedWidthTable ${styles.table}` }
-          // scroll={{ y: `calc(100vh - 600px)` }}
           rowKey={ e => e.orderId }
           columns={ listColumns }
           dataSource={ listData }
