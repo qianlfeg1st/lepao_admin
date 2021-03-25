@@ -237,6 +237,10 @@ function BillDetail () {
             <Col span={12}>结算日期：{ detail.createTimeLabel }</Col>
           </Row>
           <Row className={ styles.box }>
+            <Col span={12}>总积分：{ detail.goldTotal }</Col>
+            <Col span={12}>总成本{ detail.moneyCostTotalLabel }</Col>
+          </Row>
+          <Row className={ styles.box }>
             <Col span={12}>应付金额：{ detail.moneyTotalLabel }</Col>
             <Col span={12} />
           </Row>
